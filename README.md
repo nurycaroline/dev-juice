@@ -1,71 +1,37 @@
-# dev-helper README
+# Dev Helper
 
-This is the README for your extension "dev-helper". After writing up a brief description, we recommend including the following sections.
+Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
 
-## Features
+## Funcionalidades
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Gerador de CNPJ
 
-For example if there is an image subfolder under your extension project workspace:
+Gera números de CNPJ válidos para uso em desenvolvimento e testes.
 
-\!\[feature X\]\(images/feature-x.png\)
+- Acesse a funcionalidade através do ícone na Activity Bar
+- Clique em "Gerador de CNPJ" para gerar um novo CNPJ válido
+- Opção para copiar o CNPJ gerado para o clipboard
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Como usar
 
-## Requirements
+1. Abra o painel do Dev Helper clicando no ícone de ferramentas na Activity Bar
+2. Selecione a ferramenta desejada na lista
+3. Para gerar um CNPJ, clique em "Gerador de CNPJ" e o número será exibido
+4. Clique em "Copiar para Clipboard" para copiar o número gerado
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+## Requisitos
 
-## Extension Settings
+Não há requisitos especiais para esta extensão.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+## Configurações
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Esta extensão não adiciona configurações adicionais.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
+- Funcionalidade inicial de geração de CNPJ válido
+- Interface na Activity Bar
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**Aproveite!**

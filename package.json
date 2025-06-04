@@ -1,7 +1,7 @@
 {
   "name": "dev-helper",
   "displayName": "Dev Helper",
-  "description": "",
+  "description": "Tools para desenvolvedores",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.100.0"
@@ -9,15 +9,46 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "dev-helper.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "dev-helper.generateCNPJ",
+        "title": "Gerar CNPJ Válido",
+        "icon": "$(key)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dev-helper",
+          "title": "Dev Helper",
+          "icon": "$(tools)"
+        }
+      ]
+    },
+    "views": {
+      "dev-helper": [
+        {
+          "id": "devHelperExplorer",
+          "name": "Dev Tools",
+          "icon": "$(tools)"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "dev-helper.generateCNPJ",
+          "when": "view == devHelperExplorer",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -27,6 +58,10 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+  "files": [
+    "out/**/*",
+    "src/templates/**/*"
+  ],
   "devDependencies": {
     "@types/vscode": "^1.100.0",
     "@types/mocha": "^10.0.10",
