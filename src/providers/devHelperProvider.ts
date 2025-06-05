@@ -39,6 +39,18 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'dev-helper.generateCNPJ',
                         vscode.TreeItemCollapsibleState.None
                     ),
+                    new DevToolItem(
+                        'CPF',
+                        'Gerar número de CPF válido',
+                        'dev-helper.generateCPF',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'UUID',
+                        'Gerar UUID (Identificador Único Universal)',
+                        'dev-helper.generateUUID',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
                     // Add more generators here as needed
                 ]);
             }

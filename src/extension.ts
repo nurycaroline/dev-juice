@@ -3,6 +3,8 @@
 import * as vscode from 'vscode';
 import { DevHelperProvider } from './providers/devHelperProvider';
 import { CNPJPanelProvider } from './providers/cnpjPanelProvider';
+import { CPFPanelProvider } from './providers/cpfPanelProvider';
+import { UUIDPanelProvider } from './providers/uuidPanelProvider';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -30,8 +32,23 @@ export function activate(context: vscode.ExtensionContext) {
 		CNPJPanelProvider.createOrShow(context.extensionUri);
 	});
 
+	// Generate CPF command
+	const generateCPFDisposable = vscode.commands.registerCommand('dev-helper.generateCPF', () => {
+		CPFPanelProvider.createOrShow(context.extensionUri);
+	});
+
+	// Generate UUID command
+	const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
+		UUIDPanelProvider.createOrShow(context.extensionUri);
+	});
+
 	// Add the commands to the extension context
-	context.subscriptions.push(helloWorldDisposable, generateCNPJDisposable);
+	context.subscriptions.push(
+		helloWorldDisposable, 
+		generateCNPJDisposable,
+		generateCPFDisposable,
+		generateUUIDDisposable
+	);
 }
 
 // This method is called when your extension is deactivated

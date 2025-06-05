@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de CPF</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: var(--vscode-editor-foreground);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 4px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+        .result-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .cpf-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .cpf-label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: var(--vscode-descriptionForeground);
+        }
+        .cpf-value {
+            font-family: monospace;
+            font-size: 16px;
+            background-color: var(--vscode-editor-background);
+            padding: 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            user-select: all;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .cpf-value:hover {
+            background-color: var(--vscode-editor-selectionBackground);
+        }
+        .cpf-value:active {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+        }
+        .tooltip {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--vscode-editorHoverWidget-background);
+            color: var(--vscode-editorHoverWidget-foreground);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            z-index: 100;
+            border: 1px solid var(--vscode-editorHoverWidget-border);
+        }
+        .cpf-value:hover .tooltip {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de CPF</h1>
+        
+        <button id="generateBtn">Gerar Novo CPF</button>
+        
+        <div id="resultContainer" class="result">
+            <div class="result-header">CPF Gerado:</div>
+            
+            <div class="cpf-row">
+                <div class="cpf-label">Formatado:</div>
+                <div id="formattedCPF" class="cpf-value">
+                    <span class="tooltip">Clique para copiar</span>
+                    <span class="value">-</span>
+                </div>
+            </div>
+            
+            <div class="cpf-row">
+                <div class="cpf-label">Não formatado:</div>
+                <div id="unformattedCPF" class="cpf-value">
+                    <span class="tooltip">Clique para copiar</span>
+                    <span class="value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const vscode = acquireVsCodeApi();
+            
+            // UI Elements
+            const generateBtn = document.getElementById('generateBtn');
+            const formattedCPFElement = document.getElementById('formattedCPF').querySelector('.value');
+            const unformattedCPFElement = document.getElementById('unformattedCPF').querySelector('.value');
+            
+            let currentCPF = '';
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateCPF);
+            
+            // Set up click-to-copy for formatted CPF
+            document.getElementById('formattedCPF').addEventListener('click', function() {
+                copyCPF(formattedCPFElement.textContent);
+                showCopiedFeedback(this);
+            });
+            
+            // Set up click-to-copy for unformatted CPF
+            document.getElementById('unformattedCPF').addEventListener('click', function() {
+                copyCPF(unformattedCPFElement.textContent);
+                showCopiedFeedback(this);
+            });
+            
+            // Generate CPF function
+            function generateCPF() {
+                vscode.postMessage({
+                    command: 'generateCPF'
+                });
+            }
+            
+            // Copy CPF function
+            function copyCPF(cpf) {
+                if (cpf && cpf !== '-') {
+                    vscode.postMessage({
+                        command: 'copyCPF',
+                        cpf: cpf
+                    });
+                }
+            }
+            
+            // Show visual feedback when copied
+            function showCopiedFeedback(element) {
+                const tooltip = element.querySelector('.tooltip');
+                const originalText = tooltip.textContent;
+                
+                tooltip.textContent = 'Copiado!';
+                tooltip.style.opacity = '1';
+                
+                setTimeout(() => {
+                    tooltip.textContent = originalText;
+                    tooltip.style.opacity = '';
+                }, 1500);
+            }
+            
+            // Handle messages from the extension
+            window.addEventListener('message', event => {
+                const message = event.data;
+                
+                switch (message.command) {
+                    case 'cpfGenerated':
+                        const cpf = message.cpf;
+                        
+                        // The formatted CPF comes from the extension
+                        formattedCPFElement.textContent = cpf;
+                        
+                        // Remove formatting for the unformatted version
+                        unformattedCPFElement.textContent = cpf.replace(/[^\d]/g, '');
+                        break;
+                }
+            });
+            
+            // Generate a CPF on load
+            generateCPF();
+        }());
+    </script>
+</body>
+</html>
