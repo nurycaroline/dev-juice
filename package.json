@@ -20,6 +20,46 @@
         "command": "dev-helper.generateCNPJ",
         "title": "Gerar CNPJ Válido",
         "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.generateCPF",
+        "title": "Gerar CPF Válido",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.generateUUID",
+        "title": "Gerar UUID",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.insertCNPJFormatted",
+        "title": "Dev Helper: Inserir CNPJ Formatado",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.insertCNPJUnformatted",
+        "title": "Dev Helper: Inserir CNPJ Não Formatado",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.insertCPFFormatted",
+        "title": "Dev Helper: Inserir CPF Formatado",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.insertCPFUnformatted",
+        "title": "Dev Helper: Inserir CPF Não Formatado",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.insertUUIDFormatted",
+        "title": "Dev Helper: Inserir UUID Formatado",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.insertUUIDUnformatted",
+        "title": "Dev Helper: Inserir UUID Não Formatado",
+        "category": "Editor"
       }
     ],
     "viewsContainers": {

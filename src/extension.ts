@@ -5,6 +5,7 @@ import { DevHelperProvider } from './providers/devHelperProvider';
 import { CNPJPanelProvider } from './providers/cnpjPanelProvider';
 import { CPFPanelProvider } from './providers/cpfPanelProvider';
 import { UUIDPanelProvider } from './providers/uuidPanelProvider';
+import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -42,12 +43,50 @@ export function activate(context: vscode.ExtensionContext) {
 		UUIDPanelProvider.createOrShow(context.extensionUri);
 	});
 
+	// Comandos para inserir valores gerados diretamente no editor
+	
+	// Inserir CNPJ formatado
+	const insertCNPJFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertCNPJFormatted', () => {
+		insertCNPJ(true);
+	});
+
+	// Inserir CNPJ não formatado
+	const insertCNPJUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertCNPJUnformatted', () => {
+		insertCNPJ(false);
+	});
+
+	// Inserir CPF formatado
+	const insertCPFFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertCPFFormatted', () => {
+		insertCPF(true);
+	});
+
+	// Inserir CPF não formatado
+	const insertCPFUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertCPFUnformatted', () => {
+		insertCPF(false);
+	});
+
+	// Inserir UUID formatado
+	const insertUUIDFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertUUIDFormatted', () => {
+		insertUUID(true);
+	});
+
+	// Inserir UUID não formatado
+	const insertUUIDUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertUUIDUnformatted', () => {
+		insertUUID(false);
+	});
+
 	// Add the commands to the extension context
 	context.subscriptions.push(
 		helloWorldDisposable, 
 		generateCNPJDisposable,
 		generateCPFDisposable,
-		generateUUIDDisposable
+		generateUUIDDisposable,
+		insertCNPJFormattedDisposable,
+		insertCNPJUnformattedDisposable,
+		insertCPFFormattedDisposable,
+		insertCPFUnformattedDisposable,
+		insertUUIDFormattedDisposable,
+		insertUUIDUnformattedDisposable
 	);
 }
 
