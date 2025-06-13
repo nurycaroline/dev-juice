@@ -37,6 +37,51 @@
         "icon": "$(credit-card)"
       },
       {
+        "command": "dev-helper.formatJson",
+        "title": "Formatador JSON",
+        "icon": "$(json)"
+      },
+      {
+        "command": "dev-helper.base64Encoder",
+        "title": "Codificador Base64",
+        "icon": "$(lock)"
+      },
+      {
+        "command": "dev-helper.hashGenerator",
+        "title": "Gerador de Hash",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.emailValidator",
+        "title": "Validador de Email",
+        "icon": "$(mail)"
+      },
+      {
+        "command": "dev-helper.passwordGenerator",
+        "title": "Gerador de Senhas",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "dev-helper.colorConverter",
+        "title": "Conversor de Cores",
+        "icon": "$(color-mode)"
+      },
+      {
+        "command": "dev-helper.dateCalculator",
+        "title": "Calculadora de Data",
+        "icon": "$(calendar)"
+      },
+      {
+        "command": "dev-helper.urlEncoder",
+        "title": "URL Encoder/Decoder",
+        "icon": "$(link)"
+      },
+      {
+        "command": "dev-helper.qrReader",
+        "title": "QR Code Reader",
+        "icon": "$(device-camera)"
+      },
+      {
         "command": "dev-helper.insertCNPJFormatted",
         "title": "Dev Helper: Inserir CNPJ Formatado",
         "category": "Editor"

@@ -6,6 +6,9 @@ import { CNPJPanelProvider } from './providers/cnpjPanelProvider';
 import { CPFPanelProvider } from './providers/cpfPanelProvider';
 import { UUIDPanelProvider } from './providers/uuidPanelProvider';
 import { PixPanelProvider } from './providers/pixPanelProvider';
+import { JsonFormatterProvider } from './providers/jsonFormatterProvider';
+import { Base64EncoderProvider } from './providers/base64EncoderProvider';
+import { PasswordGeneratorProvider } from './providers/passwordGeneratorProvider';
 import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
@@ -49,6 +52,51 @@ export function activate(context: vscode.ExtensionContext) {
 		PixPanelProvider.createOrShow(context.extensionUri);
 	});
 
+	// Format JSON command
+	const formatJsonDisposable = vscode.commands.registerCommand('dev-helper.formatJson', () => {
+		JsonFormatterProvider.createOrShow(context.extensionUri);
+	});
+
+	// Base64 Encoder command
+	const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
+		Base64EncoderProvider.createOrShow(context.extensionUri);
+	});
+
+	// Hash Generator command (placeholder for now)
+	const hashGeneratorDisposable = vscode.commands.registerCommand('dev-helper.hashGenerator', () => {
+		vscode.window.showInformationMessage('Gerador de Hash em desenvolvimento...');
+	});
+
+	// Email Validator command (placeholder for now)
+	const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
+		vscode.window.showInformationMessage('Validador de Email em desenvolvimento...');
+	});
+
+	// Password Generator command
+	const passwordGeneratorDisposable = vscode.commands.registerCommand('dev-helper.passwordGenerator', () => {
+		PasswordGeneratorProvider.createOrShow(context.extensionUri);
+	});
+
+	// Color Converter command (placeholder for now)
+	const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
+		vscode.window.showInformationMessage('Conversor de Cores em desenvolvimento...');
+	});
+
+	// Date Calculator command (placeholder for now)
+	const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
+		vscode.window.showInformationMessage('Calculadora de Data em desenvolvimento...');
+	});
+
+	// URL Encoder command (placeholder for now)
+	const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
+		vscode.window.showInformationMessage('URL Encoder/Decoder em desenvolvimento...');
+	});
+
+	// QR Reader command (placeholder for now)
+	const qrReaderDisposable = vscode.commands.registerCommand('dev-helper.qrReader', () => {
+		vscode.window.showInformationMessage('QR Code Reader em desenvolvimento...');
+	});
+
 	// Comandos para inserir valores gerados diretamente no editor
 	
 	// Inserir CNPJ formatado
@@ -88,6 +136,15 @@ export function activate(context: vscode.ExtensionContext) {
 		generateCPFDisposable,
 		generateUUIDDisposable,
 		generatePixDisposable,
+		formatJsonDisposable,
+		base64EncoderDisposable,
+		hashGeneratorDisposable,
+		emailValidatorDisposable,
+		passwordGeneratorDisposable,
+		colorConverterDisposable,
+		dateCalculatorDisposable,
+		urlEncoderDisposable,
+		qrReaderDisposable,
 		insertCNPJFormattedDisposable,
 		insertCNPJUnformattedDisposable,
 		insertCPFFormattedDisposable,

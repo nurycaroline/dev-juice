@@ -54,20 +54,90 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'PIX QR Code',
                         'Gerar código PIX com QR Code',
                         'dev-helper.generatePix',
+                        vscode.TreeItemCollapsibleState.None                    ),
+                    // Add more generators here as needed
+                ]);
+            } else if (element.label === 'Utilitários') {
+                return Promise.resolve([
+                    new DevToolItem(
+                        'Formatador JSON',
+                        'Formatar e validar código JSON',
+                        'dev-helper.formatJson',
                         vscode.TreeItemCollapsibleState.None
                     ),
-                    // Add more generators here as needed
+                    new DevToolItem(
+                        'Codificador Base64',
+                        'Codificar/decodificar texto em Base64',
+                        'dev-helper.base64Encoder',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'Gerador de Hash',
+                        'Gerar hashes MD5, SHA1, SHA256',
+                        'dev-helper.hashGenerator',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'Validador de Email',
+                        'Validar formato de endereços de email',
+                        'dev-helper.emailValidator',
+                        vscode.TreeItemCollapsibleState.None                    ),
+                    // Add more utilities here as needed
+                ]);
+            } else if (element.label === 'Tools') {
+                return Promise.resolve([
+                    new DevToolItem(
+                        'Conversor de Cores',
+                        'Converter entre formatos de cores (HEX, RGB, HSL)',
+                        'dev-helper.colorConverter',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'Gerador de Senhas',
+                        'Gerar senhas seguras com opções customizáveis',
+                        'dev-helper.passwordGenerator',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'Calculadora de Data',
+                        'Calcular diferenças entre datas e formatos',
+                        'dev-helper.dateCalculator',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'URL Encoder/Decoder',
+                        'Codificar e decodificar URLs',
+                        'dev-helper.urlEncoder',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'QR Code Reader',
+                        'Ler e decodificar códigos QR',
+                        'dev-helper.qrReader',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    // Add more tools here as needed
                 ]);
             }
             return Promise.resolve([]);
-        } else {
-            // Root level items
+        } else {            // Root level items
             return Promise.resolve([
                 new DevToolItem(
                     'Geradores',
                     'Ferramentas para geração de dados',
                     '',
                     vscode.TreeItemCollapsibleState.Expanded
+                ),                new DevToolItem(
+                    'Utilitários',
+                    'Ferramentas utilitárias para desenvolvimento',
+                    '',
+                    vscode.TreeItemCollapsibleState.Collapsed
+                ),
+                new DevToolItem(
+                    'Tools',
+                    'Ferramentas especializadas para desenvolvedores',
+                    '',
+                    vscode.TreeItemCollapsibleState.Collapsed
                 ),
                 // Add more categories here as needed
             ]);

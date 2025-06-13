@@ -72,6 +72,32 @@ A extensão oferece comandos para inserção rápida de valores gerados diretame
 - `Dev Helper: Inserir UUID Formatado`
 - `Dev Helper: Inserir UUID Não Formatado`
 
+### 🔧 Tools
+
+Ferramentas especializadas para desenvolvedores:
+
+#### Gerador de Senhas 🔐
+
+Gera senhas seguras com opções totalmente customizáveis:
+
+- **Comprimento configurável**: De 4 a 128 caracteres
+- **Tipos de caracteres**:
+  - Letras minúsculas (a-z)
+  - Letras maiúsculas (A-Z)
+  - Números (0-9)
+  - Símbolos especiais (!@#$%^&*)
+  - Caracteres personalizados
+- **Indicador de força** da senha gerada
+- **Geração criptograficamente segura** usando Node.js crypto
+- **Interface intuitiva** com controles visuais
+
+#### Em Desenvolvimento
+
+- **Conversor de Cores**: Converter entre HEX, RGB, HSL
+- **Calculadora de Data**: Calcular diferenças entre datas
+- **URL Encoder/Decoder**: Codificar e decodificar URLs
+- **QR Code Reader**: Ler e decodificar códigos QR
+
 ## Requisitos
 
 Não há requisitos especiais para esta extensão.
