@@ -5,6 +5,7 @@ import { DevHelperProvider } from './providers/devHelperProvider';
 import { CNPJPanelProvider } from './providers/cnpjPanelProvider';
 import { CPFPanelProvider } from './providers/cpfPanelProvider';
 import { UUIDPanelProvider } from './providers/uuidPanelProvider';
+import { PixPanelProvider } from './providers/pixPanelProvider';
 import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
@@ -41,6 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
 	// Generate UUID command
 	const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
 		UUIDPanelProvider.createOrShow(context.extensionUri);
+	});
+
+	// Generate PIX command
+	const generatePixDisposable = vscode.commands.registerCommand('dev-helper.generatePix', () => {
+		PixPanelProvider.createOrShow(context.extensionUri);
 	});
 
 	// Comandos para inserir valores gerados diretamente no editor
@@ -81,6 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
 		generateCNPJDisposable,
 		generateCPFDisposable,
 		generateUUIDDisposable,
+		generatePixDisposable,
 		insertCNPJFormattedDisposable,
 		insertCNPJUnformattedDisposable,
 		insertCPFFormattedDisposable,

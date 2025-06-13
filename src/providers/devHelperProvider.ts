@@ -37,8 +37,7 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'CNPJ',
                         'Gerar número de CNPJ válido',
                         'dev-helper.generateCNPJ',
-                        vscode.TreeItemCollapsibleState.None
-                    ),
+                        vscode.TreeItemCollapsibleState.None                    ),
                     new DevToolItem(
                         'CPF',
                         'Gerar número de CPF válido',
@@ -49,6 +48,12 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'UUID',
                         'Gerar UUID (Identificador Único Universal)',
                         'dev-helper.generateUUID',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'PIX QR Code',
+                        'Gerar código PIX com QR Code',
+                        'dev-helper.generatePix',
                         vscode.TreeItemCollapsibleState.None
                     ),
                     // Add more generators here as needed

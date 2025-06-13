@@ -1,6 +1,6 @@
 # Dev Helper
 
-Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
+Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores brasileiros.
 
 ## Funcionalidades
 
@@ -12,12 +12,65 @@ Gera números de CNPJ válidos para uso em desenvolvimento e testes.
 - Clique em "Gerador de CNPJ" para gerar um novo CNPJ válido
 - Opção para copiar o CNPJ gerado para o clipboard
 
+### Gerador de CPF
+
+Gera números de CPF válidos para uso em desenvolvimento e testes.
+
+- Interface amigável para geração de CPFs
+- Validação automática dos números gerados
+- Opções de formatação
+
+### Gerador de UUID
+
+Gera identificadores únicos universais (UUID) para uso em aplicações.
+
+- Gera UUIDs no formato padrão
+- Opções para UUID formatado ou sem formatação
+
+### 🆕 Gerador de PIX QR Code
+
+Gera códigos PIX completos com QR Code para testes de pagamento.
+
+- **Chaves PIX suportadas**: CPF, CNPJ, email, telefone (+5511999999999) e chave aleatória (UUID)
+- **Validação automática** da chave PIX em tempo real
+- **Geração de QR Code** visual para teste
+- **Código PIX EMV** completo para integração
+- **Campos opcionais**: valor, descrição e ID da transação
+- **Download e cópia** do QR Code gerado
+- **Interface moderna** e intuitiva
+
+#### Como usar o Gerador de PIX
+
+1. Abra o painel do Dev Helper
+2. Clique em "PIX QR Code"
+3. Preencha os campos obrigatórios:
+   - **Chave PIX**: Sua chave PIX (CPF, CNPJ, email, etc.)
+   - **Nome do Recebedor**: Nome completo ou razão social
+   - **Cidade**: Cidade do recebedor
+4. Campos opcionais:
+   - **Valor**: Valor da transação em reais
+   - **Descrição**: Descrição da transação
+   - **ID da Transação**: Identificador único
+5. Clique em "Gerar PIX QR Code"
+6. O QR Code e código PIX serão gerados automaticamente
+
 ## Como usar
 
 1. Abra o painel do Dev Helper clicando no ícone de ferramentas na Activity Bar
 2. Selecione a ferramenta desejada na lista
-3. Para gerar um CNPJ, clique em "Gerador de CNPJ" e o número será exibido
-4. Clique em "Copiar para Clipboard" para copiar o número gerado
+3. Para geradores com interface gráfica, uma nova aba será aberta com o formulário
+4. Para inserção rápida no código, use os comandos de inserção disponíveis na paleta de comandos (Ctrl+Shift+P)
+
+## Comandos Disponíveis
+
+A extensão oferece comandos para inserção rápida de valores gerados diretamente no editor:
+
+- `Dev Helper: Inserir CNPJ Formatado`
+- `Dev Helper: Inserir CNPJ Não Formatado`
+- `Dev Helper: Inserir CPF Formatado`
+- `Dev Helper: Inserir CPF Não Formatado`
+- `Dev Helper: Inserir UUID Formatado`
+- `Dev Helper: Inserir UUID Não Formatado`
 
 ## Requisitos
 

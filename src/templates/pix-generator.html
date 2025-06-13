@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de PIX QR Code</title>
+    <style>
+        body {
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--vscode-titleBar-activeForeground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 3px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--vscode-focusBorder);
+        }
+
+        .button {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .button:active {
+            background-color: var(--vscode-button-activeBackground);
+        }
+
+        .button.secondary {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+
+        .button.secondary:hover {
+            background-color: var(--vscode-button-secondaryHoverBackground);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 5px;
+            border: 1px solid var(--vscode-panel-border);
+        }
+
+        .qr-code-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 5px;
+        }
+
+        .pix-code {
+            background-color: var(--vscode-textCodeBlock-background);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 3px;
+            padding: 10px;
+            font-family: var(--vscode-editor-font-family);
+            font-size: 12px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+
+        .error {
+            color: var(--vscode-errorForeground);
+            background-color: var(--vscode-inputValidation-errorBackground);
+            border: 1px solid var(--vscode-inputValidation-errorBorder);
+            padding: 8px;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+
+        .success {
+            color: var(--vscode-terminal-ansiGreen);
+            background-color: var(--vscode-diffEditor-insertedTextBackground);
+            border: 1px solid var(--vscode-diffEditor-insertedLineBackground);
+            padding: 8px;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+
+        .key-validation {
+            font-size: 12px;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .key-validation.valid {
+            color: var(--vscode-terminal-ansiGreen);
+            background-color: var(--vscode-diffEditor-insertedTextBackground);
+        }
+
+        .key-validation.invalid {
+            color: var(--vscode-errorForeground);
+            background-color: var(--vscode-inputValidation-errorBackground);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .copy-button {
+            font-size: 12px;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Gerador de PIX QR Code</h1>
+        
+        <form id="pixForm">
+            <div class="form-group">
+                <label for="pixKey">Chave PIX *</label>
+                <input type="text" id="pixKey" placeholder="CPF, CNPJ, email, telefone ou chave aleatória" required>
+                <div id="keyValidation" class="key-validation hidden"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="merchantName">Nome do Recebedor *</label>
+                <input type="text" id="merchantName" placeholder="Nome completo ou razão social" maxlength="25" required>
+            </div>
+
+            <div class="form-group">
+                <label for="merchantCity">Cidade *</label>
+                <input type="text" id="merchantCity" placeholder="Cidade do recebedor" maxlength="15" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="amount">Valor (R$)</label>
+                    <input type="number" id="amount" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="txId">ID da Transação</label>
+                    <input type="text" id="txId" placeholder="ID único (opcional)" maxlength="25">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrição</label>
+                <textarea id="description" placeholder="Descrição da transação (opcional)" maxlength="72" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="button">Gerar PIX QR Code</button>
+                <button type="button" class="button secondary" onclick="clearForm()">Limpar</button>
+            </div>
+        </form>
+
+        <div id="resultSection" class="result-section hidden">
+            <div id="loading" class="loading hidden">
+                Gerando QR Code...
+            </div>
+            
+            <div id="qrResult" class="hidden">
+                <h3>PIX Gerado com Sucesso! 🎉</h3>
+                
+                <div class="qr-code-container">
+                    <img id="qrCodeImage" class="qr-code-image" alt="QR Code PIX">
+                </div>                <div>
+                    <p><strong>Código PIX:</strong></p>
+                    <div class="pix-code" id="pixCodeText"></div>
+                    <button type="button" class="button copy-button" onclick="copyPixCode()">📋 Copiar Código</button>
+                </div>
+
+                <div>
+                    <button type="button" class="button" onclick="downloadQRCode()">💾 Baixar QR Code</button>
+                    <button type="button" class="button secondary" onclick="copyQRCodeImage()">📋 Copiar Imagem</button>
+                </div>
+            </div>
+
+            <div id="error" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        let currentPixCode = '';
+        let currentQRDataUrl = '';
+
+        // Validação da chave PIX em tempo real
+        document.getElementById('pixKey').addEventListener('input', function() {
+            const pixKey = this.value.trim();
+            const validation = document.getElementById('keyValidation');
+            
+            if (pixKey) {
+                vscode.postMessage({
+                    command: 'validatePixKey',
+                    pixKey: pixKey
+                });
+            } else {
+                validation.className = 'key-validation hidden';
+            }
+        });
+
+        // Submissão do formulário
+        document.getElementById('pixForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const pixKey = document.getElementById('pixKey').value.trim();
+            const merchantName = document.getElementById('merchantName').value.trim();
+            const merchantCity = document.getElementById('merchantCity').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const description = document.getElementById('description').value.trim();
+            const txId = document.getElementById('txId').value.trim();
+
+            if (!pixKey || !merchantName || !merchantCity) {
+                showError('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            showLoading();
+            
+            vscode.postMessage({
+                command: 'generatePix',
+                data: {
+                    pixKey,
+                    merchantName,
+                    merchantCity,
+                    amount: amount > 0 ? amount : undefined,
+                    description: description || undefined,
+                    txId: txId || undefined
+                }
+            });
+        });
+
+        // Receber mensagens do VS Code
+        window.addEventListener('message', event => {
+            const message = event.data;
+            
+            switch (message.command) {
+                case 'pixKeyValidation':
+                    showPixKeyValidation(message.validation);
+                    break;
+                case 'pixGenerated':
+                    showPixResult(message.pixCode, message.qrCodeDataUrl);
+                    break;
+                case 'error':
+                    showError(message.message);
+                    break;
+            }
+        });
+
+        function showPixKeyValidation(validation) {
+            const validationDiv = document.getElementById('keyValidation');
+            validationDiv.className = `key-validation ${validation.isValid ? 'valid' : 'invalid'}`;
+            validationDiv.textContent = validation.isValid 
+                ? `✅ Chave PIX válida (${validation.type})`
+                : '❌ Formato de chave PIX inválido';
+        }
+
+        function showLoading() {
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('qrResult').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
+        }
+
+        function showPixResult(pixCode, qrCodeDataUrl) {
+            currentPixCode = pixCode;
+            currentQRDataUrl = qrCodeDataUrl;
+            
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('qrResult').classList.remove('hidden');
+            document.getElementById('error').classList.add('hidden');
+            
+            document.getElementById('qrCodeImage').src = qrCodeDataUrl;
+            document.getElementById('pixCodeText').textContent = pixCode;
+        }
+
+        function showError(message) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('qrResult').classList.add('hidden');
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('error').textContent = message;
+        }
+
+        function clearForm() {
+            document.getElementById('pixForm').reset();
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('keyValidation').className = 'key-validation hidden';
+        }
+
+        function copyPixCode() {
+            if (currentPixCode) {
+                vscode.postMessage({
+                    command: 'copyToClipboard',
+                    text: currentPixCode
+                });
+            }
+        }
+
+        function copyQRCodeImage() {
+            if (currentQRDataUrl) {
+                vscode.postMessage({
+                    command: 'copyImageToClipboard',
+                    dataUrl: currentQRDataUrl
+                });
+            }
+        }
+
+        function downloadQRCode() {
+            if (currentQRDataUrl) {
+                vscode.postMessage({
+                    command: 'downloadQRCode',
+                    dataUrl: currentQRDataUrl
+                });
+            }
+        }
+    </script>
+</body>
+</html>
