@@ -1,0 +1,518 @@
+import * as vscode from 'vscode';
+import * as crypto from 'crypto';
+
+/**
+ * Provider for the Hash Generator webview panel
+ */
+export class HashGeneratorProvider {
+    /**
+     * Track the currently active panels. Only allow a single panel to exist at a time.
+     */
+    public static currentPanel: HashGeneratorProvider | undefined;
+
+    public static readonly viewType = 'hashGenerator';
+
+    private readonly _panel: vscode.WebviewPanel;
+    private readonly _extensionUri: vscode.Uri;
+    private readonly _disposables: vscode.Disposable[] = [];
+
+    public static createOrShow(extensionUri: vscode.Uri) {
+        const column = vscode.window.activeTextEditor
+            ? vscode.window.activeTextEditor.viewColumn
+            : undefined;
+
+        // If we already have a panel, show it.
+        if (HashGeneratorProvider.currentPanel) {
+            HashGeneratorProvider.currentPanel._panel.reveal(column);
+            return;
+        }
+
+        // Otherwise, create a new panel.
+        const panel = vscode.window.createWebviewPanel(
+            HashGeneratorProvider.viewType,
+            'Gerador de Hash',
+            column ?? vscode.ViewColumn.One,
+            {
+                enableScripts: true,
+                localResourceRoots: [
+                    vscode.Uri.joinPath(extensionUri, 'src', 'templates')
+                ]
+            }
+        );
+
+        HashGeneratorProvider.currentPanel = new HashGeneratorProvider(panel, extensionUri);
+    }
+
+    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+        this._panel = panel;
+        this._extensionUri = extensionUri;
+
+        // Set the webview's initial html content
+        this._update();
+
+        // Listen for when the panel is disposed
+        this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+
+        // Handle messages from the webview
+        this._panel.webview.onDidReceiveMessage(
+            message => {
+                switch (message.command) {
+                    case 'generateHash':
+                        this._generateHash(message.text, message.algorithm);
+                        return;
+                    case 'generateAllHashes':
+                        this._generateAllHashes(message.text);
+                        return;
+                    case 'copyToClipboard':
+                        this._copyToClipboard(message.text);
+                        return;
+                }
+            },
+            null,
+            this._disposables
+        );
+    }
+
+    /**
+     * Generates a hash for the given text and algorithm
+     */
+    private _generateHash(text: string, algorithm: string) {
+        try {
+            const hash = crypto.createHash(algorithm).update(text, 'utf8').digest('hex');
+            
+            this._panel.webview.postMessage({
+                command: 'hashGenerated',
+                algorithm: algorithm,
+                hash: hash,
+                success: true
+            });
+        } catch (error) {
+            console.error('Erro ao gerar hash:', error);
+            this._panel.webview.postMessage({
+                command: 'hashGenerated',
+                algorithm: algorithm,
+                error: error instanceof Error ? error.message : 'Erro desconhecido',
+                success: false
+            });
+        }
+    }
+
+    /**
+     * Generates all supported hashes for the given text
+     */
+    private _generateAllHashes(text: string) {
+        const algorithms = ['md5', 'sha1', 'sha256', 'sha512'];
+        const hashes: { [key: string]: string } = {};
+        
+        try {
+            for (const algorithm of algorithms) {
+                hashes[algorithm] = crypto.createHash(algorithm).update(text, 'utf8').digest('hex');
+            }
+            
+            this._panel.webview.postMessage({
+                command: 'allHashesGenerated',
+                hashes: hashes,
+                success: true
+            });
+        } catch (error) {
+            console.error('Erro ao gerar hashes:', error);
+            this._panel.webview.postMessage({
+                command: 'allHashesGenerated',
+                error: error instanceof Error ? error.message : 'Erro desconhecido',
+                success: false
+            });
+        }
+    }
+
+    /**
+     * Copies text to clipboard
+     */
+    private async _copyToClipboard(text: string) {
+        try {
+            await vscode.env.clipboard.writeText(text);
+            vscode.window.showInformationMessage('Hash copiado para a área de transferência!');
+        } catch (error) {
+            console.error('Erro ao copiar hash:', error);
+            vscode.window.showErrorMessage('Erro ao copiar hash para a área de transferência.');
+        }
+    }
+
+    public dispose() {
+        HashGeneratorProvider.currentPanel = undefined;
+
+        // Clean up our resources
+        this._panel.dispose();
+
+        while (this._disposables.length) {
+            const x = this._disposables.pop();
+            if (x) {
+                x.dispose();
+            }
+        }
+    }
+
+    private _update() {
+        const webview = this._panel.webview;
+        this._panel.webview.html = this._getHtmlForWebview(webview);
+    }
+
+    private _getHtmlForWebview(webview: vscode.Webview) {
+        return `
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Gerador de Hash</title>
+                <style>
+                    body {
+                        font-family: var(--vscode-font-family);
+                        font-size: var(--vscode-font-size);
+                        color: var(--vscode-foreground);
+                        background-color: var(--vscode-editor-background);
+                        padding: 20px;
+                        margin: 0;
+                    }
+
+                    .container {
+                        max-width: 800px;
+                        margin: 0 auto;
+                    }
+
+                    h1 {
+                        color: var(--vscode-titleBar-activeForeground);
+                        margin-bottom: 20px;
+                        text-align: center;
+                    }
+
+                    .form-group {
+                        margin-bottom: 15px;
+                    }
+
+                    label {
+                        display: block;
+                        margin-bottom: 5px;
+                        font-weight: bold;
+                        color: var(--vscode-descriptionForeground);
+                    }
+
+                    textarea, select {
+                        width: 100%;
+                        padding: 8px 12px;
+                        border: 1px solid var(--vscode-input-border);
+                        border-radius: 3px;
+                        background-color: var(--vscode-input-background);
+                        color: var(--vscode-input-foreground);
+                        font-family: var(--vscode-editor-font-family);
+                        font-size: 12px;
+                        box-sizing: border-box;
+                        resize: vertical;
+                    }
+
+                    textarea {
+                        height: 120px;
+                    }
+
+                    textarea:focus, select:focus {
+                        outline: none;
+                        border-color: var(--vscode-focusBorder);
+                    }
+
+                    .button {
+                        background-color: var(--vscode-button-background);
+                        color: var(--vscode-button-foreground);
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        font-family: var(--vscode-font-family);
+                        font-size: var(--vscode-font-size);
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                    }
+
+                    .button:hover {
+                        background-color: var(--vscode-button-hoverBackground);
+                    }
+
+                    .button.secondary {
+                        background-color: var(--vscode-button-secondaryBackground);
+                        color: var(--vscode-button-secondaryForeground);
+                    }
+
+                    .button.secondary:hover {
+                        background-color: var(--vscode-button-secondaryHoverBackground);
+                    }
+
+                    .hash-result {
+                        margin-bottom: 20px;
+                        padding: 15px;
+                        background-color: var(--vscode-editor-inactiveSelectionBackground);
+                        border-radius: 5px;
+                        border: 1px solid var(--vscode-panel-border);
+                    }
+
+                    .hash-result h3 {
+                        margin-top: 0;
+                        margin-bottom: 10px;
+                        color: var(--vscode-descriptionForeground);
+                        text-transform: uppercase;
+                    }
+
+                    .hash-value {
+                        background-color: var(--vscode-textCodeBlock-background);
+                        border: 1px solid var(--vscode-panel-border);
+                        border-radius: 3px;
+                        padding: 10px;
+                        font-family: var(--vscode-editor-font-family);
+                        font-size: 12px;
+                        word-break: break-all;
+                        margin-bottom: 10px;
+                        position: relative;
+                    }
+
+                    .copy-button {
+                        font-size: 12px;
+                        padding: 5px 10px;
+                    }
+
+                    .error {
+                        color: var(--vscode-errorForeground);
+                        background-color: var(--vscode-inputValidation-errorBackground);
+                        border: 1px solid var(--vscode-inputValidation-errorBorder);
+                        padding: 8px;
+                        border-radius: 3px;
+                        margin: 10px 0;
+                    }
+
+                    .success {
+                        color: var(--vscode-terminal-ansiGreen);
+                        background-color: var(--vscode-diffEditor-insertedTextBackground);
+                        border: 1px solid var(--vscode-diffEditor-insertedLineBackground);
+                        padding: 8px;
+                        border-radius: 3px;
+                        margin: 10px 0;
+                    }
+
+                    .hidden {
+                        display: none;
+                    }
+
+                    .algorithm-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 15px;
+                        margin-bottom: 20px;
+                    }
+
+                    .info-box {
+                        background-color: var(--vscode-textCodeBlock-background);
+                        border: 1px solid var(--vscode-panel-border);
+                        border-radius: 3px;
+                        padding: 15px;
+                        margin-bottom: 20px;
+                    }
+
+                    .info-box h3 {
+                        margin-top: 0;
+                        color: var(--vscode-descriptionForeground);
+                    }
+
+                    .info-box ul {
+                        margin: 0;
+                        padding-left: 20px;
+                    }
+
+                    .info-box li {
+                        margin-bottom: 5px;
+                    }
+
+                    @media (max-width: 600px) {
+                        .algorithm-grid {
+                            grid-template-columns: 1fr;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>🔐 Gerador de Hash</h1>
+                    
+                    <div class="info-box">
+                        <h3>Sobre Algoritmos de Hash</h3>
+                        <ul>
+                            <li><strong>MD5:</strong> Rápido, mas não seguro para criptografia (128 bits)</li>
+                            <li><strong>SHA-1:</strong> Melhor que MD5, mas obsoleto para segurança (160 bits)</li>
+                            <li><strong>SHA-256:</strong> Seguro e amplamente usado (256 bits)</li>
+                            <li><strong>SHA-512:</strong> Mais seguro, hash maior (512 bits)</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputText">Texto para Gerar Hash</label>
+                        <textarea id="inputText" placeholder="Digite ou cole o texto aqui..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="algorithm">Algoritmo de Hash</label>
+                        <select id="algorithm">
+                            <option value="md5">MD5</option>
+                            <option value="sha1">SHA-1</option>
+                            <option value="sha256" selected>SHA-256</option>
+                            <option value="sha512">SHA-512</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="button" onclick="generateSingleHash()">Gerar Hash</button>
+                        <button type="button" class="button secondary" onclick="generateAllHashes()">Gerar Todos os Hashes</button>
+                        <button type="button" class="button secondary" onclick="clearAll()">Limpar</button>
+                    </div>
+
+                    <div id="messages"></div>
+
+                    <div id="singleResult" class="hidden">
+                        <div class="hash-result">
+                            <h3 id="singleAlgorithm"></h3>
+                            <div class="hash-value" id="singleHash"></div>
+                            <button type="button" class="button copy-button" onclick="copySingleHash()">📋 Copiar</button>
+                        </div>
+                    </div>
+
+                    <div id="allResults" class="hidden">
+                        <h2>Todos os Hashes Gerados</h2>
+                        <div class="algorithm-grid">
+                            <div class="hash-result">
+                                <h3>MD5</h3>
+                                <div class="hash-value" id="md5Hash"></div>
+                                <button type="button" class="button copy-button" onclick="copyHash('md5')">📋 Copiar</button>
+                            </div>
+                            <div class="hash-result">
+                                <h3>SHA-1</h3>
+                                <div class="hash-value" id="sha1Hash"></div>
+                                <button type="button" class="button copy-button" onclick="copyHash('sha1')">📋 Copiar</button>
+                            </div>
+                            <div class="hash-result">
+                                <h3>SHA-256</h3>
+                                <div class="hash-value" id="sha256Hash"></div>
+                                <button type="button" class="button copy-button" onclick="copyHash('sha256')">📋 Copiar</button>
+                            </div>
+                            <div class="hash-result">
+                                <h3>SHA-512</h3>
+                                <div class="hash-value" id="sha512Hash"></div>
+                                <button type="button" class="button copy-button" onclick="copyHash('sha512')">📋 Copiar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    const vscode = acquireVsCodeApi();
+                    let currentHashes = {};
+                    let currentSingleHash = '';
+
+                    function generateSingleHash() {
+                        const text = document.getElementById('inputText').value;
+                        const algorithm = document.getElementById('algorithm').value;
+                        
+                        if (!text.trim()) {
+                            showMessage('Por favor, insira um texto para gerar o hash.', 'error');
+                            return;
+                        }
+
+                        vscode.postMessage({
+                            command: 'generateHash',
+                            text: text,
+                            algorithm: algorithm
+                        });
+                    }
+
+                    function generateAllHashes() {
+                        const text = document.getElementById('inputText').value;
+                        
+                        if (!text.trim()) {
+                            showMessage('Por favor, insira um texto para gerar os hashes.', 'error');
+                            return;
+                        }
+
+                        vscode.postMessage({
+                            command: 'generateAllHashes',
+                            text: text
+                        });
+                    }
+
+                    function copySingleHash() {
+                        if (currentSingleHash) {
+                            vscode.postMessage({
+                                command: 'copyToClipboard',
+                                text: currentSingleHash
+                            });
+                        }
+                    }
+
+                    function copyHash(algorithm) {
+                        if (currentHashes[algorithm]) {
+                            vscode.postMessage({
+                                command: 'copyToClipboard',
+                                text: currentHashes[algorithm]
+                            });
+                        }
+                    }
+
+                    function clearAll() {
+                        document.getElementById('inputText').value = '';
+                        document.getElementById('singleResult').classList.add('hidden');
+                        document.getElementById('allResults').classList.add('hidden');
+                        clearMessages();
+                        currentHashes = {};
+                        currentSingleHash = '';
+                    }
+
+                    function showMessage(message, type) {
+                        const messagesDiv = document.getElementById('messages');
+                        messagesDiv.innerHTML = \`<div class="\${type}">\${message}</div>\`;
+                    }
+
+                    function clearMessages() {
+                        document.getElementById('messages').innerHTML = '';
+                    }
+
+                    // Receber mensagens do VS Code
+                    window.addEventListener('message', event => {
+                        const message = event.data;
+                        
+                        switch (message.command) {
+                            case 'hashGenerated':
+                                if (message.success) {
+                                    currentSingleHash = message.hash;
+                                    document.getElementById('singleAlgorithm').textContent = message.algorithm.toUpperCase();
+                                    document.getElementById('singleHash').textContent = message.hash;
+                                    document.getElementById('singleResult').classList.remove('hidden');
+                                    document.getElementById('allResults').classList.add('hidden');
+                                    clearMessages();
+                                } else {
+                                    showMessage('Erro ao gerar hash: ' + message.error, 'error');
+                                }
+                                break;
+                            case 'allHashesGenerated':
+                                if (message.success) {
+                                    currentHashes = message.hashes;
+                                    document.getElementById('md5Hash').textContent = message.hashes.md5;
+                                    document.getElementById('sha1Hash').textContent = message.hashes.sha1;
+                                    document.getElementById('sha256Hash').textContent = message.hashes.sha256;
+                                    document.getElementById('sha512Hash').textContent = message.hashes.sha512;
+                                    document.getElementById('allResults').classList.remove('hidden');
+                                    document.getElementById('singleResult').classList.add('hidden');
+                                    clearMessages();
+                                } else {
+                                    showMessage('Erro ao gerar hashes: ' + message.error, 'error');
+                                }
+                                break;
+                        }
+                    });
+                </script>
+            </body>
+            </html>
+        `;
+    }
+}

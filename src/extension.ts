@@ -9,6 +9,7 @@ import { PixPanelProvider } from './providers/pixPanelProvider';
 import { JsonFormatterProvider } from './providers/jsonFormatterProvider';
 import { Base64EncoderProvider } from './providers/base64EncoderProvider';
 import { PasswordGeneratorProvider } from './providers/passwordGeneratorProvider';
+import { HashGeneratorProvider } from './providers/hashGeneratorProvider';
 import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
@@ -62,9 +63,9 @@ export function activate(context: vscode.ExtensionContext) {
 		Base64EncoderProvider.createOrShow(context.extensionUri);
 	});
 
-	// Hash Generator command (placeholder for now)
+	// Hash Generator command
 	const hashGeneratorDisposable = vscode.commands.registerCommand('dev-helper.hashGenerator', () => {
-		vscode.window.showInformationMessage('Gerador de Hash em desenvolvimento...');
+		HashGeneratorProvider.createOrShow(context.extensionUri);
 	});
 
 	// Email Validator command (placeholder for now)
