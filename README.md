@@ -57,7 +57,7 @@ Decodifica códigos PIX QR para análise e verificação.
 #### Como usar o PIX Decoder
 
 1. Abra o painel do Dev Helper
-2. Navegue até "Tools" → "PIX Decoder"
+2. Navegue até "Utilitários" → "PIX Decoder"
 3. Escolha o método:
    - **Aba "Código PIX"**: Cole a string completa do código PIX
    - **Aba "Imagem QR"**: Faça upload de uma foto do QR Code
@@ -212,9 +212,6 @@ Esta extensão não adiciona configurações adicionais.
 - ✅ **Formatador JSON**: Formatação e minificação de JSON
 - ✅ **Codificador Base64**: Codificação e decodificação
 - ✅ **Validador de Email**: Validação individual e em lote
-
-#### Tools
-
 - ✅ **Conversor de Cores**: HEX, RGB, HSL, HSV
 - ✅ **Calculadora de Data**: Diferenças e cálculos temporais
 - ✅ **URL Encoder/Decoder**: Codificação segura de URLs

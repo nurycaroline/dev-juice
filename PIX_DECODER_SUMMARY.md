@@ -80,7 +80,7 @@ A nova ferramenta de decodificação de códigos PIX QR oferece:
 ## 🎯 **Como Usar**
 
 1. Abra o painel Dev Helper na barra lateral
-2. Navegue até "Tools" → "PIX Decoder"
+2. Navegue até "Utilitários" → "PIX Decoder"
 3. Escolha o método:
    - **Aba "Código PIX"**: Cole a string PIX
    - **Aba "Imagem QR"**: Faça upload da imagem
@@ -89,9 +89,9 @@ A nova ferramenta de decodificação de códigos PIX QR oferece:
 
 ## 🚀 **Ferramentas Completas da Extensão**
 
-A extensão Dev Helper agora possui **13 ferramentas** completas:
+A extensão Dev Helper agora possui **14 ferramentas** organizadas em **2 seções**:
 
-### **Geradores (5)**
+### **Geradores (6)**
 1. CNPJ Generator
 2. CPF Generator  
 3. UUID Generator
@@ -99,17 +99,15 @@ A extensão Dev Helper agora possui **13 ferramentas** completas:
 5. Hash Generator
 6. Password Generator
 
-### **Utilitários (3)**
-7. JSON Formatter
-8. Base64 Encoder
-9. Email Validator
-
-### **Tools (5)**
-10. Color Converter
-11. Date Calculator
-12. URL Encoder/Decoder
-13. QR Code Reader
-14. **PIX QR Code Decoder** (NOVO!)
+### **Utilitários (8)**
+1. JSON Formatter
+2. Base64 Encoder
+3. Email Validator
+4. Color Converter
+5. Date Calculator
+6. URL Encoder/Decoder
+7. QR Code Reader
+8. **PIX QR Code Decoder** (NOVO!)
 
 ---
 
