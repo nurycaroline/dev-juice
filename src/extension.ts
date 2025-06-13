@@ -10,6 +10,11 @@ import { JsonFormatterProvider } from './providers/jsonFormatterProvider';
 import { Base64EncoderProvider } from './providers/base64EncoderProvider';
 import { PasswordGeneratorProvider } from './providers/passwordGeneratorProvider';
 import { HashGeneratorProvider } from './providers/hashGeneratorProvider';
+import { EmailValidatorProvider } from './providers/emailValidatorProvider';
+import { ColorConverterProvider } from './providers/colorConverterProvider';
+import { DateCalculatorProvider } from './providers/dateCalculatorProvider';
+import { UrlEncoderProvider } from './providers/urlEncoderProvider';
+import { QrReaderProvider } from './providers/qrReaderProvider';
 import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
@@ -68,9 +73,9 @@ export function activate(context: vscode.ExtensionContext) {
 		HashGeneratorProvider.createOrShow(context.extensionUri);
 	});
 
-	// Email Validator command (placeholder for now)
+	// Email Validator command
 	const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
-		vscode.window.showInformationMessage('Validador de Email em desenvolvimento...');
+		EmailValidatorProvider.createOrShow(context.extensionUri);
 	});
 
 	// Password Generator command
@@ -78,24 +83,24 @@ export function activate(context: vscode.ExtensionContext) {
 		PasswordGeneratorProvider.createOrShow(context.extensionUri);
 	});
 
-	// Color Converter command (placeholder for now)
+	// Color Converter command
 	const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
-		vscode.window.showInformationMessage('Conversor de Cores em desenvolvimento...');
+		ColorConverterProvider.createOrShow(context.extensionUri);
 	});
 
-	// Date Calculator command (placeholder for now)
+	// Date Calculator command
 	const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
-		vscode.window.showInformationMessage('Calculadora de Data em desenvolvimento...');
+		DateCalculatorProvider.createOrShow(context.extensionUri);
 	});
 
-	// URL Encoder command (placeholder for now)
+	// URL Encoder command
 	const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
-		vscode.window.showInformationMessage('URL Encoder/Decoder em desenvolvimento...');
+		UrlEncoderProvider.createOrShow(context.extensionUri);
 	});
 
-	// QR Reader command (placeholder for now)
+	// QR Reader command
 	const qrReaderDisposable = vscode.commands.registerCommand('dev-helper.qrReader', () => {
-		vscode.window.showInformationMessage('QR Code Reader em desenvolvimento...');
+		QrReaderProvider.createOrShow(context.extensionUri);
 	});
 
 	// Comandos para inserir valores gerados diretamente no editor
@@ -156,4 +161,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	// Extension cleanup if needed
+}

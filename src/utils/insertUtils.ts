@@ -88,3 +88,25 @@ export async function insertPixCode(pixData: PixData): Promise<void> {
     vscode.window.showErrorMessage(`Erro ao gerar PIX: ${errorMessage}`);
   }
 }
+
+/**
+ * Insere um texto genérico no cursor do editor de texto ativo
+ * @param text Texto a ser inserido
+ */
+export async function insertText(text: string): Promise<void> {
+  const editor = vscode.window.activeTextEditor;
+
+  if (!editor) {
+    vscode.window.showErrorMessage('Nenhum editor ativo para inserir o texto.');
+    return;
+  }
+
+  // Insere o texto em cada seleção do editor
+  editor.edit(editBuilder => {
+    editor.selections.forEach(selection => {
+      editBuilder.replace(selection, text);
+    });
+  });
+
+  vscode.window.showInformationMessage('Texto inserido com sucesso!');
+}

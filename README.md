@@ -76,7 +76,36 @@ A extensão oferece comandos para inserção rápida de valores gerados diretame
 
 Ferramentas especializadas para desenvolvedores:
 
-#### Gerador de Senhas 🔐
+### Validador de Email 📧
+
+Valida endereços de email com análise detalhada:
+
+- **Validação RFC 5322** compliant
+- **Verificações detalhadas**:
+  - Formato básico e avançado
+  - Validação da parte local (antes do @)
+  - Validação do domínio (depois do @)
+  - Detecção de erros comuns
+- **Sugestões inteligentes** para correção de erros de digitação
+- **Identificação de provedores** populares (Gmail, Yahoo, Outlook, etc.)
+- **Validação em lote** para múltiplos emails
+- **Relatório estatístico** com resumo dos resultados
+- **Validação em tempo real** durante a digitação
+
+### Gerador de Hash 🔐
+
+Gera hashes criptográficos com múltiplos algoritmos:
+
+- **Algoritmos suportados**:
+  - MD5 (não recomendado para segurança)
+  - SHA-1 (obsoleto para segurança)
+  - SHA-256 (recomendado)
+  - SHA-512 (alta segurança)
+- **Geração individual** ou de **todos os hashes** simultaneamente
+- **Informações detalhadas** sobre cada algoritmo
+- **Interface intuitiva** com explicações sobre segurança
+
+### Gerador de Senhas 🔐
 
 Gera senhas seguras com opções totalmente customizáveis:
 
@@ -91,12 +120,45 @@ Gera senhas seguras com opções totalmente customizáveis:
 - **Geração criptograficamente segura** usando Node.js crypto
 - **Interface intuitiva** com controles visuais
 
-#### Em Desenvolvimento
+### Conversor de Cores 🎨
 
-- **Conversor de Cores**: Converter entre HEX, RGB, HSL
-- **Calculadora de Data**: Calcular diferenças entre datas
-- **URL Encoder/Decoder**: Codificar e decodificar URLs
-- **QR Code Reader**: Ler e decodificar códigos QR
+Converte cores entre diferentes formatos:
+
+- **Formatos suportados**: HEX, RGB, HSL, HSV
+- **Conversão bidirecional** entre todos os formatos
+- **Interface visual** com preview da cor
+- **Cópia rápida** para área de transferência
+- **Validação** de formatos de entrada
+
+### Calculadora de Data 📅
+
+Ferramenta completa para cálculos com datas:
+
+- **Diferença entre datas**: Calcule diferenças em anos, meses, dias, horas, etc.
+- **Adicionar/Subtrair tempo**: Adicione ou subtraia períodos de uma data
+- **Múltiplos formatos**: Suporte a vários formatos de data
+- **Data atual automaticamente carregada**
+- **Resultados detalhados** com explicações
+
+### URL Encoder/Decoder 🔗
+
+Codifica e decodifica URLs de forma segura:
+
+- **Codificação automática** de caracteres especiais
+- **Decodificação** de URLs codificadas
+- **Processamento em tempo real** com debounce
+- **Suporte completo** a caracteres UTF-8
+- **Exemplos práticos** para facilitar o uso
+
+### QR Code Reader 📱
+
+Lê e decodifica códigos QR de imagens:
+
+- **Múltiplos formatos de imagem**: PNG, JPG, JPEG, GIF, BMP, WEBP
+- **Drag & Drop** para upload fácil
+- **Preview da imagem** carregada
+- **Detecção automática** de QR Codes
+- **Biblioteca jsQR** para alta precisão
 
 ## Requisitos
 
@@ -107,6 +169,41 @@ Não há requisitos especiais para esta extensão.
 Esta extensão não adiciona configurações adicionais.
 
 ## Release Notes
+
+### 1.0.0
+
+**Funcionalidades Principais Implementadas:**
+
+#### Geradores
+
+- ✅ **Gerador de CNPJ**: Números válidos com formatação opcional
+- ✅ **Gerador de CPF**: Números válidos com formatação opcional  
+- ✅ **Gerador de UUID**: Identificadores únicos universais (v4)
+- ✅ **Gerador de PIX**: Códigos QR para pagamentos brasileiros
+- ✅ **Gerador de Hash**: MD5, SHA-1, SHA-256, SHA-512
+- ✅ **Gerador de Senhas**: Senhas seguras customizáveis
+
+#### Utilitários
+
+- ✅ **Formatador JSON**: Formatação e minificação de JSON
+- ✅ **Codificador Base64**: Codificação e decodificação
+- ✅ **Validador de Email**: Validação individual e em lote
+
+#### Tools
+
+- ✅ **Conversor de Cores**: HEX, RGB, HSL, HSV
+- ✅ **Calculadora de Data**: Diferenças e cálculos temporais
+- ✅ **URL Encoder/Decoder**: Codificação segura de URLs
+- ✅ **QR Code Reader**: Leitura de códigos QR de imagens
+
+**Melhorias:**
+
+- Interface moderna e responsiva
+- Painel principal organizado em seções
+- Comandos para inserção direta no editor
+- Suporte completo a copy/paste
+- Validações abrangentes
+- Documentação completa
 
 ### 0.0.1
 
