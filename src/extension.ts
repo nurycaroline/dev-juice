@@ -16,6 +16,7 @@ import { DateCalculatorProvider } from './providers/dateCalculatorProvider';
 import { UrlEncoderProvider } from './providers/urlEncoderProvider';
 import { QrReaderProvider } from './providers/qrReaderProvider';
 import { PixDecoderProvider } from './providers/pixDecoderProvider';
+import { TextFormatterProvider } from './providers/textFormatterProvider';
 import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
 
 // This method is called when your extension is activated
@@ -109,6 +110,11 @@ export function activate(context: vscode.ExtensionContext) {
 		PixDecoderProvider.createOrShow(context.extensionUri);
 	});
 
+	// Text Formatter command
+	const textFormatterDisposable = vscode.commands.registerCommand('dev-helper.textFormatter', () => {
+		TextFormatterProvider.createOrShow(context.extensionUri);
+	});
+
 	// Comandos para inserir valores gerados diretamente no editor
 	
 	// Inserir CNPJ formatado
@@ -158,6 +164,7 @@ export function activate(context: vscode.ExtensionContext) {
 		urlEncoderDisposable,
 		qrReaderDisposable,
 		pixDecoderDisposable,
+		textFormatterDisposable,
 		insertCNPJFormattedDisposable,
 		insertCNPJUnformattedDisposable,
 		insertCPFFormattedDisposable,

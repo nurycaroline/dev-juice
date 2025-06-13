@@ -184,6 +184,26 @@ Lê e decodifica códigos QR de imagens:
 - **Detecção automática** de QR Codes
 - **Biblioteca jsQR** para alta precisão
 
+### Formatação de texto 📝
+
+Converte texto entre diferentes formatos de caso e estilo:
+
+- **Formatos suportados**:
+  - **Sentence case**: Primeira letra maiúscula, resto minúsculo
+  - **snake_case**: Palavras separadas por underscore
+  - **camelCase**: Primeira palavra minúscula, demais com inicial maiúscula
+  - **kebab-case**: Palavras separadas por hífen
+  - **PascalCase**: Todas as palavras com inicial maiúscula
+  - **lower case**: Tudo em minúsculas
+  - **UPPER CASE**: Tudo em maiúsculas
+  - **Capitalized Case**: Cada Palavra Com Inicial Maiúscula
+  - **aLtErNaTiNg cAsE**: Alternância entre maiúscula e minúscula
+  - **InVeRsE CaSe**: Inverte o caso de cada caractere
+- **Conversão em tempo real** durante a digitação
+- **Cópia rápida** dos textos formatados
+- **Inserção direta no editor** ativo
+- **Interface intuitiva** com múltiplas opções
+
 ## Requisitos
 
 Não há requisitos especiais para esta extensão.
@@ -212,6 +232,7 @@ Esta extensão não adiciona configurações adicionais.
 - ✅ **Formatador JSON**: Formatação e minificação de JSON
 - ✅ **Codificador Base64**: Codificação e decodificação
 - ✅ **Validador de Email**: Validação individual e em lote
+- ✅ **Formatação de texto**: Conversão entre formatos de caso (camelCase, snake_case, etc.)
 - ✅ **Conversor de Cores**: HEX, RGB, HSL, HSV
 - ✅ **Calculadora de Data**: Diferenças e cálculos temporais
 - ✅ **URL Encoder/Decoder**: Codificação segura de URLs

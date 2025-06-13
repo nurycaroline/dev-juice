@@ -108,11 +108,16 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'Ler e decodificar códigos QR',
                         'dev-helper.qrReader',
                         vscode.TreeItemCollapsibleState.None
-                    ),
-                    new DevToolItem(
+                    ),                    new DevToolItem(
                         'PIX Decoder',
                         'Decodificar códigos PIX QR',
                         'dev-helper.pixDecoder',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'Formatação de texto',
+                        'Formatar texto em vários estilos (camelCase, snake_case, etc.)',
+                        'dev-helper.textFormatter',
                         vscode.TreeItemCollapsibleState.None
                     ),                    // Add more utilities here as needed
                 ]);

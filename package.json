@@ -87,6 +87,11 @@
         "icon": "$(zap)"
       },
       {
+        "command": "dev-helper.textFormatter",
+        "title": "Formatação de Texto",
+        "icon": "$(symbol-string)"
+      },
+      {
         "command": "dev-helper.insertCNPJFormatted",
         "title": "Dev Helper: Inserir CNPJ Formatado",
         "category": "Editor"
