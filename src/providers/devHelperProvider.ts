@@ -49,8 +49,7 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'Gerar UUID (Identificador Único Universal)',
                         'dev-helper.generateUUID',
                         vscode.TreeItemCollapsibleState.None
-                    ),
-                    new DevToolItem(
+                    ),                    new DevToolItem(
                         'PIX QR Code',
                         'Gerar código PIX com QR Code',
                         'dev-helper.generatePix',
@@ -109,11 +108,16 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
                         'Codificar e decodificar URLs',
                         'dev-helper.urlEncoder',
                         vscode.TreeItemCollapsibleState.None
-                    ),
-                    new DevToolItem(
+                    ),                    new DevToolItem(
                         'QR Code Reader',
                         'Ler e decodificar códigos QR',
                         'dev-helper.qrReader',
+                        vscode.TreeItemCollapsibleState.None
+                    ),
+                    new DevToolItem(
+                        'PIX Decoder',
+                        'Decodificar códigos PIX QR',
+                        'dev-helper.pixDecoder',
                         vscode.TreeItemCollapsibleState.None
                     ),
                     // Add more tools here as needed

@@ -39,6 +39,30 @@ Gera códigos PIX completos com QR Code para testes de pagamento.
 - **Download e cópia** do QR Code gerado
 - **Interface moderna** e intuitiva
 
+### 🔍 PIX QR Code Decoder
+
+Decodifica códigos PIX QR para análise e verificação.
+
+- **Decodificação de string PIX**: Cole o código PIX completo para análise
+- **Leitura de imagem QR**: Upload de fotos/screenshots de QR Codes PIX
+- **Informações detalhadas**:
+  - Dados do beneficiário (nome, cidade, chave PIX)
+  - Informações da transação (valor, moeda, categoria)
+  - Dados adicionais (identificador, referências)
+  - Validação de integridade (CRC16)
+- **Detecção automática** do tipo de chave PIX
+- **Interface em abas** para diferentes métodos de entrada
+- **Exportação** das informações decodificadas
+
+#### Como usar o PIX Decoder
+
+1. Abra o painel do Dev Helper
+2. Navegue até "Tools" → "PIX Decoder"
+3. Escolha o método:
+   - **Aba "Código PIX"**: Cole a string completa do código PIX
+   - **Aba "Imagem QR"**: Faça upload de uma foto do QR Code
+4. Visualize todas as informações decodificadas organizadamente
+
 #### Como usar o Gerador de PIX
 
 1. Abra o painel do Dev Helper
@@ -195,6 +219,7 @@ Esta extensão não adiciona configurações adicionais.
 - ✅ **Calculadora de Data**: Diferenças e cálculos temporais
 - ✅ **URL Encoder/Decoder**: Codificação segura de URLs
 - ✅ **QR Code Reader**: Leitura de códigos QR de imagens
+- ✅ **PIX QR Code Decoder**: Decodificação completa de códigos PIX
 
 **Melhorias:**
 

@@ -82,6 +82,11 @@
         "icon": "$(device-camera)"
       },
       {
+        "command": "dev-helper.pixDecoder",
+        "title": "PIX QR Code Decoder",
+        "icon": "$(zap)"
+      },
+      {
         "command": "dev-helper.insertCNPJFormatted",
         "title": "Dev Helper: Inserir CNPJ Formatado",
         "category": "Editor"
