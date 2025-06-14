@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Email</title>
+    <style>
+        body {
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--vscode-titleBar-activeForeground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--vscode-panel-border);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .tab.active {
+            color: var(--vscode-foreground);
+            border-bottom-color: var(--vscode-button-background);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 3px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--vscode-focusBorder);
+        }
+
+        .button {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .button.secondary {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+
+        .validation-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid var(--vscode-panel-border);
+        }
+
+        .validation-result.valid {
+            background-color: var(--vscode-diffEditor-insertedTextBackground);
+            border-color: var(--vscode-terminal-ansiGreen);
+        }
+
+        .validation-result.invalid {
+            background-color: var(--vscode-inputValidation-errorBackground);
+            border-color: var(--vscode-errorForeground);
+        }
+
+        .email-display {
+            font-family: var(--vscode-editor-font-family);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .details-section {
+            margin-top: 15px;
+        }
+
+        .details-section h4 {
+            margin: 10px 0 5px 0;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .details-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .details-list li {
+            padding: 3px 0;
+            border-left: 3px solid transparent;
+            padding-left: 10px;
+        }
+
+        .details-list li.info {
+            border-left-color: var(--vscode-terminal-ansiBlue);
+        }
+
+        .details-list li.warning {
+            border-left-color: var(--vscode-terminal-ansiYellow);
+        }
+
+        .details-list li.suggestion {
+            border-left-color: var(--vscode-terminal-ansiGreen);
+        }
+
+        .bulk-summary {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background-color: var(--vscode-textCodeBlock-background);
+            border-radius: 3px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--vscode-terminal-ansiBlue);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .bulk-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 3px;
+        }
+
+        .bulk-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--vscode-panel-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .bulk-item:last-child {
+            border-bottom: none;
+        }
+
+        .bulk-email {
+            flex: 1;
+            font-family: var(--vscode-editor-font-family);
+            margin-right: 10px;
+        }
+
+        .bulk-status {
+            font-size: 18px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .copy-button {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Validador de Email</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('single')">Validação Única</div>
+            <div class="tab" onclick="switchTab('bulk')">Validação em Lote</div>
+        </div>
+
+        <!-- Single Email Validation -->
+        <div id="singleTab" class="tab-content active">
+            <div class="form-group">
+                <label for="singleEmail">Endereço de Email</label>
+                <input type="email" id="singleEmail" placeholder="digite@exemplo.com" 
+                       oninput="validateEmailRealTime()">
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="button" onclick="validateSingleEmail()">Validar Email</button>
+                <button type="button" class="button secondary" onclick="clearSingle()">Limpar</button>
+            </div>
+
+            <div id="singleResult" class="hidden"></div>
+        </div>
+
+        <!-- Bulk Email Validation -->
+        <div id="bulkTab" class="tab-content">
+            <div class="form-group">
+                <label for="bulkEmails">Lista de Emails (separados por vírgula, ponto e vírgula ou quebra de linha)</label>
+                <textarea id="bulkEmails" placeholder="email1@exemplo.com, email2@exemplo.com&#10;email3@exemplo.com"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="button" onclick="validateBulkEmails()">Validar Lista</button>
+                <button type="button" class="button secondary" onclick="clearBulk()">Limpar</button>
+            </div>
+
+            <div id="bulkSummary" class="hidden"></div>
+            <div id="bulkResults" class="hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        let currentValidationTimer = null;
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function validateEmailRealTime() {
+            clearTimeout(currentValidationTimer);
+            currentValidationTimer = setTimeout(() => {
+                const email = document.getElementById('singleEmail').value.trim();
+                if (email) {
+                    validateSingleEmail();
+                } else {
+                    document.getElementById('singleResult').classList.add('hidden');
+                }
+            }, 500);
+        }
+
+        function validateSingleEmail() {
+            const email = document.getElementById('singleEmail').value.trim();
+            if (!email) {
+                return;
+            }
+
+            vscode.postMessage({
+                command: 'validateEmail',
+                email: email
+            });
+        }
+
+        function validateBulkEmails() {
+            const emails = document.getElementById('bulkEmails').value.trim();
+            if (!emails) {
+                return;
+            }
+
+            vscode.postMessage({
+                command: 'validateBulkEmails',
+                emails: emails
+            });
+        }
+
+        function clearSingle() {
+            document.getElementById('singleEmail').value = '';
+            document.getElementById('singleResult').classList.add('hidden');
+        }
+
+        function clearBulk() {
+            document.getElementById('bulkEmails').value = '';
+            document.getElementById('bulkSummary').classList.add('hidden');
+            document.getElementById('bulkResults').classList.add('hidden');
+        }
+
+        function copyValidEmails(emails) {
+            const validEmails = emails.filter(r => r.validation.isValid).map(r => r.email);
+            vscode.postMessage({
+                command: 'copyToClipboard',
+                text: validEmails.join(', ')
+            });
+        }
+
+        function displaySingleResult(email, validation) {
+            const resultDiv = document.getElementById('singleResult');
+            const isValid = validation.isValid;
+            
+            let html = `
+                <div class="validation-result ${isValid ? 'valid' : 'invalid'}">
+                    <div class="email-display">
+                        <span class="status-icon">${isValid ? '✅' : '❌'}</span>
+                        ${email}
+                    </div>
+                    <div><strong>Status:</strong> ${validation.format}</div>
+            `;
+
+            if (validation.details.length > 0) {
+                html += '<div class="details-section"><h4>Detalhes:</h4><ul class="details-list">';
+                validation.details.forEach(detail => {
+                    html += `<li class="info">ℹ️ ${detail}</li>`;
+                });
+                html += '</ul></div>';
+            }
+
+            if (validation.warnings.length > 0) {
+                html += '<div class="details-section"><h4>Avisos:</h4><ul class="details-list">';
+                validation.warnings.forEach(warning => {
+                    html += `<li class="warning">⚠️ ${warning}</li>`;
+                });
+                html += '</ul></div>';
+            }
+
+            if (validation.suggestions.length > 0) {
+                html += '<div class="details-section"><h4>Sugestões:</h4><ul class="details-list">';
+                validation.suggestions.forEach(suggestion => {
+                    html += `<li class="suggestion">💡 ${suggestion}</li>`;
+                });
+                html += '</ul></div>';
+            }
+
+            html += '</div>';
+            resultDiv.innerHTML = html;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function displayBulkResults(results, summary) {
+            // Display summary
+            const summaryDiv = document.getElementById('bulkSummary');
+            summaryDiv.innerHTML = `
+                <div class="bulk-summary">
+                    <h3>Resumo da Validação</h3>
+                    <div class="summary-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">${summary.total}</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${summary.valid}</div>
+                            <div class="stat-label">Válidos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${summary.invalid}</div>
+                            <div class="stat-label">Inválidos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">${summary.validPercentage}%</div>
+                            <div class="stat-label">Taxa de Sucesso</div>
+                        </div>
+                    </div>
+                    <button type="button" class="button copy-button" onclick="copyValidEmails(${JSON.stringify(results).replace(/"/g, '&quot;')})">
+                        📋 Copiar Emails Válidos
+                    </button>
+                </div>
+            `;
+            summaryDiv.classList.remove('hidden');
+
+            // Display results
+            const resultsDiv = document.getElementById('bulkResults');
+            let html = '<div class="bulk-results">';
+            
+            results.forEach(result => {
+                const isValid = result.validation.isValid;
+                html += `
+                    <div class="bulk-item">
+                        <div class="bulk-email">${result.email}</div>
+                        <div class="bulk-status">${isValid ? '✅' : '❌'}</div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+            resultsDiv.classList.remove('hidden');
+        }
+
+        // Receber mensagens do VS Code
+        window.addEventListener('message', event => {
+            const message = event.data;
+            
+            switch (message.command) {
+                case 'emailValidated':
+                    if (message.success) {
+                        displaySingleResult(message.email, message.validation);
+                    }
+                    break;
+                case 'bulkEmailsValidated':
+                    if (message.success) {
+                        displayBulkResults(message.results, message.summary);
+                    }
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

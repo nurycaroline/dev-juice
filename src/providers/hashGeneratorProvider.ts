@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
+import { loadTemplate } from '../utils/templateLoader';
 
 /**
  * Provider for the Hash Generator webview panel
@@ -149,11 +150,9 @@ export class HashGeneratorProvider {
                 x.dispose();
             }
         }
-    }
-
-    private _update() {
+    }    private _update() {
         const webview = this._panel.webview;
-        this._panel.webview.html = this._getHtmlForWebview(webview);
+        this._panel.webview.html = loadTemplate(this._extensionUri, 'hash-generator');
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {

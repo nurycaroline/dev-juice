@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Cores</title>
+    <style>
+        body {
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--vscode-titleBar-activeForeground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-section {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 3px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--vscode-focusBorder);
+        }
+
+        .button {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .button.secondary {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+
+        .color-preview {
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 5px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .results-section {
+            margin-top: 20px;
+        }
+
+        .color-format {
+            background-color: var(--vscode-textCodeBlock-background);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 3px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .format-info {
+            flex: 1;
+        }
+
+        .format-name {
+            font-weight: bold;
+            color: var(--vscode-descriptionForeground);
+            margin-bottom: 5px;
+        }
+
+        .format-value {
+            font-family: var(--vscode-editor-font-family);
+            font-size: 14px;
+            color: var(--vscode-foreground);
+        }
+
+        .copy-button {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+
+        .error {
+            color: var(--vscode-errorForeground);
+            background-color: var(--vscode-inputValidation-errorBackground);
+            border: 1px solid var(--vscode-inputValidation-errorBorder);
+            padding: 8px;
+            border-radius: 3px;
+            margin: 10px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .input-group .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .input-group .button {
+            margin-bottom: 0;
+        }
+
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Conversor de Cores</h1>
+        
+        <div class="input-section">
+            <div class="form-group">
+                <label for="inputFormat">Formato de Entrada</label>
+                <select id="inputFormat" onchange="updateInputPlaceholder()">
+                    <option value="hex">HEX (#RRGGBB)</option>
+                    <option value="rgb">RGB (rgb(r, g, b))</option>
+                    <option value="hsl">HSL (hsl(h, s%, l%))</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="colorInput">Valor da Cor</label>
+                    <div class="color-picker-container">
+                        <input type="text" id="colorInput" placeholder="#FF5733" 
+                               oninput="convertColorRealTime()">
+                        <input type="color" id="colorPicker" onchange="updateFromColorPicker()">
+                    </div>
+                </div>
+                <button type="button" class="button" onclick="convertColor()">Converter</button>
+                <button type="button" class="button secondary" onclick="clearAll()">Limpar</button>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error hidden"></div>
+
+        <div id="resultsSection" class="results-section hidden">
+            <div class="color-preview" id="colorPreview"></div>
+
+            <div class="color-format">
+                <div class="format-info">
+                    <div class="format-name">HEX</div>
+                    <div class="format-value" id="hexValue"></div>
+                </div>
+                <button type="button" class="button copy-button" onclick="copyValue('hex')">📋 Copiar</button>
+            </div>
+
+            <div class="color-format">
+                <div class="format-info">
+                    <div class="format-name">RGB</div>
+                    <div class="format-value" id="rgbValue"></div>
+                </div>
+                <button type="button" class="button copy-button" onclick="copyValue('rgb')">📋 Copiar</button>
+            </div>
+
+            <div class="color-format">
+                <div class="format-info">
+                    <div class="format-name">HSL</div>
+                    <div class="format-value" id="hslValue"></div>
+                </div>
+                <button type="button" class="button copy-button" onclick="copyValue('hsl')">📋 Copiar</button>
+            </div>
+
+            <div class="color-format">
+                <div class="format-info">
+                    <div class="format-name">HSV</div>
+                    <div class="format-value" id="hsvValue"></div>
+                </div>
+                <button type="button" class="button copy-button" onclick="copyValue('hsv')">📋 Copiar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        let currentResult = null;
+        let conversionTimer = null;
+
+        function updateInputPlaceholder() {
+            const format = document.getElementById('inputFormat').value;
+            const input = document.getElementById('colorInput');
+            
+            switch (format) {
+                case 'hex':
+                    input.placeholder = '#FF5733';
+                    break;
+                case 'rgb':
+                    input.placeholder = 'rgb(255, 87, 51)';
+                    break;
+                case 'hsl':
+                    input.placeholder = 'hsl(9, 100%, 60%)';
+                    break;
+            }
+        }
+
+        function updateFromColorPicker() {
+            const colorPicker = document.getElementById('colorPicker');
+            const colorInput = document.getElementById('colorInput');
+            const format = document.getElementById('inputFormat');
+            
+            format.value = 'hex';
+            colorInput.value = colorPicker.value.toUpperCase();
+            updateInputPlaceholder();
+            convertColor();
+        }
+
+        function convertColorRealTime() {
+            clearTimeout(conversionTimer);
+            conversionTimer = setTimeout(() => {
+                const color = document.getElementById('colorInput').value.trim();
+                if (color) {
+                    convertColor();
+                }
+            }, 500);
+        }
+
+        function convertColor() {
+            const color = document.getElementById('colorInput').value.trim();
+            const format = document.getElementById('inputFormat').value;
+
+            if (!color) {
+                showError('Por favor, insira uma cor para converter.');
+                return;
+            }
+
+            hideError();
+            
+            vscode.postMessage({
+                command: 'convertColor',
+                color: color,
+                fromFormat: format
+            });
+        }
+
+        function copyValue(format) {
+            if (currentResult && currentResult[format]) {
+                vscode.postMessage({
+                    command: 'copyToClipboard',
+                    text: currentResult[format]
+                });
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('colorInput').value = '';
+            document.getElementById('colorPicker').value = '#000000';
+            document.getElementById('resultsSection').classList.add('hidden');
+            hideError();
+            currentResult = null;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        function displayResult(result) {
+            currentResult = result;
+            
+            // Update color preview
+            const preview = document.getElementById('colorPreview');
+            preview.style.backgroundColor = result.hex;
+
+            // Update values
+            document.getElementById('hexValue').textContent = result.hex;
+            document.getElementById('rgbValue').textContent = result.rgb;
+            document.getElementById('hslValue').textContent = result.hsl;
+            document.getElementById('hsvValue').textContent = result.hsv;
+
+            // Update color picker
+            document.getElementById('colorPicker').value = result.hex;
+
+            // Show results
+            document.getElementById('resultsSection').classList.remove('hidden');
+            hideError();
+        }
+
+        // Receber mensagens do VS Code
+        window.addEventListener('message', event => {
+            const message = event.data;
+            
+            switch (message.command) {
+                case 'colorConverted':
+                    if (message.success) {
+                        displayResult(message.result);
+                    } else {
+                        showError(message.error);
+                    }
+                    break;
+            }
+        });
+
+        // Initialize
+        updateInputPlaceholder();
+    </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Reader</title>
+    <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            background-color: var(--vscode-editor-background);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--vscode-foreground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            background-color: var(--vscode-input-background);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: var(--vscode-foreground);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            padding-bottom: 10px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--vscode-panel-border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--vscode-input-background);
+        }
+
+        .upload-area:hover {
+            border-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-list-hoverBackground);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-list-hoverBackground);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+
+        .secondary-btn:hover {
+            background-color: var(--vscode-button-secondaryHoverBackground);
+        }
+
+        .result-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--vscode-textCodeBlock-background);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            display: none;
+        }
+
+        .result-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--vscode-foreground);
+            word-break: break-all;
+            white-space: pre-wrap;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: var(--vscode-input-background);
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 4px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        .info {
+            background-color: var(--vscode-editorInfo-background);
+            border-left: 4px solid var(--vscode-editorInfo-foreground);
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .error {
+            background-color: var(--vscode-editorError-background);
+            border-left: 4px solid var(--vscode-editorError-foreground);
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .success {
+            background-color: var(--vscode-editorInfo-background);
+            border-left: 4px solid var(--vscode-charts-green);
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--vscode-foreground);
+        }
+
+        .spinner {
+            border: 2px solid var(--vscode-panel-border);
+            border-top: 2px solid var(--vscode-focusBorder);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .upload-area {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 QR Code Reader</h1>
+        
+        <div class="section">
+            <h2>📤 Upload de Imagem</h2>
+            
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()" 
+                 ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                <div class="upload-icon">📁</div>
+                <p><strong>Clique aqui ou arraste uma imagem com QR Code</strong></p>
+                <p>Formatos suportados: PNG, JPG, JPEG, GIF, BMP, WEBP</p>
+            </div>
+            
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+            
+            <div class="info">
+                <strong>ℹ️ Como usar:</strong> Selecione ou arraste uma imagem contendo um QR Code. O leitor irá automaticamente detectar e decodificar o conteúdo do código.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Resultado</h2>
+            
+            <div id="loadingArea" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                Processando QR Code...
+            </div>
+            
+            <div id="resultArea" class="result-area">
+                <div id="imagePreview"></div>
+                <div id="resultStatus"></div>
+                <div id="resultText" class="result-text"></div>
+                <div class="button-group">
+                    <button class="secondary-btn" onclick="copyResult()">Copiar Texto</button>
+                    <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
+                    <button onclick="clearResult()">Limpar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>💡 Dica:</strong> QR Codes podem conter URLs, texto, informações de contato, dados Wi-Fi, e muito mais. Este leitor suporta todos os tipos de QR Codes padrão.
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        let currentResult = '';
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                processFile(file);
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function processFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Por favor, selecione um arquivo de imagem válido.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    showLoading();
+                    decodeQRCode(img, e.target.result);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function decodeQRCode(img, imageSrc) {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                ctx.drawImage(img, 0, 0);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                hideLoading();
+                
+                if (code) {
+                    showResult(code.data, imageSrc, true);
+                } else {
+                    showResult('', imageSrc, false);
+                }
+            } catch (error) {
+                hideLoading();
+                showError('Erro ao processar a imagem: ' + error.message);
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingArea').style.display = 'block';
+            document.getElementById('resultArea').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingArea').style.display = 'none';
+        }
+
+        function showResult(text, imageSrc, success) {
+            const resultArea = document.getElementById('resultArea');
+            const imagePreview = document.getElementById('imagePreview');
+            const resultStatus = document.getElementById('resultStatus');
+            const resultText = document.getElementById('resultText');
+            
+            // Show image preview
+            imagePreview.innerHTML = '<img src="' + imageSrc + '" class="image-preview" alt="QR Code Image">';
+            
+            if (success && text) {
+                currentResult = text;
+                resultStatus.innerHTML = '<div class="success"><strong>✅ QR Code decodificado com sucesso!</strong></div>';
+                resultText.textContent = text;
+                resultText.style.display = 'block';
+            } else {
+                currentResult = '';
+                resultStatus.innerHTML = '<div class="error"><strong>❌ Nenhum QR Code encontrado na imagem.</strong><br>Verifique se a imagem contém um QR Code válido e se está bem visível.</div>';
+                resultText.style.display = 'none';
+            }
+            
+            resultArea.style.display = 'block';
+        }
+
+        function showError(message) {
+            const resultArea = document.getElementById('resultArea');
+            const imagePreview = document.getElementById('imagePreview');
+            const resultStatus = document.getElementById('resultStatus');
+            const resultText = document.getElementById('resultText');
+            
+            imagePreview.innerHTML = '';
+            resultStatus.innerHTML = '<div class="error"><strong>❌ Erro:</strong> ' + message + '</div>';
+            resultText.style.display = 'none';
+            resultArea.style.display = 'block';
+            currentResult = '';
+        }
+
+        function copyResult() {
+            if (currentResult) {
+                vscode.postMessage({
+                    command: 'copyToClipboard',
+                    text: currentResult
+                });
+            }
+        }
+
+        function insertResult() {
+            if (currentResult) {
+                vscode.postMessage({
+                    command: 'insertInEditor',
+                    text: currentResult
+                });
+            }
+        }
+
+        function clearResult() {
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            currentResult = '';
+        }
+
+        // Remove dragover class when dragging leaves the area
+        document.addEventListener('dragleave', function(e) {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+                document.querySelector('.upload-area').classList.remove('dragover');
+            }
+        });
+    </script>
+</body>
+</html>
