@@ -69,8 +69,8 @@ export class TextFormatterProvider {
 
         try {
             const formattedText = TextFormatterProvider.formatText(text, format);
-            panel.webview.postMessage({ 
-                command: 'formatResult', 
+            panel.webview.postMessage({
+                command: 'formatResult',
                 result: formattedText,
                 format: format
             });
@@ -161,7 +161,7 @@ export class TextFormatterProvider {
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(' ');
-    }    private static toAlternatingCase(text: string): string {
+    } private static toAlternatingCase(text: string): string {
         const letterRegex = /[a-zA-Z]/;
         return text
             .split('')
@@ -425,6 +425,21 @@ export class TextFormatterProvider {
                     </div>
                 </div>
 
+                <div id="resultArea" class="result-area">
+                    <h3>📋 Resultado</h3>
+                    <div id="resultPreview" class="result-preview"></div>
+                    
+                    <div class="button-group">
+                        <button class="secondary-btn" onclick="copyResult()">Copiar</button>
+                        <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
+                        <button onclick="clearResult()">Limpar</button>
+                    </div>
+                </div>
+
+                <div class="info">
+                    <strong>💡 Dica:</strong> Esta ferramenta é útil para converter nomes de variáveis, funções, constantes e outros elementos de código entre diferentes convenções de nomenclatura.
+                </div>
+                
                 <div class="section">
                     <h2>🎨 Formatos Disponíveis</h2>
                     <p>Clique em um formato para aplicar ao seu texto:</p>
@@ -490,21 +505,6 @@ export class TextFormatterProvider {
                             <div class="format-description">Inverte maiúsculas e minúsculas</div>
                         </div>
                     </div>
-                </div>
-
-                <div id="resultArea" class="result-area">
-                    <h3>📋 Resultado</h3>
-                    <div id="resultPreview" class="result-preview"></div>
-                    
-                    <div class="button-group">
-                        <button class="secondary-btn" onclick="copyResult()">Copiar</button>
-                        <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
-                        <button onclick="clearResult()">Limpar</button>
-                    </div>
-                </div>
-
-                <div class="info">
-                    <strong>💡 Dica:</strong> Esta ferramenta é útil para converter nomes de variáveis, funções, constantes e outros elementos de código entre diferentes convenções de nomenclatura.
                 </div>
             </div>
 
