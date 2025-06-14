@@ -45,7 +45,7 @@ export class PixGenerator {
     payload += '010212'
         
     // Merchant Account Information (chave PIX)
-    const merchantAccountInfo = this.buildMerchantAccountInfo(data.pixKey, data.description, data.txId)
+    const merchantAccountInfo = this.buildMerchantAccountInfo(data.pixKey, data.description)
     payload += '26' + this.formatLength(merchantAccountInfo.length) + merchantAccountInfo
         
     // Merchant Category Code (obrigatório, 0000 para pessoa física)

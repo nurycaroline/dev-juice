@@ -2,22 +2,26 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
 import { DevHelperProvider } from './providers/devHelperProvider'
-import { CNPJPanelProvider } from './providers/cnpjPanelProvider'
-import { CPFPanelProvider } from './providers/cpfPanelProvider'
-import { UUIDPanelProvider } from './providers/uuidPanelProvider'
-import { PixPanelProvider } from './providers/pixPanelProvider'
-import { JsonFormatterProvider } from './providers/jsonFormatterProvider'
-import { Base64EncoderProvider } from './providers/base64EncoderProvider'
-import { PasswordGeneratorProvider } from './providers/passwordGeneratorProvider'
-import { HashGeneratorProvider } from './providers/hashGeneratorProvider'
-import { EmailValidatorProvider } from './providers/emailValidatorProvider'
-import { ColorConverterProvider } from './providers/colorConverterProvider'
-import { DateCalculatorProvider } from './providers/dateCalculatorProvider'
-import { UrlEncoderProvider } from './providers/urlEncoderProvider'
-import { QrReaderProvider } from './providers/qrReaderProvider'
-import { PixDecoderProvider } from './providers/pixDecoderProvider'
-import { TextFormatterProvider } from './providers/textFormatterProvider'
 import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeCase, formatToCamelCase, formatToKebabCase, formatToPascalCase, formatToLowerCase, formatToUpperCase, formatToCapitalizedCase, formatToAlternatingCase, formatToInverseCase } from './utils/insertUtils'
+
+// Lazy imports para providers (só carregados quando necessário)
+const lazyProviders = {
+  get CNPJPanelProvider () { return require('./providers/cnpjPanelProvider').CNPJPanelProvider },
+  get CPFPanelProvider () { return require('./providers/cpfPanelProvider').CPFPanelProvider },
+  get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider },
+  get PixPanelProvider () { return require('./providers/pixPanelProvider').PixPanelProvider },
+  get JsonFormatterProvider () { return require('./providers/jsonFormatterProvider').JsonFormatterProvider },
+  get Base64EncoderProvider () { return require('./providers/base64EncoderProvider').Base64EncoderProvider },
+  get PasswordGeneratorProvider () { return require('./providers/passwordGeneratorProvider').PasswordGeneratorProvider },
+  get HashGeneratorProvider () { return require('./providers/hashGeneratorProvider').HashGeneratorProvider },
+  get EmailValidatorProvider () { return require('./providers/emailValidatorProvider').EmailValidatorProvider },
+  get ColorConverterProvider () { return require('./providers/colorConverterProvider').ColorConverterProvider },
+  get DateCalculatorProvider () { return require('./providers/dateCalculatorProvider').DateCalculatorProvider },
+  get UrlEncoderProvider () { return require('./providers/urlEncoderProvider').UrlEncoderProvider },
+  get QrReaderProvider () { return require('./providers/qrReaderProvider').QrReaderProvider },
+  get PixDecoderProvider () { return require('./providers/pixDecoderProvider').PixDecoderProvider },
+  get TextFormatterProvider () { return require('./providers/textFormatterProvider').TextFormatterProvider }
+}
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -42,77 +46,77 @@ export function activate (context: vscode.ExtensionContext) {
 
   // Generate CNPJ command - now opens the webview panel
   const generateCNPJDisposable = vscode.commands.registerCommand('dev-helper.generateCNPJ', () => {
-    CNPJPanelProvider.createOrShow(context.extensionUri)
+    lazyProviders.CNPJPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Generate CPF command
   const generateCPFDisposable = vscode.commands.registerCommand('dev-helper.generateCPF', () => {
-    CPFPanelProvider.createOrShow(context.extensionUri)
+    lazyProviders.CPFPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Generate UUID command
   const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
-    UUIDPanelProvider.createOrShow(context.extensionUri)
+    lazyProviders.UUIDPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Generate PIX command
   const generatePixDisposable = vscode.commands.registerCommand('dev-helper.generatePix', () => {
-    PixPanelProvider.createOrShow(context.extensionUri)
+    lazyProviders.PixPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Format JSON command
   const formatJsonDisposable = vscode.commands.registerCommand('dev-helper.formatJson', () => {
-    JsonFormatterProvider.createOrShow(context.extensionUri)
+    lazyProviders.JsonFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // Base64 Encoder command
   const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
-    Base64EncoderProvider.createOrShow(context.extensionUri)
+    lazyProviders.Base64EncoderProvider.createOrShow(context.extensionUri)
   })
 
   // Hash Generator command
   const hashGeneratorDisposable = vscode.commands.registerCommand('dev-helper.hashGenerator', () => {
-    HashGeneratorProvider.createOrShow(context.extensionUri)
+    lazyProviders.HashGeneratorProvider.createOrShow(context.extensionUri)
   })
 
   // Email Validator command
   const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
-    EmailValidatorProvider.createOrShow(context.extensionUri)
+    lazyProviders.EmailValidatorProvider.createOrShow(context.extensionUri)
   })
 
   // Password Generator command
   const passwordGeneratorDisposable = vscode.commands.registerCommand('dev-helper.passwordGenerator', () => {
-    PasswordGeneratorProvider.createOrShow(context.extensionUri)
+    lazyProviders.PasswordGeneratorProvider.createOrShow(context.extensionUri)
   })
 
   // Color Converter command
   const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
-    ColorConverterProvider.createOrShow(context.extensionUri)
+    lazyProviders.ColorConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Date Calculator command
   const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
-    DateCalculatorProvider.createOrShow(context.extensionUri)
+    lazyProviders.DateCalculatorProvider.createOrShow(context.extensionUri)
   })
 
   // URL Encoder command
   const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
-    UrlEncoderProvider.createOrShow(context.extensionUri)
+    lazyProviders.UrlEncoderProvider.createOrShow(context.extensionUri)
   })
 
   // QR Reader command
   const qrReaderDisposable = vscode.commands.registerCommand('dev-helper.qrReader', () => {
-    QrReaderProvider.createOrShow(context.extensionUri)
+    lazyProviders.QrReaderProvider.createOrShow(context.extensionUri)
   })
 
   // PIX Decoder command
   const pixDecoderDisposable = vscode.commands.registerCommand('dev-helper.pixDecoder', () => {
-    PixDecoderProvider.createOrShow(context.extensionUri)
+    lazyProviders.PixDecoderProvider.createOrShow(context.extensionUri)
   })
 
   // Text Formatter command
   const textFormatterDisposable = vscode.commands.registerCommand('dev-helper.textFormatter', () => {
-    TextFormatterProvider.createOrShow(context.extensionUri)
+    lazyProviders.TextFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // Comandos de formatação de texto para seleção no editor

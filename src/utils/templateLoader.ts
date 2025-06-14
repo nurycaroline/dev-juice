@@ -1,22 +1,14 @@
 import * as vscode from 'vscode'
-import * as fs from 'fs'
-import * as path from 'path'
+import { loadTemplateWithCache } from './templateCache'
 
 /**
- * Carrega um template HTML de um arquivo
+ * Carrega um template HTML de um arquivo com cache
  * @param extensionUri URI da extensão
  * @param templateName Nome do template (sem extensão)
  * @returns Conteúdo do template HTML
  */
 export function loadTemplate (extensionUri: vscode.Uri, templateName: string): string {
-  const templatePath = path.join(extensionUri.fsPath, 'src', 'templates', `${templateName}.html`)
-    
-  try {
-    return fs.readFileSync(templatePath, 'utf8')
-  } catch (error) {
-    console.error(`Erro ao carregar template ${templateName}:`, error)
-    return `<html><body><h1>Erro ao carregar template</h1><p>Template ${templateName} não encontrado.</p></body></html>`
-  }
+  return loadTemplateWithCache(extensionUri, templateName)
 }
 
 /**
