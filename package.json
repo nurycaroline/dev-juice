@@ -206,6 +206,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "test": "vscode-test"
   },
   "files": [
