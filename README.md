@@ -96,6 +96,28 @@ A extensão oferece comandos para inserção rápida de valores gerados diretame
 - `Dev Helper: Inserir UUID Formatado`
 - `Dev Helper: Inserir UUID Não Formatado`
 
+### Comandos de Formatação de Texto
+
+Comandos para formatar texto selecionado no editor:
+
+- `Dev Helper: Formatar para Sentence case` - Primeira letra maiúscula, resto minúsculo
+- `Dev Helper: Formatar para snake_case` - Palavras separadas por underscore
+- `Dev Helper: Formatar para camelCase` - Primeira palavra minúscula, outras com primeira letra maiúscula
+- `Dev Helper: Formatar para kebab-case` - Palavras separadas por hífen
+- `Dev Helper: Formatar para PascalCase` - Todas as palavras com primeira letra maiúscula
+- `Dev Helper: Formatar para lower case` - Tudo em letras minúsculas
+- `Dev Helper: Formatar para UPPER CASE` - Tudo em letras maiúsculas
+- `Dev Helper: Formatar para Capitalized Case` - Primeira letra de cada palavra maiúscula
+- `Dev Helper: Formatar para aLtErNaTiNg cAsE` - Letras alternando entre maiúscula e minúscula
+- `Dev Helper: Formatar para InVeRsE CaSe` - Inverte o caso de cada letra
+
+**Como usar os comandos de formatação:**
+
+1. Selecione o texto que deseja formatar no editor
+2. Abra a paleta de comandos (Ctrl+Shift+P ou Cmd+Shift+P)
+3. Digite "Dev Helper: Formatar" para ver todas as opções
+4. Escolha o formato desejado
+
 ### 🔧 Tools
 
 Ferramentas especializadas para desenvolvedores:

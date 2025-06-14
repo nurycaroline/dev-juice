@@ -17,7 +17,7 @@ import { UrlEncoderProvider } from './providers/urlEncoderProvider';
 import { QrReaderProvider } from './providers/qrReaderProvider';
 import { PixDecoderProvider } from './providers/pixDecoderProvider';
 import { TextFormatterProvider } from './providers/textFormatterProvider';
-import { insertCNPJ, insertCPF, insertUUID } from './utils/insertUtils';
+import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeCase, formatToCamelCase, formatToKebabCase, formatToPascalCase, formatToLowerCase, formatToUpperCase, formatToCapitalizedCase, formatToAlternatingCase, formatToInverseCase } from './utils/insertUtils';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -115,6 +115,58 @@ export function activate(context: vscode.ExtensionContext) {
 		TextFormatterProvider.createOrShow(context.extensionUri);
 	});
 
+	// Comandos de formatação de texto para seleção no editor
+	
+	// Formatar para Sentence case
+	const formatSentenceCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextSentenceCase', () => {
+		formatToSentenceCase();
+	});
+
+	// Formatar para snake_case
+	const formatSnakeCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextSnakeCase', () => {
+		formatToSnakeCase();
+	});
+
+	// Formatar para camelCase
+	const formatCamelCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCamelCase', () => {
+		formatToCamelCase();
+	});
+
+	// Formatar para kebab-case
+	const formatKebabCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextKebabCase', () => {
+		formatToKebabCase();
+	});
+
+	// Formatar para PascalCase
+	const formatPascalCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextPascalCase', () => {
+		formatToPascalCase();
+	});
+
+	// Formatar para lower case
+	const formatLowerCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextLowerCase', () => {
+		formatToLowerCase();
+	});
+
+	// Formatar para UPPER CASE
+	const formatUpperCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextUpperCase', () => {
+		formatToUpperCase();
+	});
+
+	// Formatar para Capitalized Case
+	const formatCapitalizedCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCapitalizedCase', () => {
+		formatToCapitalizedCase();
+	});
+
+	// Formatar para aLtErNaTiNg cAsE
+	const formatAlternatingCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextAlternatingCase', () => {
+		formatToAlternatingCase();
+	});
+
+	// Formatar para InVeRsE CaSe
+	const formatInverseCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextInverseCase', () => {
+		formatToInverseCase();
+	});
+
 	// Comandos para inserir valores gerados diretamente no editor
 	
 	// Inserir CNPJ formatado
@@ -165,6 +217,16 @@ export function activate(context: vscode.ExtensionContext) {
 		qrReaderDisposable,
 		pixDecoderDisposable,
 		textFormatterDisposable,
+		formatSentenceCaseDisposable,
+		formatSnakeCaseDisposable,
+		formatCamelCaseDisposable,
+		formatKebabCaseDisposable,
+		formatPascalCaseDisposable,
+		formatLowerCaseDisposable,
+		formatUpperCaseDisposable,
+		formatCapitalizedCaseDisposable,
+		formatAlternatingCaseDisposable,
+		formatInverseCaseDisposable,
 		insertCNPJFormattedDisposable,
 		insertCNPJUnformattedDisposable,
 		insertCPFFormattedDisposable,

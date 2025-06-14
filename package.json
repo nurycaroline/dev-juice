@@ -120,6 +120,56 @@
         "command": "dev-helper.insertUUIDUnformatted",
         "title": "Dev Helper: Inserir UUID Não Formatado",
         "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextSentenceCase",
+        "title": "Dev Helper: Formatar para Sentence case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextSnakeCase",
+        "title": "Dev Helper: Formatar para snake_case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextCamelCase",
+        "title": "Dev Helper: Formatar para camelCase",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextKebabCase",
+        "title": "Dev Helper: Formatar para kebab-case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextPascalCase",
+        "title": "Dev Helper: Formatar para PascalCase",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextLowerCase",
+        "title": "Dev Helper: Formatar para lower case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextUpperCase",
+        "title": "Dev Helper: Formatar para UPPER CASE",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextCapitalizedCase",
+        "title": "Dev Helper: Formatar para Capitalized Case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextAlternatingCase",
+        "title": "Dev Helper: Formatar para aLtErNaTiNg cAsE",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextInverseCase",
+        "title": "Dev Helper: Formatar para InVeRsE CaSe",
+        "category": "Editor"
       }
     ],
     "viewsContainers": {
