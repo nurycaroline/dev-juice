@@ -121,8 +121,7 @@ export class JsonFormatterProvider {
 
   private _update () {
     this._panel.webview.html = this._getHtmlForWebview()
-  }
-  private _getHtmlForWebview () {
-    return loadTemplate(this._extensionUri, 'json-formatter.html')
+  }  private _getHtmlForWebview () {
+    return loadTemplate(this._extensionUri, 'json-formatter')
   }
 }

@@ -316,8 +316,7 @@ export class EmailValidatorProvider {
         x.dispose()
       }
     }
-  }
-  private _update () {
-    this._panel.webview.html = loadTemplate(this._extensionUri, 'email-validator.html')
+  }  private _update () {
+    this._panel.webview.html = loadTemplate(this._extensionUri, 'email-validator')
   }
 }

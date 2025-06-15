@@ -213,7 +213,7 @@ export class PasswordGeneratorProvider {
 
   private _update () {
     this._panel.webview.html = this._getHtmlForWebview()
-  }    private _getHtmlForWebview () {
-    return loadTemplate(this._extensionUri, 'password-generator.html')
+  }  private _getHtmlForWebview () {
+    return loadTemplate(this._extensionUri, 'password-generator')
   }
 }
