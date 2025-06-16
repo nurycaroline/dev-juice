@@ -212,27 +212,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>📱 QR Code Reader</h1>
+        <h1>QR Code Reader</h1>
         
         <div class="section">
-            <h2>📤 Upload de Imagem</h2>
+            <h2>Upload de Imagem</h2>
             
             <div class="upload-area" onclick="document.getElementById('fileInput').click()" 
                  ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                <div class="upload-icon">📁</div>
                 <p><strong>Clique aqui ou arraste uma imagem com QR Code</strong></p>
                 <p>Formatos suportados: PNG, JPG, JPEG, GIF, BMP, WEBP</p>
             </div>
             
             <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
-            
-            <div class="info">
-                <strong>ℹ️ Como usar:</strong> Selecione ou arraste uma imagem contendo um QR Code. O leitor irá automaticamente detectar e decodificar o conteúdo do código.
-            </div>
         </div>
 
         <div class="section">
-            <h2>📊 Resultado</h2>
+            <h2>Resultado</h2>
             
             <div id="loadingArea" class="loading" style="display: none;">
                 <div class="spinner"></div>
@@ -249,10 +244,6 @@
                     <button onclick="clearResult()">Limpar</button>
                 </div>
             </div>
-        </div>
-
-        <div class="info">
-            <strong>💡 Dica:</strong> QR Codes podem conter URLs, texto, informações de contato, dados Wi-Fi, e muito mais. Este leitor suporta todos os tipos de QR Codes padrão.
         </div>
     </div>
 

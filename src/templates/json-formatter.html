@@ -44,7 +44,7 @@
             border-radius: 3px;
             background-color: var(--vscode-input-background);
             color: var(--vscode-input-foreground);
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             font-size: 12px;
             box-sizing: border-box;
             resize: vertical;
@@ -118,7 +118,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>📄 Formatador JSON</h1>
+        <h1>Formatador JSON</h1>
         
         <div class="form-group">
             <label for="inputJson">JSON de Entrada</label>
@@ -136,7 +136,7 @@
             <label for="outputJson">JSON Formatado</label>
             <div class="textarea-container">
                 <textarea id="outputJson" readonly placeholder="O JSON formatado aparecerá aqui..."></textarea>
-                <button type="button" class="button copy-button hidden" id="copyButton" onclick="copyFormatted()">📋 Copiar</button>
+                <button type="button" class="button copy-button hidden" id="copyButton" onclick="copyFormatted()">Copiar</button>
             </div>
         </div>
     </div>

@@ -109,7 +109,7 @@
             border: 1px solid var(--vscode-panel-border);
             border-radius: 3px;
             padding: 10px;
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             font-size: 12px;
             word-break: break-all;
             margin: 10px 0;
@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏦 Gerador de PIX QR Code</h1>
+        <h1>Gerador de PIX QR Code</h1>
         
         <form id="pixForm">
             <div class="form-group">
@@ -232,12 +232,12 @@
                 </div>                <div>
                     <p><strong>Código PIX:</strong></p>
                     <div class="pix-code" id="pixCodeText"></div>
-                    <button type="button" class="button copy-button" onclick="copyPixCode()">📋 Copiar Código</button>
+                    <button type="button" class="button copy-button" onclick="copyPixCode()">Copiar Código</button>
                 </div>
 
                 <div>
                     <button type="button" class="button" onclick="downloadQRCode()">💾 Baixar QR Code</button>
-                    <button type="button" class="button secondary" onclick="copyQRCodeImage()">📋 Copiar Imagem</button>
+                    <button type="button" class="button secondary" onclick="copyQRCodeImage()">Copiar Imagem</button>
                 </div>
             </div>
 

@@ -313,14 +313,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>💰 PIX QR Code Decoder</h1>
+        <h1>PIX QR Code Decoder</h1>
         
         <div class="section">
-            <h2>📥 Decodificar PIX</h2>
+            <h2>Decodificar PIX</h2>
             
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('string')">📝 Código PIX</button>
-                <button class="tab" onclick="switchTab('image')">📷 Imagem QR</button>
+                <button class="tab active" onclick="switchTab('string')">Código PIX</button>
+                <button class="tab" onclick="switchTab('image')">Imagem QR</button>
             </div>
 
             <div id="stringTab" class="tab-content active">
@@ -331,30 +331,21 @@
                     <button onclick="decodePixString()">Decodificar PIX</button>
                     <button class="secondary-btn" onclick="clearPixInput()">Limpar</button>
                 </div>
-                
-                <div class="info">
-                    <strong>ℹ️ Como usar:</strong> Cole o código PIX completo (string) que você recebeu. O decodificador irá extrair todas as informações como chave PIX, valor, beneficiário, etc.
-                </div>
             </div>
 
             <div id="imageTab" class="tab-content">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()" 
                      ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                    <div class="upload-icon">📱</div>
                     <p><strong>Clique aqui ou arraste uma imagem de QR Code PIX</strong></p>
                     <p>Formatos suportados: PNG, JPG, JPEG, GIF, BMP, WEBP</p>
                 </div>
                 
                 <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
-                
-                <div class="info">
-                    <strong>ℹ️ Como usar:</strong> Faça upload de uma foto ou screenshot do QR Code PIX. O sistema irá ler o código e decodificar automaticamente as informações do pagamento.
-                </div>
             </div>
         </div>
 
         <div class="section">
-            <h2>📊 Resultado da Decodificação</h2>
+            <h2>Resultado da Decodificação</h2>
             
             <div id="loadingArea" class="loading" style="display: none;">
                 <div class="spinner"></div>
@@ -371,10 +362,6 @@
                     <button onclick="clearResult()">Limpar</button>
                 </div>
             </div>
-        </div>
-
-        <div class="info">
-            <strong>💡 Sobre o PIX:</strong> O PIX é o sistema de pagamentos instantâneos brasileiro. Este decodificador extrai informações como chave PIX, valor da transação, dados do beneficiário e validação de integridade (CRC16).
         </div>
     </div>
 
@@ -533,7 +520,7 @@
             
             // Basic Info Card
             html += '<div class="result-card">';
-            html += '<h3>📋 Informações Básicas</h3>';
+            html += '<h3>Informações Básicas</h3>';
             if (data.version) {
                 html += '<div class="info-row"><span class="info-label">Versão:</span><span class="info-value">' + data.version + '</span></div>';
             }

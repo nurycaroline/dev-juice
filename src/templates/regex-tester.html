@@ -270,7 +270,6 @@
 <body>
     <div class="container">
         <h1>
-            <span class="regex-icon">🔍</span>
             Testador de Regex
         </h1>
 
@@ -352,8 +351,8 @@
             <textarea id="testText" placeholder="Cole ou digite o texto que deseja testar aqui..."></textarea>
             
             <div class="button-container">
-                <button onclick="testRegex()">🔍 Testar Regex</button>
-                <button class="secondary-button" onclick="clearAll()">🗑️ Limpar Tudo</button>
+                <button onclick="testRegex()">Testar Regex</button>
+                <button class="secondary-button" onclick="clearAll()">Limpar Tudo</button>
             </div>
         </div>
 
@@ -464,7 +463,7 @@
             let summary = `
                 <div class="result-summary">
                     ✅ Regex válido: /${result.pattern}/${result.flags || ''}<br>
-                    📊 ${result.matchCount} ${result.matchCount === 1 ? 'correspondência encontrada' : 'correspondências encontradas'}<br>
+                    ${result.matchCount} ${result.matchCount === 1 ? 'correspondência encontrada' : 'correspondências encontradas'}<br>
                     ${result.fullMatch ? '✅ O texto inteiro corresponde ao padrão' : '❌ O texto inteiro NÃO corresponde ao padrão'}
             `;
 
@@ -551,10 +550,10 @@
             return `
                 <div class="button-container" style="margin-top: 10px;">
                     <button class="secondary-button" onclick="copyToClipboard('${escapedMatch}')">
-                        📋 Copiar Match
+                        Copiar Match
                     </button>
                     <button class="secondary-button" onclick="insertInEditor('${escapedMatch}')">
-                        📝 Inserir no Editor
+                        Inserir no Editor
                     </button>
                 </div>
             `;

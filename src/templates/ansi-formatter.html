@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,7 +50,8 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        textarea, input[type="text"] {
+        textarea,
+        input[type="text"] {
             width: 100%;
             height: 150px;
             padding: 8px;
@@ -184,17 +186,18 @@
             margin-top: 10px;
             border-collapse: collapse;
         }
-        
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid var(--vscode-panel-border);
             padding: 8px;
             text-align: left;
         }
-        
+
         table th {
             background-color: var(--vscode-editorWidget-background);
         }
-        
+
         .color-sample {
             display: inline-block;
             width: 15px;
@@ -203,11 +206,11 @@
             margin-right: 5px;
             vertical-align: middle;
         }
-        
+
         .color-table-section {
             margin-top: 20px;
         }
-        
+
         .collapsible {
             cursor: pointer;
             padding: 10px;
@@ -221,80 +224,72 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.2s ease-out;
             background-color: var(--vscode-editor-background);
         }
-        
+
         .active:after {
             content: "▲";
         }
-        
+
         .collapsible:after {
             content: "▼";
             font-size: 13px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Formatador de Logs ANSI</h1>
-        
+
         <div class="section">
             <h2>Entrada</h2>
             <div class="form-group">
                 <label for="input-text">Cole o texto com códigos ANSI:</label>
                 <textarea id="input-text" placeholder="Cole aqui o texto contendo códigos ANSI..."></textarea>
             </div>
-            
+
             <div class="checkbox-group">
                 <div class="checkbox-item">
                     <input type="checkbox" id="strip-ansi" checked>
                     <label for="strip-ansi">Remover códigos ANSI</label>
-                    <div class="tooltip">?
-                        <span class="tooltip-text">Remove todos os códigos ANSI do texto, mantendo apenas o conteúdo</span>
-                    </div>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="render-ansi">
                     <label for="render-ansi">Renderizar códigos ANSI</label>
-                    <div class="tooltip">?
-                        <span class="tooltip-text">Aplica formatação visual aos códigos ANSI (cores, negrito, etc.)</span>
-                    </div>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="highlight-ansi">
                     <label for="highlight-ansi">Destacar códigos ANSI</label>
-                    <div class="tooltip">?
-                        <span class="tooltip-text">Mantém os códigos ANSI no texto, mas os destaca visualmente</span>
-                    </div>
                 </div>
             </div>
-            
+
             <div class="btn-row">
                 <div class="btn-group">
                     <button id="process-btn">Processar</button>
                     <button id="clear-btn">Limpar</button>
                 </div>
             </div>
-            
+
             <div id="error-alert" class="alert alert-error"></div>
         </div>
-        
+
         <div class="section">
             <h2>Saída</h2>
             <div id="output-container"></div>
-            
+
             <div class="btn-row">
                 <div class="btn-group">
                     <button id="copy-btn">Copiar Texto Processado</button>
                 </div>
             </div>
         </div>
-        
+
         <button class="collapsible">Códigos ANSI Comuns</button>
         <div class="collapsible-content">
             <div class="section color-table-section">
@@ -341,7 +336,9 @@
                         <tr>
                             <td>Invertido</td>
                             <td>\x1b[7m</td>
-                            <td><span style="background-color: var(--vscode-foreground); color: var(--vscode-editor-background);">Texto invertido</span></td>
+                            <td><span
+                                    style="background-color: var(--vscode-foreground); color: var(--vscode-editor-background);">Texto
+                                    invertido</span></td>
                         </tr>
                         <tr>
                             <td>Oculto</td>
@@ -355,7 +352,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
                 <h3>Cores de Texto (Foreground)</h3>
                 <table>
                     <thead>
@@ -408,7 +405,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
                 <h3>Cores de Fundo (Background)</h3>
                 <table>
                     <thead>
@@ -463,16 +460,12 @@
                 </table>
             </div>
         </div>
-        
-        <div class="info-panel">
-            <p><strong>Sobre códigos ANSI:</strong> Códigos ANSI são sequências de escape usadas em terminais para controlar cores, estilos de texto e posicionamento do cursor. São comuns em logs de aplicações, especialmente no ambiente de desenvolvimento.</p>
-        </div>
     </div>
 
     <script>
-        (function() {
+        (function () {
             const vscode = acquireVsCodeApi();
-            
+
             // Elementos do DOM
             const inputText = document.getElementById('input-text');
             const outputContainer = document.getElementById('output-container');
@@ -483,93 +476,93 @@
             const stripAnsi = document.getElementById('strip-ansi');
             const renderAnsi = document.getElementById('render-ansi');
             const highlightAnsi = document.getElementById('highlight-ansi');
-            
+
             // Configurar comportamento dos checkboxes
-            stripAnsi.addEventListener('change', function() {
+            stripAnsi.addEventListener('change', function () {
                 if (this.checked) {
                     renderAnsi.checked = false;
                     highlightAnsi.checked = false;
                 }
             });
-            
-            renderAnsi.addEventListener('change', function() {
+
+            renderAnsi.addEventListener('change', function () {
                 if (this.checked) {
                     stripAnsi.checked = false;
                     highlightAnsi.checked = false;
                 }
             });
-            
-            highlightAnsi.addEventListener('change', function() {
+
+            highlightAnsi.addEventListener('change', function () {
                 if (this.checked) {
                     stripAnsi.checked = false;
                     renderAnsi.checked = false;
                 }
             });
-              // Processar texto
-            processBtn.addEventListener('click', function() {
+            // Processar texto
+            processBtn.addEventListener('click', function () {
                 const text = inputText.value;
-                
+
                 if (!text.trim()) {
                     showError('Por favor, insira um texto para processar.');
                     return;
                 }
-                
+
                 const options = {
                     stripAnsi: stripAnsi.checked,
                     renderAnsi: renderAnsi.checked,
                     highlightAnsi: highlightAnsi.checked
                 };
-                
+
                 // Debug - mostrar mensagem no output
-                console.log('Enviando texto para processamento:', { 
+                console.log('Enviando texto para processamento:', {
                     textLength: text.length,
                     options: options
                 });
-                
+
                 vscode.postMessage({
                     command: 'processAnsi',
                     text: text,
                     options: options
                 });
             });
-            
+
             // Limpar campos
-            clearBtn.addEventListener('click', function() {
+            clearBtn.addEventListener('click', function () {
                 inputText.value = '';
                 outputContainer.innerHTML = '';
                 hideError();
             });
-            
+
             // Copiar resultado
-            copyBtn.addEventListener('click', function() {
+            copyBtn.addEventListener('click', function () {
                 const processedText = outputContainer.textContent;
-                
+
                 if (!processedText.trim()) {
                     showError('Não há texto processado para copiar.');
                     return;
                 }
-                
+
                 vscode.postMessage({
                     command: 'copyToClipboard',
                     text: processedText
                 });
             });
-            
+
             // Exibir erro
             function showError(message) {
                 errorAlert.textContent = message;
                 errorAlert.style.display = 'block';
             }
-            
+
             // Ocultar erro
             function hideError() {
                 errorAlert.style.display = 'none';
             }
-            
+
             // Configurar seções colapsáveis
             const collapsibles = document.getElementsByClassName('collapsible');
             for (let i = 0; i < collapsibles.length; i++) {
-                collapsibles[i].addEventListener('click', function() {
+                collapsibles[i].addEventListener('click', function () {
                     this.classList.toggle('active');
                     const content = this.nextElementSibling;
                     if (content.style.maxHeight) {
@@ -579,11 +572,11 @@
                     }
                 });
             }
-              // Lidar com mensagens do webview
+            // Lidar com mensagens do webview
             window.addEventListener('message', event => {
                 console.log('Mensagem recebida do extension:', event.data);
                 const message = event.data;
-                
+
                 if (message.command === 'processed') {
                     if (message.success) {
                         outputContainer.innerHTML = message.result;
@@ -596,4 +589,5 @@
         })();
     </script>
 </body>
+
 </html>

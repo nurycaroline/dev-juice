@@ -124,7 +124,7 @@
         }
 
         .email-display {
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 10px;
@@ -221,7 +221,7 @@
 
         .bulk-email {
             flex: 1;
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             margin-right: 10px;
         }
 
@@ -241,7 +241,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>📧 Validador de Email</h1>
+        <h1>Validador de Email</h1>
         
         <div class="tabs">
             <div class="tab active" onclick="switchTab('single')">Validação Única</div>
@@ -417,7 +417,7 @@
                         </div>
                     </div>
                     <button type="button" class="button copy-button" onclick="copyValidEmails(${JSON.stringify(results).replace(/"/g, '&quot;')})">
-                        📋 Copiar Emails Válidos
+                        Copiar Emails Válidos
                     </button>
                 </div>
             `;

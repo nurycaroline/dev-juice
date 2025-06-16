@@ -43,7 +43,7 @@
             border-radius: 3px;
             background-color: var(--vscode-input-background);
             color: var(--vscode-input-foreground);
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             font-size: 12px;
             box-sizing: border-box;
             resize: vertical;
@@ -104,7 +104,7 @@
             border: 1px solid var(--vscode-panel-border);
             border-radius: 3px;
             padding: 10px;
-            font-family: var(--vscode-editor-font-family);
+            font-family: var(--vscode-font-family);
             font-size: 12px;
             word-break: break-all;
             margin-bottom: 10px;
@@ -176,7 +176,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔐 Gerador de Hash</h1>
+        <h1>Gerador de Hash</h1>
         
         <div class="info-box">
             <h3>Sobre Algoritmos de Hash</h3>
@@ -215,7 +215,7 @@
             <div class="hash-result">
                 <h3 id="singleAlgorithm"></h3>
                 <div class="hash-value" id="singleHash"></div>
-                <button type="button" class="button copy-button" onclick="copySingleHash()">📋 Copiar</button>
+                <button type="button" class="button copy-button" onclick="copySingleHash()">Copiar</button>
             </div>
         </div>
 
@@ -225,22 +225,22 @@
                 <div class="hash-result">
                     <h3>MD5</h3>
                     <div class="hash-value" id="md5Hash"></div>
-                    <button type="button" class="button copy-button" onclick="copyHash('md5')">📋 Copiar</button>
+                    <button type="button" class="button copy-button" onclick="copyHash('md5')">Copiar</button>
                 </div>
                 <div class="hash-result">
                     <h3>SHA-1</h3>
                     <div class="hash-value" id="sha1Hash"></div>
-                    <button type="button" class="button copy-button" onclick="copyHash('sha1')">📋 Copiar</button>
+                    <button type="button" class="button copy-button" onclick="copyHash('sha1')">Copiar</button>
                 </div>
                 <div class="hash-result">
                     <h3>SHA-256</h3>
                     <div class="hash-value" id="sha256Hash"></div>
-                    <button type="button" class="button copy-button" onclick="copyHash('sha256')">📋 Copiar</button>
+                    <button type="button" class="button copy-button" onclick="copyHash('sha256')">Copiar</button>
                 </div>
                 <div class="hash-result">
                     <h3>SHA-512</h3>
                     <div class="hash-value" id="sha512Hash"></div>
-                    <button type="button" class="button copy-button" onclick="copyHash('sha512')">📋 Copiar</button>
+                    <button type="button" class="button copy-button" onclick="copyHash('sha512')">Copiar</button>
                 </div>
             </div>
         </div>
