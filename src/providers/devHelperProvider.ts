@@ -1,26 +1,16 @@
 import * as vscode from 'vscode'
 
-// Define a type alias for the event type to fix the SonarLint warning
 type TreeDataEvent = DevToolItem | undefined | null | void;
 
-/**
- * Tree data provider for the Dev Helper explorer view
- */
 export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
-  // Making _onDidChangeTreeData readonly to fix SonarLint warning
   private readonly _onDidChangeTreeData: vscode.EventEmitter<TreeDataEvent> = new vscode.EventEmitter<TreeDataEvent>()
   readonly onDidChangeTreeData: vscode.Event<TreeDataEvent> = this._onDidChangeTreeData.event
 
-  /**
-     * Refresh the tree view
-     */
   refresh (): void {
     this._onDidChangeTreeData.fire()
   }
 
-  /**
-     * Get the tree item representation of the element
-     */
+
   getTreeItem (element: DevToolItem): vscode.TreeItem {
     return element
   }
@@ -148,23 +138,20 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
   }
 }
 
-/**
- * Tree item representing a dev tool
- */
+
 export class DevToolItem extends vscode.TreeItem {
   constructor (
-        public readonly label: string,
-        public readonly tooltip: string,
-        public readonly commandId: string,
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly iconType: string = 'key',
-        public readonly showIcon: boolean = false
+    public readonly label: string,
+    public readonly tooltip: string,
+    public readonly commandId: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly iconType: string = 'key',
+    public readonly showIcon: boolean = false
   ) {
     super(label, collapsibleState)
 
     this.tooltip = tooltip
 
-    // Set the command that should be executed when the tree item is selected
     if (commandId) {
       this.command = {
         command: commandId,
@@ -172,7 +159,6 @@ export class DevToolItem extends vscode.TreeItem {
       }
     }
 
-    // Set the icon based on the type only if showIcon is true
     if (showIcon) {
       this.iconPath = new vscode.ThemeIcon(iconType)
     }
