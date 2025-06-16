@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .update-rates {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .last-updated {
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 0.85em;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+            font-size: 0.9em;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .disclaimer h3 {
+            margin-top: 0;
+            color: var(--vscode-foreground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Moedas</h1>
+            <p>Converta entre diferentes moedas usando taxas de câmbio offline</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-currency">De:</label>
+                    <select id="from-currency">
+                        <option value="BRL" selected>Real Brasileiro (BRL)</option>
+                        <option value="USD">Dólar Americano (USD)</option>
+                        <option value="EUR">Euro (EUR)</option>
+                        <option value="GBP">Libra Esterlina (GBP)</option>
+                        <option value="JPY">Iene Japonês (JPY)</option>
+                        <option value="CHF">Franco Suíço (CHF)</option>
+                        <option value="CAD">Dólar Canadense (CAD)</option>
+                        <option value="AUD">Dólar Australiano (AUD)</option>
+                        <option value="CNY">Yuan Chinês (CNY)</option>
+                        <option value="ARS">Peso Argentino (ARS)</option>
+                        <option value="MXN">Peso Mexicano (MXN)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-currency">Para:</label>
+                    <select id="to-currency">
+                        <option value="BRL">Real Brasileiro (BRL)</option>
+                        <option value="USD" selected>Dólar Americano (USD)</option>
+                        <option value="EUR">Euro (EUR)</option>
+                        <option value="GBP">Libra Esterlina (GBP)</option>
+                        <option value="JPY">Iene Japonês (JPY)</option>
+                        <option value="CHF">Franco Suíço (CHF)</option>
+                        <option value="CAD">Dólar Canadense (CAD)</option>
+                        <option value="AUD">Dólar Australiano (AUD)</option>
+                        <option value="CNY">Yuan Chinês (CNY)</option>
+                        <option value="ARS">Peso Argentino (ARS)</option>
+                        <option value="MXN">Peso Mexicano (MXN)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as moedas para ver o resultado.
+            </div>
+            
+            <div class="last-updated" id="last-updated">
+                Taxas de câmbio atualizadas em: 16 de junho de 2025
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="disclaimer">
+                <h3>Aviso Importante</h3>
+                <p>Este conversor utiliza taxas de câmbio estáticas e aproximadas para fins de demonstração. As taxas reais de câmbio flutuam constantemente e podem diferir significativamente dos valores mostrados aqui.</p>
+                <p>Para transações financeiras reais, consulte sempre as taxas atuais fornecidas por bancos ou serviços financeiros.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Taxas de câmbio aproximadas com base no USD (16/06/2025)
+            // Observe que estas são taxas de demonstração aproximadas
+            const exchangeRates = {
+                USD: 1.00,      // Dólar Americano (base)
+                EUR: 0.92,      // Euro
+                GBP: 0.78,      // Libra Esterlina
+                JPY: 155.42,    // Iene Japonês
+                BRL: 5.28,      // Real Brasileiro
+                CHF: 0.89,      // Franco Suíço
+                CAD: 1.36,      // Dólar Canadense
+                AUD: 1.52,      // Dólar Australiano
+                CNY: 7.24,      // Yuan Chinês
+                ARS: 900.75,    // Peso Argentino
+                MXN: 16.95      // Peso Mexicano
+            };
+
+            const inputValue = document.getElementById('input-value');
+            const fromCurrency = document.getElementById('from-currency');
+            const toCurrency = document.getElementById('to-currency');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromCurrency.value;
+                const to = toCurrency.value;
+                
+                // Converter para USD (moeda base) primeiro, e depois para a moeda alvo
+                const usdAmount = value / exchangeRates[from];
+                const targetAmount = usdAmount * exchangeRates[to];
+                
+                // Formatar o valor com a moeda correta
+                const fromFormatted = formatCurrency(value, from);
+                const toFormatted = formatCurrency(targetAmount, to);
+                  resultElement.innerHTML = `
+                    <strong>${fromFormatted}</strong> = <strong>${toFormatted}</strong><br>
+                    <small>Taxa de câmbio: 1 ${from} = ${formatNumber(exchangeRates[to] / exchangeRates[from])} ${to}</small>
+                `;
+            }
+
+            // Formatar número como moeda
+            function formatCurrency(num, currency) {
+                let formatter;
+                
+                switch (currency) {
+                    case 'USD':
+                        formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                        break;
+                    case 'EUR':
+                        formatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+                        break;
+                    case 'GBP':
+                        formatter = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+                        break;
+                    case 'JPY':
+                        formatter = new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' });
+                        break;
+                    case 'BRL':
+                        formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+                        break;
+                    case 'CHF':
+                        formatter = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' });
+                        break;
+                    case 'CAD':
+                        formatter = new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' });
+                        break;
+                    case 'AUD':
+                        formatter = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
+                        break;
+                    case 'CNY':
+                        formatter = new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' });
+                        break;
+                    case 'ARS':
+                        formatter = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+                        break;
+                    case 'MXN':
+                        formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+                        break;
+                    default:
+                        formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+                }
+                
+                return formatter.format(num);
+            }
+
+            // Formatar número para taxa de câmbio
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito grandes ou muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('en-US', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 2
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as moedas
+            fromCurrency.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toCurrency.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

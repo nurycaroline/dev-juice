@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Armazenamento de Dados</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .common-conversions {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+        }
+
+        .common-conversions h3 {
+            margin-top: 0;
+        }
+
+        .common-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .common-table th, .common-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+
+        .common-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--vscode-foreground);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--vscode-focusBorder);
+            font-weight: bold;
+        }
+        
+        .tab:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Armazenamento de Dados</h1>
+            <p>Converta entre diferentes unidades de armazenamento de dados</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="tabs">
+                <button id="tab-binary" class="tab active">Binário (1024)</button>
+                <button id="tab-decimal" class="tab">Decimal (1000)</button>
+            </div>
+            
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-unit">De:</label>
+                    <select id="from-unit">
+                        <option value="bit">Bit (b)</option>
+                        <option value="byte">Byte (B)</option>
+                        <option value="kb" selected>Kilobyte (KB)</option>
+                        <option value="mb">Megabyte (MB)</option>
+                        <option value="gb">Gigabyte (GB)</option>
+                        <option value="tb">Terabyte (TB)</option>
+                        <option value="pb">Petabyte (PB)</option>
+                        <option value="eb">Exabyte (EB)</option>
+                        <option value="zb">Zettabyte (ZB)</option>
+                        <option value="yb">Yottabyte (YB)</option>
+                        <option value="kib">Kibibyte (KiB)</option>
+                        <option value="mib">Mebibyte (MiB)</option>
+                        <option value="gib">Gibibyte (GiB)</option>
+                        <option value="tib">Tebibyte (TiB)</option>
+                        <option value="pib">Pebibyte (PiB)</option>
+                        <option value="eib">Exbibyte (EiB)</option>
+                        <option value="zib">Zebibyte (ZiB)</option>
+                        <option value="yib">Yobibyte (YiB)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-unit">Para:</label>
+                    <select id="to-unit">
+                        <option value="bit">Bit (b)</option>
+                        <option value="byte">Byte (B)</option>
+                        <option value="kb">Kilobyte (KB)</option>
+                        <option value="mb">Megabyte (MB)</option>
+                        <option value="gb" selected>Gigabyte (GB)</option>
+                        <option value="tb">Terabyte (TB)</option>
+                        <option value="pb">Petabyte (PB)</option>
+                        <option value="eb">Exabyte (EB)</option>
+                        <option value="zb">Zettabyte (ZB)</option>
+                        <option value="yb">Yottabyte (YB)</option>
+                        <option value="kib">Kibibyte (KiB)</option>
+                        <option value="mib">Mebibyte (MiB)</option>
+                        <option value="gib">Gibibyte (GiB)</option>
+                        <option value="tib">Tebibyte (TiB)</option>
+                        <option value="pib">Pebibyte (PiB)</option>
+                        <option value="eib">Exbibyte (EiB)</option>
+                        <option value="zib">Zebibyte (ZiB)</option>
+                        <option value="yib">Yobibyte (YiB)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as unidades para ver o resultado.
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="common-conversions">
+                <h3>Informações sobre as Unidades</h3>
+                <table class="common-table">
+                    <thead>
+                        <tr>
+                            <th>Unidade</th>
+                            <th>Padrão Binário (1024)</th>
+                            <th>Padrão Decimal (1000)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Byte</td>
+                            <td>8 bits</td>
+                            <td>8 bits</td>
+                        </tr>
+                        <tr>
+                            <td>Kilobyte (KB)</td>
+                            <td>-</td>
+                            <td>1,000 bytes</td>
+                        </tr>
+                        <tr>
+                            <td>Kibibyte (KiB)</td>
+                            <td>1,024 bytes</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Megabyte (MB)</td>
+                            <td>-</td>
+                            <td>1,000,000 bytes</td>
+                        </tr>
+                        <tr>
+                            <td>Mebibyte (MiB)</td>
+                            <td>1,048,576 bytes</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Gigabyte (GB)</td>
+                            <td>-</td>
+                            <td>1,000,000,000 bytes</td>
+                        </tr>
+                        <tr>
+                            <td>Gibibyte (GiB)</td>
+                            <td>1,073,741,824 bytes</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Modo binário (padrão, 1024)
+            let isBinaryMode = true;
+            
+            // Tabs
+            const tabBinary = document.getElementById('tab-binary');
+            const tabDecimal = document.getElementById('tab-decimal');
+            
+            // Elementos UI
+            const inputValue = document.getElementById('input-value');
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+            
+            // Constantes para conversão
+            const BITS_IN_BYTE = 8;
+            const BINARY_BASE = 1024;
+            const DECIMAL_BASE = 1000;
+            
+            // Fatores de conversão para bytes (padrão binário)
+            function getConversionFactors() {
+                const base = isBinaryMode ? BINARY_BASE : DECIMAL_BASE;
+                
+                return {
+                    bit: 1/BITS_IN_BYTE,       // bits para bytes
+                    byte: 1,                    // bytes (base)
+                    kb: Math.pow(base, 1),      // kilobytes para bytes
+                    mb: Math.pow(base, 2),      // megabytes para bytes
+                    gb: Math.pow(base, 3),      // gigabytes para bytes
+                    tb: Math.pow(base, 4),      // terabytes para bytes
+                    pb: Math.pow(base, 5),      // petabytes para bytes
+                    eb: Math.pow(base, 6),      // exabytes para bytes
+                    zb: Math.pow(base, 7),      // zettabytes para bytes
+                    yb: Math.pow(base, 8),      // yottabytes para bytes
+                    
+                    // IEC (sempre usa base 1024, independente do modo)
+                    kib: Math.pow(BINARY_BASE, 1), // kibibytes para bytes
+                    mib: Math.pow(BINARY_BASE, 2), // mebibytes para bytes
+                    gib: Math.pow(BINARY_BASE, 3), // gibibytes para bytes
+                    tib: Math.pow(BINARY_BASE, 4), // tebibytes para bytes
+                    pib: Math.pow(BINARY_BASE, 5), // pebibytes para bytes
+                    eib: Math.pow(BINARY_BASE, 6), // exbibytes para bytes
+                    zib: Math.pow(BINARY_BASE, 7), // zebibytes para bytes
+                    yib: Math.pow(BINARY_BASE, 8)  // yobibytes para bytes
+                };
+            }
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromUnit.value;
+                const to = toUnit.value;
+                const conversionFactors = getConversionFactors();
+                
+                // Converter para bytes e depois para a unidade de destino
+                const bytes = value * conversionFactors[from];
+                const result = bytes / conversionFactors[to];
+                
+                const formattedResult = formatNumber(result);
+                const fromUnitText = fromUnit.options[fromUnit.selectedIndex].text;
+                const toUnitText = toUnit.options[toUnit.selectedIndex].text;
+                
+                resultElement.innerHTML = `
+                    <strong>${value} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>
+                `;
+            }
+
+            // Formatar número com separadores adequados
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito grandes ou muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('pt-BR', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 0
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+            
+            // Alternar entre modos binário e decimal
+            function setMode(binary) {
+                isBinaryMode = binary;
+                
+                if (binary) {
+                    tabBinary.classList.add('active');
+                    tabDecimal.classList.remove('active');
+                } else {
+                    tabBinary.classList.remove('active');
+                    tabDecimal.classList.add('active');
+                }
+                
+                // Reconverter se houver um valor
+                if (inputValue.value) {
+                    convert();
+                }
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as unidades
+            fromUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            // Tabs para alternar entre modos binário e decimal
+            tabBinary.addEventListener('click', function() {
+                setMode(true);
+            });
+            
+            tabDecimal.addEventListener('click', function() {
+                setMode(false);
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

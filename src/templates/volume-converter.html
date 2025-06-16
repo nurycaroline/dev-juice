@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Volume</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .common-conversions {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+        }
+
+        .common-conversions h3 {
+            margin-top: 0;
+        }
+
+        .common-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .common-table th, .common-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+
+        .common-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Volume</h1>
+            <p>Converta entre diferentes unidades de volume</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-unit">De:</label>
+                    <select id="from-unit">
+                        <option value="ml">Mililitro (ml)</option>
+                        <option value="cl">Centilitro (cl)</option>
+                        <option value="dl">Decilitro (dl)</option>
+                        <option value="l" selected>Litro (l)</option>
+                        <option value="m3">Metro Cúbico (m³)</option>
+                        <option value="in3">Polegada Cúbica (in³)</option>
+                        <option value="ft3">Pé Cúbico (ft³)</option>
+                        <option value="yd3">Jarda Cúbica (yd³)</option>
+                        <option value="gal_us">Galão Americano (gal)</option>
+                        <option value="gal_uk">Galão Imperial (gal)</option>
+                        <option value="pt_us">Pinta Americana (pt)</option>
+                        <option value="pt_uk">Pinta Imperial (pt)</option>
+                        <option value="oz_fl_us">Onça Fluida Americana (fl oz)</option>
+                        <option value="oz_fl_uk">Onça Fluida Imperial (fl oz)</option>
+                        <option value="cup_us">Xícara Americana (cup)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-unit">Para:</label>
+                    <select id="to-unit">
+                        <option value="ml">Mililitro (ml)</option>
+                        <option value="cl">Centilitro (cl)</option>
+                        <option value="dl">Decilitro (dl)</option>
+                        <option value="l">Litro (l)</option>
+                        <option value="m3">Metro Cúbico (m³)</option>
+                        <option value="in3">Polegada Cúbica (in³)</option>
+                        <option value="ft3">Pé Cúbico (ft³)</option>
+                        <option value="yd3">Jarda Cúbica (yd³)</option>
+                        <option value="gal_us" selected>Galão Americano (gal)</option>
+                        <option value="gal_uk">Galão Imperial (gal)</option>
+                        <option value="pt_us">Pinta Americana (pt)</option>
+                        <option value="pt_uk">Pinta Imperial (pt)</option>
+                        <option value="oz_fl_us">Onça Fluida Americana (fl oz)</option>
+                        <option value="oz_fl_uk">Onça Fluida Imperial (fl oz)</option>
+                        <option value="cup_us">Xícara Americana (cup)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as unidades para ver o resultado.
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="common-conversions">
+                <h3>Conversões Comuns</h3>
+                <table class="common-table">
+                    <thead>
+                        <tr>
+                            <th>De</th>
+                            <th>Para</th>
+                            <th>Multiplicar por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Litros</td>
+                            <td>Galões Americanos</td>
+                            <td>0.264172</td>
+                        </tr>
+                        <tr>
+                            <td>Galões Americanos</td>
+                            <td>Litros</td>
+                            <td>3.78541</td>
+                        </tr>
+                        <tr>
+                            <td>Metros Cúbicos</td>
+                            <td>Pés Cúbicos</td>
+                            <td>35.3147</td>
+                        </tr>
+                        <tr>
+                            <td>Pés Cúbicos</td>
+                            <td>Metros Cúbicos</td>
+                            <td>0.0283168</td>
+                        </tr>
+                        <tr>
+                            <td>Onças Fluidas (US)</td>
+                            <td>Mililitros</td>
+                            <td>29.5735</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Fatores de conversão para mililitros
+            const conversionFactors = {
+                ml: 1,              // mililitros (base)
+                cl: 10,             // centilitros
+                dl: 100,            // decilitros
+                l: 1000,            // litros
+                m3: 1000000,        // metros cúbicos
+                in3: 16.3871,       // polegadas cúbicas
+                ft3: 28316.8,       // pés cúbicos
+                yd3: 764554.9,      // jardas cúbicas
+                gal_us: 3785.41,    // galões americanos
+                gal_uk: 4546.09,    // galões imperiais
+                pt_us: 473.176,     // pintas americanas
+                pt_uk: 568.261,     // pintas imperiais
+                oz_fl_us: 29.5735,  // onças fluidas americanas
+                oz_fl_uk: 28.4131,  // onças fluidas imperiais
+                cup_us: 236.588     // xícaras americanas
+            };
+
+            const inputValue = document.getElementById('input-value');
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromUnit.value;
+                const to = toUnit.value;
+                
+                // Converter para mililitros e depois para a unidade de destino
+                const ml = value * conversionFactors[from];
+                const result = ml / conversionFactors[to];
+                
+                const formattedResult = formatNumber(result);
+                const fromUnitText = fromUnit.options[fromUnit.selectedIndex].text;
+                const toUnitText = toUnit.options[toUnit.selectedIndex].text;
+                
+                resultElement.innerHTML = `
+                    <strong>${value} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>
+                `;
+            }
+
+            // Formatar número com separadores adequados
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito grandes ou muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('pt-BR', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 0
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as unidades
+            fromUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

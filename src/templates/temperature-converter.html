@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Temperatura</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .formula-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+        }
+
+        .formula-section h3 {
+            margin-top: 0;
+        }
+
+        .formula-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .formula-table th, .formula-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+
+        .formula-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+
+        .formula {
+            font-family: monospace;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Temperatura</h1>
+            <p>Converta entre diferentes unidades de temperatura</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-unit">De:</label>
+                    <select id="from-unit">
+                        <option value="celsius" selected>Celsius (°C)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                        <option value="kelvin">Kelvin (K)</option>
+                        <option value="rankine">Rankine (°R)</option>
+                        <option value="reaumur">Réaumur (°Ré)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-unit">Para:</label>
+                    <select id="to-unit">
+                        <option value="celsius">Celsius (°C)</option>
+                        <option value="fahrenheit" selected>Fahrenheit (°F)</option>
+                        <option value="kelvin">Kelvin (K)</option>
+                        <option value="rankine">Rankine (°R)</option>
+                        <option value="reaumur">Réaumur (°Ré)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as unidades para ver o resultado.
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="formula-section">
+                <h3>Fórmulas de Conversão</h3>
+                <table class="formula-table">
+                    <thead>
+                        <tr>
+                            <th>De</th>
+                            <th>Para</th>
+                            <th>Fórmula</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Celsius</td>
+                            <td>Fahrenheit</td>
+                            <td><span class="formula">°F = °C × 9/5 + 32</span></td>
+                        </tr>
+                        <tr>
+                            <td>Fahrenheit</td>
+                            <td>Celsius</td>
+                            <td><span class="formula">°C = (°F - 32) × 5/9</span></td>
+                        </tr>
+                        <tr>
+                            <td>Celsius</td>
+                            <td>Kelvin</td>
+                            <td><span class="formula">K = °C + 273.15</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kelvin</td>
+                            <td>Celsius</td>
+                            <td><span class="formula">°C = K - 273.15</span></td>
+                        </tr>
+                        <tr>
+                            <td>Fahrenheit</td>
+                            <td>Kelvin</td>
+                            <td><span class="formula">K = (°F - 32) × 5/9 + 273.15</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kelvin</td>
+                            <td>Fahrenheit</td>
+                            <td><span class="formula">°F = (K - 273.15) × 9/5 + 32</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="additional-info">
+                <h3>Pontos de Referência</h3>
+                <ul>
+                    <li>Ponto de ebulição da água: 100°C / 212°F / 373.15K</li>
+                    <li>Temperatura ambiente: ~20-25°C / ~68-77°F / ~293-298K</li>
+                    <li>Ponto de congelamento da água: 0°C / 32°F / 273.15K</li>
+                    <li>Zero absoluto: -273.15°C / -459.67°F / 0K</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const inputValue = document.getElementById('input-value');
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+
+            // Funções de conversão para Celsius
+            const toCelsius = {
+                celsius: temp => temp,
+                fahrenheit: temp => (temp - 32) * 5/9,
+                kelvin: temp => temp - 273.15,
+                rankine: temp => (temp - 491.67) * 5/9,
+                reaumur: temp => temp * 5/4
+            };
+
+            // Funções de conversão de Celsius para outras unidades
+            const fromCelsius = {
+                celsius: temp => temp,
+                fahrenheit: temp => temp * 9/5 + 32,
+                kelvin: temp => temp + 273.15,
+                rankine: temp => (temp + 273.15) * 9/5,
+                reaumur: temp => temp * 4/5
+            };
+
+            // Símbolos das unidades
+            const unitSymbols = {
+                celsius: '°C',
+                fahrenheit: '°F',
+                kelvin: 'K',
+                rankine: '°R',
+                reaumur: '°Ré'
+            };
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromUnit.value;
+                const to = toUnit.value;
+                
+                // Converter para Celsius primeiro (se necessário), depois para a unidade de destino
+                const celsius = toCelsius[from](value);
+                const result = fromCelsius[to](celsius);
+                
+                const formattedResult = formatNumber(result);
+                const fromUnitSymbol = unitSymbols[from];
+                const toUnitSymbol = unitSymbols[to];
+                
+                resultElement.innerHTML = `
+                    <strong>${value} ${fromUnitSymbol}</strong> = <strong>${formattedResult} ${toUnitSymbol}</strong>
+                `;
+            }
+
+            // Formatar número com separadores adequados
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('pt-BR', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 0
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as unidades
+            fromUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

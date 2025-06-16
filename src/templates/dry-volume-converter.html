@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Volume (Seco)</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .error {
+            color: var(--vscode-errorForeground);
+            margin-top: 8px;
+        }
+
+        .examples {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-panel-border);
+            padding-top: 20px;
+        }
+
+        .examples h3 {
+            margin-bottom: 10px;
+        }
+
+        .example-item {
+            margin-bottom: 12px;
+        }
+
+        .example-input {
+            font-family: var(--vscode-editor-font-family);
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .example-output {
+            margin-top: 4px;
+            margin-left: 16px;
+            font-family: var(--vscode-editor-font-family);
+            color: var(--vscode-textPreformat-foreground);
+        }
+
+        .copy-button {
+            margin-left: 8px;
+            padding: 2px 8px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Volume (Seco)</h1>
+            <p>Converta entre diferentes unidades de volume para materiais secos</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="fromValue">Valor:</label>
+                    <input type="number" id="fromValue" step="any" placeholder="Digite o valor para converter">
+                </div>
+                <div class="input-group">
+                    <label for="fromUnit">De:</label>
+                    <select id="fromUnit">
+                        <option value="cubic_meter">Metro cúbico (m³)</option>
+                        <option value="cubic_centimeter">Centímetro cúbico (cm³)</option>
+                        <option value="cubic_millimeter">Milímetro cúbico (mm³)</option>
+                        <option value="cubic_foot">Pé cúbico (ft³)</option>
+                        <option value="cubic_inch">Polegada cúbica (in³)</option>
+                        <option value="liter">Litro (L)</option>
+                        <option value="milliliter">Mililitro (mL)</option>
+                        <option value="us_bushel" selected>Bushel (EUA)</option>
+                        <option value="us_peck">Peck (EUA)</option>
+                        <option value="us_dry_gallon">Galão seco (EUA)</option>
+                        <option value="us_dry_quart">Quart seco (EUA)</option>
+                        <option value="us_dry_pint">Pint seco (EUA)</option>
+                        <option value="imperial_bushel">Bushel (Imperial)</option>
+                        <option value="imperial_peck">Peck (Imperial)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="toUnit">Para:</label>
+                    <select id="toUnit">
+                        <option value="cubic_meter">Metro cúbico (m³)</option>
+                        <option value="cubic_centimeter">Centímetro cúbico (cm³)</option>
+                        <option value="cubic_millimeter">Milímetro cúbico (mm³)</option>
+                        <option value="cubic_foot">Pé cúbico (ft³)</option>
+                        <option value="cubic_inch">Polegada cúbica (in³)</option>
+                        <option value="liter" selected>Litro (L)</option>
+                        <option value="milliliter">Mililitro (mL)</option>
+                        <option value="us_bushel">Bushel (EUA)</option>
+                        <option value="us_peck">Peck (EUA)</option>
+                        <option value="us_dry_gallon">Galão seco (EUA)</option>
+                        <option value="us_dry_quart">Quart seco (EUA)</option>
+                        <option value="us_dry_pint">Pint seco (EUA)</option>
+                        <option value="imperial_bushel">Bushel (Imperial)</option>
+                        <option value="imperial_peck">Peck (Imperial)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="convertBtn">Converter</button>
+            <div class="conversion-result" id="result">O resultado aparecerá aqui.</div>
+            <div class="error" id="error" style="display: none;"></div>
+        </div>
+
+        <div class="examples">
+            <h3>Exemplos de Conversão</h3>
+            <div class="example-item">
+                <div class="example-input">1 bushel (EUA) ≈ 35.24 litros</div>
+                <div class="example-output">Um bushel americano é aproximadamente igual a 35.24 litros.</div>
+            </div>
+            <div class="example-item">
+                <div class="example-input">1 peck (EUA) = 8.81 litros</div>
+                <div class="example-output">Um peck americano é igual a 8.81 litros.</div>
+            </div>
+            <div class="example-item">
+                <div class="example-input">1 bushel (Imperial) = 36.37 litros</div>
+                <div class="example-output">Um bushel imperial é igual a 36.37 litros.</div>
+            </div>
+            <div class="example-item">
+                <div class="example-input">1 galão seco (EUA) = 4.40 litros</div>
+                <div class="example-output">Um galão seco americano é igual a 4.40 litros.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fromValueInput = document.getElementById('fromValue');
+        const fromUnitSelect = document.getElementById('fromUnit');
+        const toUnitSelect = document.getElementById('toUnit');
+        const convertBtn = document.getElementById('convertBtn');
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+
+        // Fatores de conversão para litros
+        const conversionFactors = {
+            cubic_meter: 1000,
+            cubic_centimeter: 0.001,
+            cubic_millimeter: 0.000001,
+            cubic_foot: 28.3168,
+            cubic_inch: 0.0163871,
+            liter: 1,
+            milliliter: 0.001,
+            us_bushel: 35.2391,
+            us_peck: 8.80977,
+            us_dry_gallon: 4.40488,
+            us_dry_quart: 1.10122,
+            us_dry_pint: 0.550611,
+            imperial_bushel: 36.3687,
+            imperial_peck: 9.09218
+        };
+
+        function convert() {
+            const fromValue = parseFloat(fromValueInput.value);
+            
+            if (isNaN(fromValue)) {
+                errorDiv.textContent = 'Por favor, digite um valor numérico válido.';
+                errorDiv.style.display = 'block';
+                resultDiv.textContent = 'O resultado aparecerá aqui.';
+                return;
+            }
+            
+            errorDiv.style.display = 'none';
+            
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            
+            // Converter para a unidade base (litros)
+            const valueInLiters = fromValue * conversionFactors[fromUnit];
+            
+            // Converter da unidade base para a unidade desejada
+            const result = valueInLiters / conversionFactors[toUnit];
+            
+            const fromUnitText = fromUnitSelect.options[fromUnitSelect.selectedIndex].text;
+            const toUnitText = toUnitSelect.options[toUnitSelect.selectedIndex].text;
+            
+            resultDiv.innerHTML = `<strong>${fromValue} ${fromUnitText}</strong> = <strong>${result.toLocaleString('pt-BR', { maximumFractionDigits: 6 })} ${toUnitText}</strong>`;
+        }
+
+        convertBtn.addEventListener('click', convert);
+        
+        // Converter ao pressionar Enter no campo de entrada
+        fromValueInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convert();
+            }
+        });
+    </script>
+</body>
+</html>

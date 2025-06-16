@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Área</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .common-conversions {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+        }
+
+        .common-conversions h3 {
+            margin-top: 0;
+        }
+
+        .common-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .common-table th, .common-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+
+        .common-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Área</h1>
+            <p>Converta entre diferentes unidades de área</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-unit">De:</label>
+                    <select id="from-unit">
+                        <option value="mm2">Milímetro Quadrado (mm²)</option>
+                        <option value="cm2">Centímetro Quadrado (cm²)</option>
+                        <option value="dm2">Decímetro Quadrado (dm²)</option>
+                        <option value="m2" selected>Metro Quadrado (m²)</option>
+                        <option value="a">Are (a)</option>
+                        <option value="ha">Hectare (ha)</option>
+                        <option value="km2">Quilômetro Quadrado (km²)</option>
+                        <option value="in2">Polegada Quadrada (in²)</option>
+                        <option value="ft2">Pé Quadrado (ft²)</option>
+                        <option value="yd2">Jarda Quadrada (yd²)</option>
+                        <option value="ac">Acre (ac)</option>
+                        <option value="mi2">Milha Quadrada (mi²)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-unit">Para:</label>
+                    <select id="to-unit">
+                        <option value="mm2">Milímetro Quadrado (mm²)</option>
+                        <option value="cm2">Centímetro Quadrado (cm²)</option>
+                        <option value="dm2">Decímetro Quadrado (dm²)</option>
+                        <option value="m2">Metro Quadrado (m²)</option>
+                        <option value="a">Are (a)</option>
+                        <option value="ha">Hectare (ha)</option>
+                        <option value="km2">Quilômetro Quadrado (km²)</option>
+                        <option value="in2">Polegada Quadrada (in²)</option>
+                        <option value="ft2" selected>Pé Quadrado (ft²)</option>
+                        <option value="yd2">Jarda Quadrada (yd²)</option>
+                        <option value="ac">Acre (ac)</option>
+                        <option value="mi2">Milha Quadrada (mi²)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as unidades para ver o resultado.
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="common-conversions">
+                <h3>Conversões Comuns</h3>
+                <table class="common-table">
+                    <thead>
+                        <tr>
+                            <th>De</th>
+                            <th>Para</th>
+                            <th>Multiplicar por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Metros Quadrados</td>
+                            <td>Pés Quadrados</td>
+                            <td>10.7639</td>
+                        </tr>
+                        <tr>
+                            <td>Pés Quadrados</td>
+                            <td>Metros Quadrados</td>
+                            <td>0.092903</td>
+                        </tr>
+                        <tr>
+                            <td>Hectares</td>
+                            <td>Acres</td>
+                            <td>2.47105</td>
+                        </tr>
+                        <tr>
+                            <td>Acres</td>
+                            <td>Hectares</td>
+                            <td>0.404686</td>
+                        </tr>
+                        <tr>
+                            <td>Quilômetros Quadrados</td>
+                            <td>Milhas Quadradas</td>
+                            <td>0.386102</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Fatores de conversão para metros quadrados
+            const conversionFactors = {
+                mm2: 0.000001,        // milímetros quadrados
+                cm2: 0.0001,          // centímetros quadrados
+                dm2: 0.01,            // decímetros quadrados
+                m2: 1,                // metros quadrados (base)
+                a: 100,               // are
+                ha: 10000,            // hectare
+                km2: 1000000,         // quilômetros quadrados
+                in2: 0.00064516,      // polegadas quadradas
+                ft2: 0.092903,        // pés quadrados
+                yd2: 0.836127,        // jardas quadradas
+                ac: 4046.86,          // acres
+                mi2: 2589988.11       // milhas quadradas
+            };
+
+            const inputValue = document.getElementById('input-value');
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromUnit.value;
+                const to = toUnit.value;
+                
+                // Converter para metros quadrados e depois para a unidade de destino
+                const m2 = value * conversionFactors[from];
+                const result = m2 / conversionFactors[to];
+                
+                const formattedResult = formatNumber(result);
+                const fromUnitText = fromUnit.options[fromUnit.selectedIndex].text;
+                const toUnitText = toUnit.options[toUnit.selectedIndex].text;
+                
+                resultElement.innerHTML = `
+                    <strong>${value} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>
+                `;
+            }
+
+            // Formatar número com separadores adequados
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito grandes ou muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('pt-BR', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 0
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as unidades
+            fromUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

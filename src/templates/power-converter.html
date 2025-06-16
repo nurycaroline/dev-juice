@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Potência</title>
+    <style>
+        :root {
+            --container-padding: 20px;
+            --input-padding-vertical: 6px;
+            --input-padding-horizontal: 12px;
+            --input-margin-vertical: 4px;
+            --input-margin-horizontal: 0;
+        }
+
+        body {
+            padding: 0 var(--container-padding);
+            color: var(--vscode-foreground);
+            font-size: var(--vscode-font-size);
+            font-weight: var(--vscode-font-weight);
+            font-family: var(--vscode-font-family);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-weight: var(--vscode-font-weight);
+            font-size: 24px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        .header p {
+            color: var(--vscode-descriptionForeground);
+            margin-top: 0;
+        }
+
+        .converter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--vscode-editor-foreground);
+        }
+
+        input, select {
+            display: block;
+            width: 100%;
+            border: none;
+            font-family: var(--vscode-font-family);
+            padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+            color: var(--vscode-input-foreground);
+            outline-color: var(--vscode-focusBorder);
+            background-color: var(--vscode-input-background);
+        }
+
+        input:focus, select:focus {
+            outline-color: var(--vscode-focusBorder);
+        }
+
+        .conversion-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .conversion-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            color: var(--vscode-button-foreground);
+            background-color: var(--vscode-button-background);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .common-conversions {
+            margin-top: 30px;
+            border-top: 1px solid var(--vscode-widget-shadow);
+            padding-top: 20px;
+        }
+
+        .common-conversions h3 {
+            margin-top: 0;
+        }
+
+        .common-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .common-table th, .common-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid var(--vscode-widget-shadow);
+        }
+
+        .common-table th {
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+        }
+
+        .error-message {
+            color: var(--vscode-errorForeground);
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Conversor de Potência</h1>
+            <p>Converta entre diferentes unidades de potência</p>
+        </div>
+
+        <div class="converter-container">
+            <div class="conversion-form">
+                <div class="input-group">
+                    <label for="input-value">Valor:</label>
+                    <input type="number" id="input-value" step="any" placeholder="Digite o valor a ser convertido">
+                </div>
+
+                <div class="input-group">
+                    <label for="from-unit">De:</label>
+                    <select id="from-unit">
+                        <option value="w" selected>Watt (W)</option>
+                        <option value="kw">Kilowatt (kW)</option>
+                        <option value="mw">Megawatt (MW)</option>
+                        <option value="gw">Gigawatt (GW)</option>
+                        <option value="hp">Cavalo-vapor (hp)</option>
+                        <option value="hpm">Cavalo-vapor métrico (hp métrico)</option>
+                        <option value="btu-h">BTU por hora (BTU/h)</option>
+                        <option value="btu-m">BTU por minuto (BTU/min)</option>
+                        <option value="ft-lb-s">Pé-libra por segundo (ft·lb/s)</option>
+                        <option value="dbm">Decibel miliwatt (dBm)</option>
+                        <option value="cal-s">Caloria por segundo (cal/s)</option>
+                        <option value="kcal-h">Kilocaloria por hora (kcal/h)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="to-unit">Para:</label>
+                    <select id="to-unit">
+                        <option value="w">Watt (W)</option>
+                        <option value="kw" selected>Kilowatt (kW)</option>
+                        <option value="mw">Megawatt (MW)</option>
+                        <option value="gw">Gigawatt (GW)</option>
+                        <option value="hp">Cavalo-vapor (hp)</option>
+                        <option value="hpm">Cavalo-vapor métrico (hp métrico)</option>
+                        <option value="btu-h">BTU por hora (BTU/h)</option>
+                        <option value="btu-m">BTU por minuto (BTU/min)</option>
+                        <option value="ft-lb-s">Pé-libra por segundo (ft·lb/s)</option>
+                        <option value="dbm">Decibel miliwatt (dBm)</option>
+                        <option value="cal-s">Caloria por segundo (cal/s)</option>
+                        <option value="kcal-h">Kilocaloria por hora (kcal/h)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <button id="convert-btn">Converter</button>
+                </div>
+            </div>
+
+            <div class="conversion-result" id="result">
+                Insira um valor e selecione as unidades para ver o resultado.
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <div class="common-conversions">
+                <h3>Conversões Comuns</h3>
+                <table class="common-table">
+                    <thead>
+                        <tr>
+                            <th>De</th>
+                            <th>Para</th>
+                            <th>Multiplicar por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Watt (W)</td>
+                            <td>Kilowatt (kW)</td>
+                            <td>0.001</td>
+                        </tr>
+                        <tr>
+                            <td>Cavalo-vapor (hp)</td>
+                            <td>Watt (W)</td>
+                            <td>745.7</td>
+                        </tr>
+                        <tr>
+                            <td>Kilowatt (kW)</td>
+                            <td>Cavalo-vapor (hp)</td>
+                            <td>1.341</td>
+                        </tr>
+                        <tr>
+                            <td>BTU por hora (BTU/h)</td>
+                            <td>Watt (W)</td>
+                            <td>0.2931</td>
+                        </tr>
+                        <tr>
+                            <td>Kilocaloria por hora (kcal/h)</td>
+                            <td>Watt (W)</td>
+                            <td>1.163</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Fatores de conversão para watts (W)
+            const conversionFactors = {
+                w: 1,                     // watt (base)
+                kw: 1000,                 // kilowatt
+                mw: 1000000,              // megawatt
+                gw: 1000000000,           // gigawatt
+                hp: 745.699872,           // cavalo-vapor (hp) - padrão internacional
+                hpm: 735.49875,           // cavalo-vapor métrico
+                'btu-h': 0.29307107,      // BTU por hora
+                'btu-m': 17.584264,       // BTU por minuto
+                'ft-lb-s': 1.3558179,     // pé-libra por segundo
+                'cal-s': 4.184,           // caloria por segundo
+                'kcal-h': 1.163,          // kilocaloria por hora
+                dbm: function(dbm) {      // decibel miliwatt - requer tratamento especial
+                    // dBm = 10 * log10(P/1mW), então P = 1mW * 10^(dBm/10)
+                    return 0.001 * Math.pow(10, dbm / 10);
+                }
+            };
+
+            // Conversão inversa para dBm (caso especial)
+            function toDB(watts) {
+                // P(dBm) = 10 * log10(P/1mW)
+                return 10 * Math.log10(watts / 0.001);
+            }
+
+            const inputValue = document.getElementById('input-value');
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            const convertBtn = document.getElementById('convert-btn');
+            const resultElement = document.getElementById('result');
+            const errorElement = document.getElementById('error-message');
+
+            // Função para converter valores
+            function convert() {
+                const value = parseFloat(inputValue.value);
+                
+                if (isNaN(value)) {
+                    showError('Por favor, insira um valor numérico válido.');
+                    return;
+                }
+
+                hideError();
+                
+                const from = fromUnit.value;
+                const to = toUnit.value;
+                
+                try {
+                    // Converter para watts
+                    let watts;
+                    if (from === 'dbm') {
+                        // Caso especial para dBm
+                        watts = conversionFactors.dbm(value);
+                    } else {
+                        watts = value * conversionFactors[from];
+                    }
+                    
+                    // Converter de watts para a unidade de destino
+                    let result;
+                    if (to === 'dbm') {
+                        // Caso especial para dBm
+                        result = toDB(watts);
+                    } else {
+                        result = watts / conversionFactors[to];
+                    }
+                    
+                    const formattedResult = formatNumber(result);
+                    const fromUnitText = fromUnit.options[fromUnit.selectedIndex].text;
+                    const toUnitText = toUnit.options[toUnit.selectedIndex].text;
+                    
+                    resultElement.innerHTML = `
+                        <strong>${value} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>
+                    `;
+                } catch (error) {
+                    showError('Erro na conversão: ' + error.message);
+                }
+            }
+
+            // Formatar número com separadores adequados
+            function formatNumber(num) {
+                if (num === 0) return '0';
+                
+                // Para números muito grandes ou muito pequenos, use notação científica
+                if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
+                    return num.toExponential(6);
+                }
+                
+                // Para outros números, use formatação padrão com até 6 casas decimais
+                return num.toLocaleString('pt-BR', { 
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 0
+                });
+            }
+
+            function showError(message) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                resultElement.textContent = 'Erro na conversão. Verifique os valores.';
+            }
+
+            function hideError() {
+                errorElement.style.display = 'none';
+            }
+
+            // Event listeners
+            convertBtn.addEventListener('click', convert);
+            
+            // Também converter quando o usuário pressionar Enter
+            inputValue.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convert();
+                }
+            });
+
+            // Converter quando mudar as unidades
+            fromUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+            
+            toUnit.addEventListener('change', function() {
+                if (inputValue.value) convert();
+            });
+
+            // Inicialização
+            inputValue.focus();
+        })();
+    </script>
+</body>
+</html>

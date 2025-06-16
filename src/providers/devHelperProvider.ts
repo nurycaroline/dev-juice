@@ -78,9 +78,128 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
             vscode.TreeItemCollapsibleState.None
           )
           // Add more formatting tools here as needed
+        ])      } else if (element.label === 'Conversores') {
+        return Promise.resolve([
+          new DevToolItem(
+            'Conversor de Ângulo',
+            'Converter entre diferentes unidades de ângulo',
+            'dev-helper.angleConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Área',
+            'Converter entre diferentes unidades de área',
+            'dev-helper.areaConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Armazenamento de Dados',
+            'Converter entre diferentes unidades de armazenamento de dados',
+            'dev-helper.dataStorageConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Case',
+            'Converter entre diferentes estilos de case (camelCase, snake_case, etc.)',
+            'dev-helper.caseConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Comprimento',
+            'Converter entre diferentes unidades de comprimento',
+            'dev-helper.lengthConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Consumo de Combustível',
+            'Converter entre diferentes unidades de consumo de combustível',
+            'dev-helper.fuelConsumptionConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Cores',
+            'Converter entre formatos de cores (HEX, RGB, HSL)',
+            'dev-helper.colorConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Energia',
+            'Converter entre diferentes unidades de energia',
+            'dev-helper.energyConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Força',
+            'Converter entre diferentes unidades de força',
+            'dev-helper.forceConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Moedas',
+            'Converter entre diferentes moedas',
+            'dev-helper.currencyConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Números',
+            'Converter entre diferentes bases numéricas (decimal, binário, hexadecimal, etc.)',
+            'dev-helper.numbersConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Peso e Massa',
+            'Converter entre diferentes unidades de peso e massa',
+            'dev-helper.weightConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Potência',
+            'Converter entre diferentes unidades de potência',
+            'dev-helper.powerConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Pressão',
+            'Converter entre diferentes unidades de pressão',
+            'dev-helper.pressureConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Temperatura',
+            'Converter entre diferentes unidades de temperatura',
+            'dev-helper.temperatureConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Tempo',
+            'Converter entre diferentes unidades de tempo',
+            'dev-helper.timeConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Velocidade',
+            'Converter entre diferentes unidades de velocidade',
+            'dev-helper.speedConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Volume',
+            'Converter entre diferentes unidades de volume',
+            'dev-helper.volumeConverter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Conversor de Volume (Seco)',
+            'Converter entre diferentes unidades de volume para materiais secos',
+            'dev-helper.dryVolumeConverter',
+            vscode.TreeItemCollapsibleState.None
+          )
         ])
+
       } else if (element.label === 'Utilitários') {
         return Promise.resolve([
+
+          // Utilities from second block
           new DevToolItem(
             'Calculadora de Data',
             'Calcular diferenças entre datas e formatos',
@@ -91,12 +210,6 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
             'Codificador Base64',
             'Codificar/decodificar texto em Base64',
             'dev-helper.base64Encoder',
-            vscode.TreeItemCollapsibleState.None
-          ),
-          new DevToolItem(
-            'Conversor de Cores',
-            'Converter entre formatos de cores (HEX, RGB, HSL)',
-            'dev-helper.colorConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
@@ -146,13 +259,19 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           'Formatação',
           'Ferramentas de formatação de dados',
           '',
-          vscode.TreeItemCollapsibleState.Collapsed
+          vscode.TreeItemCollapsibleState.Expanded
+        ),
+        new DevToolItem(
+          'Conversores',
+          'Ferramentas para conversão entre diferentes unidades',
+          '',
+          vscode.TreeItemCollapsibleState.Expanded
         ),
         new DevToolItem(
           'Utilitários',
           'Ferramentas utilitárias para desenvolvimento',
           '',
-          vscode.TreeItemCollapsibleState.Collapsed
+          vscode.TreeItemCollapsibleState.Expanded
         )
         // Add more categories here as needed
       ])

@@ -6,23 +6,41 @@ import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeC
 
 // Lazy imports para providers (só carregados quando necessário)
 const lazyProviders = {
+  get AngleConverterProvider () { return require('./providers/converters/angleConverterProvider').AngleConverterProvider },
   get AnsiFormatterProvider () { return require('./providers/ansiFormatterProvider').AnsiFormatterProvider },
+  get AreaConverterProvider () { return require('./providers/converters/areaConverterProvider').AreaConverterProvider },
   get Base64EncoderProvider () { return require('./providers/base64EncoderProvider').Base64EncoderProvider },
+  get CaseConverterProvider () { return require('./providers/converters/caseConverterProvider').CaseConverterProvider },
   get CNPJPanelProvider () { return require('./providers/cnpjPanelProvider').CNPJPanelProvider },
   get ColorConverterProvider () { return require('./providers/colorConverterProvider').ColorConverterProvider },
   get CPFPanelProvider () { return require('./providers/cpfPanelProvider').CPFPanelProvider },
+  get CurrencyConverterProvider () { return require('./providers/converters/currencyConverterProvider').CurrencyConverterProvider },
+  get DataStorageConverterProvider () { return require('./providers/converters/dataStorageConverterProvider').DataStorageConverterProvider },
   get DateCalculatorProvider () { return require('./providers/dateCalculatorProvider').DateCalculatorProvider },
+  get DryVolumeConverterProvider () { return require('./providers/converters/dryVolumeConverterProvider').DryVolumeConverterProvider },
   get EmailValidatorProvider () { return require('./providers/emailValidatorProvider').EmailValidatorProvider },
+  get EnergyConverterProvider () { return require('./providers/converters/energyConverterProvider').EnergyConverterProvider },
+  get ForceConverterProvider () { return require('./providers/converters/forceConverterProvider').ForceConverterProvider },
+  get FuelConsumptionConverterProvider () { return require('./providers/converters/fuelConsumptionConverterProvider').FuelConsumptionConverterProvider },
   get HashGeneratorProvider () { return require('./providers/hashGeneratorProvider').HashGeneratorProvider },
   get JsonFormatterProvider () { return require('./providers/jsonFormatterProvider').JsonFormatterProvider },
+  get LengthConverterProvider () { return require('./providers/converters/lengthConverterProvider').LengthConverterProvider },
+  get NumbersConverterProvider () { return require('./providers/converters/numbersConverterProvider').NumbersConverterProvider },
   get PasswordGeneratorProvider () { return require('./providers/passwordGeneratorProvider').PasswordGeneratorProvider },
   get PixDecoderProvider () { return require('./providers/pixDecoderProvider').PixDecoderProvider },
   get PixPanelProvider () { return require('./providers/pixPanelProvider').PixPanelProvider },
+  get PowerConverterProvider () { return require('./providers/converters/powerConverterProvider').PowerConverterProvider },
+  get PressureConverterProvider () { return require('./providers/converters/pressureConverterProvider').PressureConverterProvider },
   get QrReaderProvider () { return require('./providers/qrReaderProvider').QrReaderProvider },
   get RegexTesterProvider () { return require('./providers/regexTesterProvider').RegexTesterProvider },
+  get SpeedConverterProvider () { return require('./providers/converters/speedConverterProvider').SpeedConverterProvider },
+  get TemperatureConverterProvider () { return require('./providers/converters/temperatureConverterProvider').TemperatureConverterProvider },
   get TextFormatterProvider () { return require('./providers/textFormatterProvider').TextFormatterProvider },
+  get TimeConverterProvider () { return require('./providers/converters/timeConverterProvider').TimeConverterProvider },
   get UrlEncoderProvider () { return require('./providers/urlEncoderProvider').UrlEncoderProvider },
-  get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider }
+  get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider },
+  get VolumeConverterProvider () { return require('./providers/converters/volumeConverterProvider').VolumeConverterProvider },
+  get WeightConverterProvider () { return require('./providers/converters/weightConverterProvider').WeightConverterProvider }
 }
 
 // This method is called when your extension is activated
@@ -263,14 +281,112 @@ export function activate (context: vscode.ExtensionContext) {
     insertUUID(false)
   })
 
+  // Area Converter command
+  const areaConverterDisposable = vscode.commands.registerCommand('dev-helper.areaConverter', () => {
+    lazyProviders.AreaConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Length Converter command
+  const lengthConverterDisposable = vscode.commands.registerCommand('dev-helper.lengthConverter', () => {
+    lazyProviders.LengthConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Temperature Converter command
+  const temperatureConverterDisposable = vscode.commands.registerCommand('dev-helper.temperatureConverter', () => {
+    lazyProviders.TemperatureConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Volume Converter command
+  const volumeConverterDisposable = vscode.commands.registerCommand('dev-helper.volumeConverter', () => {
+    lazyProviders.VolumeConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Weight Converter command
+  const weightConverterDisposable = vscode.commands.registerCommand('dev-helper.weightConverter', () => {
+    lazyProviders.WeightConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Angle Converter command
+  const angleConverterDisposable = vscode.commands.registerCommand('dev-helper.angleConverter', () => {
+    lazyProviders.AngleConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Case Converter command
+  const caseConverterDisposable = vscode.commands.registerCommand('dev-helper.caseConverter', () => {
+    lazyProviders.CaseConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Currency Converter command
+  const currencyConverterDisposable = vscode.commands.registerCommand('dev-helper.currencyConverter', () => {
+    lazyProviders.CurrencyConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Data Storage Converter command
+  const dataStorageConverterDisposable = vscode.commands.registerCommand('dev-helper.dataStorageConverter', () => {
+    lazyProviders.DataStorageConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Dry Volume Converter command
+  const dryVolumeConverterDisposable = vscode.commands.registerCommand('dev-helper.dryVolumeConverter', () => {
+    lazyProviders.DryVolumeConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Energy Converter command
+  const energyConverterDisposable = vscode.commands.registerCommand('dev-helper.energyConverter', () => {
+    lazyProviders.EnergyConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Force Converter command
+  const forceConverterDisposable = vscode.commands.registerCommand('dev-helper.forceConverter', () => {
+    lazyProviders.ForceConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Fuel Consumption Converter command
+  const fuelConsumptionConverterDisposable = vscode.commands.registerCommand('dev-helper.fuelConsumptionConverter', () => {
+    lazyProviders.FuelConsumptionConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Numbers Converter command
+  const numbersConverterDisposable = vscode.commands.registerCommand('dev-helper.numbersConverter', () => {
+    lazyProviders.NumbersConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Power Converter command
+  const powerConverterDisposable = vscode.commands.registerCommand('dev-helper.powerConverter', () => {
+    lazyProviders.PowerConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Pressure Converter command
+  const pressureConverterDisposable = vscode.commands.registerCommand('dev-helper.pressureConverter', () => {
+    lazyProviders.PressureConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Speed Converter command
+  const speedConverterDisposable = vscode.commands.registerCommand('dev-helper.speedConverter', () => {
+    lazyProviders.SpeedConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Time Converter command
+  const timeConverterDisposable = vscode.commands.registerCommand('dev-helper.timeConverter', () => {
+    lazyProviders.TimeConverterProvider.createOrShow(context.extensionUri)
+  })
+
   // Add the commands to the extension context - Organizados em ordem alfabética
   context.subscriptions.push(
     ansiFormatterDisposable,
     ansiFormatterProcessSelectionDisposable,
+    areaConverterDisposable,
+    angleConverterDisposable,
     base64EncoderDisposable,
     colorConverterDisposable,
+    currencyConverterDisposable,
     dateCalculatorDisposable,
+    dataStorageConverterDisposable,
+    dryVolumeConverterDisposable,
     emailValidatorDisposable,
+    energyConverterDisposable,
+    forceConverterDisposable,
+    fuelConsumptionConverterDisposable,
     formatAlternatingCaseDisposable,
     formatCamelCaseDisposable,
     formatCapitalizedCaseDisposable,
@@ -297,12 +413,22 @@ export function activate (context: vscode.ExtensionContext) {
     insertCPFUnformattedDisposable,
     insertUUIDFormattedDisposable,
     insertUUIDUnformattedDisposable,
+    lengthConverterDisposable,
+    numbersConverterDisposable,
     passwordGeneratorDisposable,
     pixDecoderDisposable,
     qrReaderDisposable,
     regexTesterDisposable,
+    speedConverterDisposable,
+    temperatureConverterDisposable,
     textFormatterDisposable,
-    urlEncoderDisposable
+    timeConverterDisposable,
+    urlEncoderDisposable,
+    volumeConverterDisposable,
+    weightConverterDisposable,
+    caseConverterDisposable,
+    powerConverterDisposable,
+    pressureConverterDisposable
   )
 }
 
