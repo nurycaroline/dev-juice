@@ -6,21 +6,21 @@ import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeC
 
 // Lazy imports para providers (só carregados quando necessário)
 const lazyProviders = {
-  get CNPJPanelProvider () { return require('./providers/cnpjPanelProvider').CNPJPanelProvider },
-  get CPFPanelProvider () { return require('./providers/cpfPanelProvider').CPFPanelProvider },
-  get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider },
-  get PixPanelProvider () { return require('./providers/pixPanelProvider').PixPanelProvider },
-  get JsonFormatterProvider () { return require('./providers/jsonFormatterProvider').JsonFormatterProvider },
   get Base64EncoderProvider () { return require('./providers/base64EncoderProvider').Base64EncoderProvider },
-  get PasswordGeneratorProvider () { return require('./providers/passwordGeneratorProvider').PasswordGeneratorProvider },
-  get HashGeneratorProvider () { return require('./providers/hashGeneratorProvider').HashGeneratorProvider },
-  get EmailValidatorProvider () { return require('./providers/emailValidatorProvider').EmailValidatorProvider },
+  get CNPJPanelProvider () { return require('./providers/cnpjPanelProvider').CNPJPanelProvider },
   get ColorConverterProvider () { return require('./providers/colorConverterProvider').ColorConverterProvider },
+  get CPFPanelProvider () { return require('./providers/cpfPanelProvider').CPFPanelProvider },
   get DateCalculatorProvider () { return require('./providers/dateCalculatorProvider').DateCalculatorProvider },
-  get UrlEncoderProvider () { return require('./providers/urlEncoderProvider').UrlEncoderProvider },
-  get QrReaderProvider () { return require('./providers/qrReaderProvider').QrReaderProvider },
+  get EmailValidatorProvider () { return require('./providers/emailValidatorProvider').EmailValidatorProvider },
+  get HashGeneratorProvider () { return require('./providers/hashGeneratorProvider').HashGeneratorProvider },
+  get JsonFormatterProvider () { return require('./providers/jsonFormatterProvider').JsonFormatterProvider },
+  get PasswordGeneratorProvider () { return require('./providers/passwordGeneratorProvider').PasswordGeneratorProvider },
   get PixDecoderProvider () { return require('./providers/pixDecoderProvider').PixDecoderProvider },
-  get TextFormatterProvider () { return require('./providers/textFormatterProvider').TextFormatterProvider }
+  get PixPanelProvider () { return require('./providers/pixPanelProvider').PixPanelProvider },
+  get QrReaderProvider () { return require('./providers/qrReaderProvider').QrReaderProvider },
+  get TextFormatterProvider () { return require('./providers/textFormatterProvider').TextFormatterProvider },
+  get UrlEncoderProvider () { return require('./providers/urlEncoderProvider').UrlEncoderProvider },
+  get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider }
 }
 
 // This method is called when your extension is activated
@@ -35,13 +35,31 @@ export function activate (context: vscode.ExtensionContext) {
   const devHelperProvider = new DevHelperProvider()
   vscode.window.registerTreeDataProvider('devHelperExplorer', devHelperProvider)
 
-  // Register commands
+  // Register commands - Organizados em ordem alfabética
 
-  // Hello World command (from template)
-  const helloWorldDisposable = vscode.commands.registerCommand('dev-helper.helloWorld', () => {
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from Dev Helper!')
+  // Base64 Encoder command
+  const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
+    lazyProviders.Base64EncoderProvider.createOrShow(context.extensionUri)
+  })
+
+  // Color Converter command
+  const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
+    lazyProviders.ColorConverterProvider.createOrShow(context.extensionUri)
+  })
+
+  // Date Calculator command
+  const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
+    lazyProviders.DateCalculatorProvider.createOrShow(context.extensionUri)
+  })
+  
+  // Email Validator command
+  const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
+    lazyProviders.EmailValidatorProvider.createOrShow(context.extensionUri)
+  })
+
+  // Format JSON command
+  const formatJsonDisposable = vscode.commands.registerCommand('dev-helper.formatJson', () => {
+    lazyProviders.JsonFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // Generate CNPJ command - now opens the webview panel
@@ -54,24 +72,14 @@ export function activate (context: vscode.ExtensionContext) {
     lazyProviders.CPFPanelProvider.createOrShow(context.extensionUri)
   })
 
-  // Generate UUID command
-  const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
-    lazyProviders.UUIDPanelProvider.createOrShow(context.extensionUri)
-  })
-
   // Generate PIX command
   const generatePixDisposable = vscode.commands.registerCommand('dev-helper.generatePix', () => {
     lazyProviders.PixPanelProvider.createOrShow(context.extensionUri)
   })
-
-  // Format JSON command
-  const formatJsonDisposable = vscode.commands.registerCommand('dev-helper.formatJson', () => {
-    lazyProviders.JsonFormatterProvider.createOrShow(context.extensionUri)
-  })
-
-  // Base64 Encoder command
-  const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
-    lazyProviders.Base64EncoderProvider.createOrShow(context.extensionUri)
+  
+  // Generate UUID command
+  const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
+    lazyProviders.UUIDPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Hash Generator command
@@ -79,9 +87,11 @@ export function activate (context: vscode.ExtensionContext) {
     lazyProviders.HashGeneratorProvider.createOrShow(context.extensionUri)
   })
 
-  // Email Validator command
-  const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
-    lazyProviders.EmailValidatorProvider.createOrShow(context.extensionUri)
+  // Hello World command (from template)
+  const helloWorldDisposable = vscode.commands.registerCommand('dev-helper.helloWorld', () => {
+    // The code you place here will be executed every time your command is executed
+    // Display a message box to the user
+    vscode.window.showInformationMessage('Hello World from Dev Helper!')
   })
 
   // Password Generator command
@@ -89,19 +99,9 @@ export function activate (context: vscode.ExtensionContext) {
     lazyProviders.PasswordGeneratorProvider.createOrShow(context.extensionUri)
   })
 
-  // Color Converter command
-  const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
-    lazyProviders.ColorConverterProvider.createOrShow(context.extensionUri)
-  })
-
-  // Date Calculator command
-  const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
-    lazyProviders.DateCalculatorProvider.createOrShow(context.extensionUri)
-  })
-
-  // URL Encoder command
-  const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
-    lazyProviders.UrlEncoderProvider.createOrShow(context.extensionUri)
+  // PIX Decoder command
+  const pixDecoderDisposable = vscode.commands.registerCommand('dev-helper.pixDecoder', () => {
+    lazyProviders.PixDecoderProvider.createOrShow(context.extensionUri)
   })
 
   // QR Reader command
@@ -109,17 +109,52 @@ export function activate (context: vscode.ExtensionContext) {
     lazyProviders.QrReaderProvider.createOrShow(context.extensionUri)
   })
 
-  // PIX Decoder command
-  const pixDecoderDisposable = vscode.commands.registerCommand('dev-helper.pixDecoder', () => {
-    lazyProviders.PixDecoderProvider.createOrShow(context.extensionUri)
-  })
-
   // Text Formatter command
   const textFormatterDisposable = vscode.commands.registerCommand('dev-helper.textFormatter', () => {
     lazyProviders.TextFormatterProvider.createOrShow(context.extensionUri)
   })
 
-  // Comandos de formatação de texto para seleção no editor
+  // URL Encoder command
+  const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
+    lazyProviders.UrlEncoderProvider.createOrShow(context.extensionUri)
+  })
+
+  // Comandos de formatação de texto para seleção no editor - Organizados em ordem alfabética
+
+  // Formatar para aLtErNaTiNg cAsE
+  const formatAlternatingCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextAlternatingCase', () => {
+    formatToAlternatingCase()
+  })
+
+  // Formatar para camelCase
+  const formatCamelCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCamelCase', () => {
+    formatToCamelCase()
+  })
+
+  // Formatar para Capitalized Case
+  const formatCapitalizedCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCapitalizedCase', () => {
+    formatToCapitalizedCase()
+  })
+
+  // Formatar para InVeRsE CaSe
+  const formatInverseCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextInverseCase', () => {
+    formatToInverseCase()
+  })
+
+  // Formatar para kebab-case
+  const formatKebabCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextKebabCase', () => {
+    formatToKebabCase()
+  })
+
+  // Formatar para lower case
+  const formatLowerCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextLowerCase', () => {
+    formatToLowerCase()
+  })
+
+  // Formatar para PascalCase
+  const formatPascalCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextPascalCase', () => {
+    formatToPascalCase()
+  })
 
   // Formatar para Sentence case
   const formatSentenceCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextSentenceCase', () => {
@@ -131,47 +166,12 @@ export function activate (context: vscode.ExtensionContext) {
     formatToSnakeCase()
   })
 
-  // Formatar para camelCase
-  const formatCamelCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCamelCase', () => {
-    formatToCamelCase()
-  })
-
-  // Formatar para kebab-case
-  const formatKebabCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextKebabCase', () => {
-    formatToKebabCase()
-  })
-
-  // Formatar para PascalCase
-  const formatPascalCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextPascalCase', () => {
-    formatToPascalCase()
-  })
-
-  // Formatar para lower case
-  const formatLowerCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextLowerCase', () => {
-    formatToLowerCase()
-  })
-
   // Formatar para UPPER CASE
   const formatUpperCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextUpperCase', () => {
     formatToUpperCase()
   })
 
-  // Formatar para Capitalized Case
-  const formatCapitalizedCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCapitalizedCase', () => {
-    formatToCapitalizedCase()
-  })
-
-  // Formatar para aLtErNaTiNg cAsE
-  const formatAlternatingCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextAlternatingCase', () => {
-    formatToAlternatingCase()
-  })
-
-  // Formatar para InVeRsE CaSe
-  const formatInverseCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextInverseCase', () => {
-    formatToInverseCase()
-  })
-
-  // Comandos para inserir valores gerados diretamente no editor
+  // Comandos para inserir valores gerados diretamente no editor - Organizados em ordem alfabética
 
   // Inserir CNPJ formatado
   const insertCNPJFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertCNPJFormatted', () => {
@@ -203,40 +203,40 @@ export function activate (context: vscode.ExtensionContext) {
     insertUUID(false)
   })
 
-  // Add the commands to the extension context
+  // Add the commands to the extension context - Organizados em ordem alfabética
   context.subscriptions.push(
-    helloWorldDisposable,
-    generateCNPJDisposable,
-    generateCPFDisposable,
-    generateUUIDDisposable,
-    generatePixDisposable,
-    formatJsonDisposable,
     base64EncoderDisposable,
-    hashGeneratorDisposable,
-    emailValidatorDisposable,
-    passwordGeneratorDisposable,
     colorConverterDisposable,
     dateCalculatorDisposable,
-    urlEncoderDisposable,
-    qrReaderDisposable,
-    pixDecoderDisposable,
-    textFormatterDisposable,
+    emailValidatorDisposable,
+    formatAlternatingCaseDisposable,
+    formatCamelCaseDisposable,
+    formatCapitalizedCaseDisposable,
+    formatInverseCaseDisposable,
+    formatJsonDisposable,
+    formatKebabCaseDisposable,
+    formatLowerCaseDisposable,
+    formatPascalCaseDisposable,
     formatSentenceCaseDisposable,
     formatSnakeCaseDisposable,
-    formatCamelCaseDisposable,
-    formatKebabCaseDisposable,
-    formatPascalCaseDisposable,
-    formatLowerCaseDisposable,
     formatUpperCaseDisposable,
-    formatCapitalizedCaseDisposable,
-    formatAlternatingCaseDisposable,
-    formatInverseCaseDisposable,
+    generateCNPJDisposable,
+    generateCPFDisposable,
+    generatePixDisposable,
+    generateUUIDDisposable,
+    hashGeneratorDisposable,
+    helloWorldDisposable,
     insertCNPJFormattedDisposable,
     insertCNPJUnformattedDisposable,
     insertCPFFormattedDisposable,
     insertCPFUnformattedDisposable,
     insertUUIDFormattedDisposable,
-    insertUUIDUnformattedDisposable
+    insertUUIDUnformattedDisposable,
+    passwordGeneratorDisposable,
+    pixDecoderDisposable,
+    qrReaderDisposable,
+    textFormatterDisposable,
+    urlEncoderDisposable
   )
 }
 

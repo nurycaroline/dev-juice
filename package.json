@@ -13,53 +13,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "dev-helper.helloWorld",
-        "title": "Hello World"
-      },
-      {
-        "command": "dev-helper.generateCNPJ",
-        "title": "Gerar CNPJ Válido",
-        "icon": "$(key)"
-      },
-      {
-        "command": "dev-helper.generateCPF",
-        "title": "Gerar CPF Válido",
-        "icon": "$(key)"
-      },
-      {
-        "command": "dev-helper.generateUUID",
-        "title": "Gerar UUID",
-        "icon": "$(key)"
-      },
-      {
-        "command": "dev-helper.generatePix",
-        "title": "Gerar PIX QR Code",
-        "icon": "$(credit-card)"
-      },
-      {
-        "command": "dev-helper.formatJson",
-        "title": "Formatador JSON",
-        "icon": "$(json)"
-      },
-      {
         "command": "dev-helper.base64Encoder",
         "title": "Codificador Base64",
         "icon": "$(lock)"
-      },
-      {
-        "command": "dev-helper.hashGenerator",
-        "title": "Gerador de Hash",
-        "icon": "$(key)"
-      },
-      {
-        "command": "dev-helper.emailValidator",
-        "title": "Validador de Email",
-        "icon": "$(mail)"
-      },
-      {
-        "command": "dev-helper.passwordGenerator",
-        "title": "Gerador de Senhas",
-        "icon": "$(shield)"
       },
       {
         "command": "dev-helper.colorConverter",
@@ -72,24 +28,93 @@
         "icon": "$(calendar)"
       },
       {
-        "command": "dev-helper.urlEncoder",
-        "title": "URL Encoder/Decoder",
-        "icon": "$(link)"
+        "command": "dev-helper.emailValidator",
+        "title": "Validador de Email",
+        "icon": "$(mail)"
       },
       {
-        "command": "dev-helper.qrReader",
-        "title": "QR Code Reader",
-        "icon": "$(device-camera)"
+        "command": "dev-helper.formatJson",
+        "title": "Formatador JSON",
+        "icon": "$(json)"
       },
       {
-        "command": "dev-helper.pixDecoder",
-        "title": "PIX QR Code Decoder",
-        "icon": "$(zap)"
+        "command": "dev-helper.formatTextAlternatingCase",
+        "title": "Dev Helper: Formatar para aLtErNaTiNg cAsE",
+        "category": "Editor"
       },
       {
-        "command": "dev-helper.textFormatter",
-        "title": "Formatação de Texto",
-        "icon": "$(symbol-string)"
+        "command": "dev-helper.formatTextCamelCase",
+        "title": "Dev Helper: Formatar para camelCase",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextCapitalizedCase",
+        "title": "Dev Helper: Formatar para Capitalized Case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextInverseCase",
+        "title": "Dev Helper: Formatar para InVeRsE CaSe",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextKebabCase",
+        "title": "Dev Helper: Formatar para kebab-case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextLowerCase",
+        "title": "Dev Helper: Formatar para lower case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextPascalCase",
+        "title": "Dev Helper: Formatar para PascalCase",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextSentenceCase",
+        "title": "Dev Helper: Formatar para Sentence case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextSnakeCase",
+        "title": "Dev Helper: Formatar para snake_case",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextUpperCase",
+        "title": "Dev Helper: Formatar para UPPER CASE",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.generateCNPJ",
+        "title": "Gerar CNPJ Válido",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.generateCPF",
+        "title": "Gerar CPF Válido",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.generatePix",
+        "title": "Gerar PIX QR Code",
+        "icon": "$(credit-card)"
+      },
+      {
+        "command": "dev-helper.generateUUID",
+        "title": "Gerar UUID",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.hashGenerator",
+        "title": "Gerador de Hash",
+        "icon": "$(key)"
+      },
+      {
+        "command": "dev-helper.helloWorld",
+        "title": "Hello World"
       },
       {
         "command": "dev-helper.insertCNPJFormatted",
@@ -122,54 +147,29 @@
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextSentenceCase",
-        "title": "Dev Helper: Formatar para Sentence case",
-        "category": "Editor"
+        "command": "dev-helper.passwordGenerator",
+        "title": "Gerador de Senhas",
+        "icon": "$(shield)"
       },
       {
-        "command": "dev-helper.formatTextSnakeCase",
-        "title": "Dev Helper: Formatar para snake_case",
-        "category": "Editor"
+        "command": "dev-helper.pixDecoder",
+        "title": "PIX QR Code Decoder",
+        "icon": "$(zap)"
       },
       {
-        "command": "dev-helper.formatTextCamelCase",
-        "title": "Dev Helper: Formatar para camelCase",
-        "category": "Editor"
+        "command": "dev-helper.qrReader",
+        "title": "QR Code Reader",
+        "icon": "$(device-camera)"
       },
       {
-        "command": "dev-helper.formatTextKebabCase",
-        "title": "Dev Helper: Formatar para kebab-case",
-        "category": "Editor"
+        "command": "dev-helper.textFormatter",
+        "title": "Formatação de Texto",
+        "icon": "$(symbol-string)"
       },
       {
-        "command": "dev-helper.formatTextPascalCase",
-        "title": "Dev Helper: Formatar para PascalCase",
-        "category": "Editor"
-      },
-      {
-        "command": "dev-helper.formatTextLowerCase",
-        "title": "Dev Helper: Formatar para lower case",
-        "category": "Editor"
-      },
-      {
-        "command": "dev-helper.formatTextUpperCase",
-        "title": "Dev Helper: Formatar para UPPER CASE",
-        "category": "Editor"
-      },
-      {
-        "command": "dev-helper.formatTextCapitalizedCase",
-        "title": "Dev Helper: Formatar para Capitalized Case",
-        "category": "Editor"
-      },
-      {
-        "command": "dev-helper.formatTextAlternatingCase",
-        "title": "Dev Helper: Formatar para aLtErNaTiNg cAsE",
-        "category": "Editor"
-      },
-      {
-        "command": "dev-helper.formatTextInverseCase",
-        "title": "Dev Helper: Formatar para InVeRsE CaSe",
-        "category": "Editor"
+        "command": "dev-helper.urlEncoder",
+        "title": "URL Encoder/Decoder",
+        "icon": "$(link)"
       }
     ],
     "viewsContainers": {
