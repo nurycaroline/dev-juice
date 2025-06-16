@@ -13,6 +13,16 @@
   "contributes": {
     "commands": [
       {
+        "command": "dev-helper.ansiFormatter",
+        "title": "Formatador de Logs ANSI",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "dev-helper.ansiFormatterProcessSelection",
+        "title": "Dev Helper: Remover Códigos ANSI da Seleção",
+        "category": "Editor"
+      },
+      {
         "command": "dev-helper.base64Encoder",
         "title": "Codificador Base64",
         "icon": "$(lock)"

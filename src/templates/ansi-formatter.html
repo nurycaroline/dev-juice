@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatador de Logs ANSI</title>
+    <style>
+        body {
+            font-family: var(--vscode-font-family);
+            font-size: var(--vscode-font-size);
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--vscode-titleBar-activeForeground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            border-radius: 5px;
+            border: 1px solid var(--vscode-panel-border);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            height: 150px;
+            padding: 8px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 3px;
+            resize: vertical;
+            font-family: monospace;
+        }
+
+        input[type="text"] {
+            height: auto;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        .btn-row {
+            display: flex;
+            margin-top: 10px;
+            justify-content: space-between;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .checkbox-group {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            margin-right: 5px;
+        }
+
+        #output-container {
+            padding: 12px;
+            background-color: var(--vscode-terminal-background, #1e1e1e);
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-top: 15px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: var(--vscode-inputValidation-errorBackground);
+            border: 1px solid var(--vscode-inputValidation-errorBorder);
+            color: var(--vscode-inputValidation-errorForeground);
+        }
+
+        .alert-success {
+            background-color: var(--vscode-gitDecoration-addedResourceForeground);
+            border: 1px solid var(--vscode-gitDecoration-addedResourceForeground);
+            color: var(--vscode-foreground);
+            opacity: 0.8;
+        }
+
+        .info-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: var(--vscode-editorWidget-background);
+            border-left: 3px solid var(--vscode-statusBar-background);
+            font-size: 0.9em;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            margin-left: 5px;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--vscode-editorWidget-background);
+            color: var(--vscode-foreground);
+            text-align: center;
+            border-radius: 3px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 0.85em;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border: 1px solid var(--vscode-panel-border);
+            padding: 8px;
+            text-align: left;
+        }
+        
+        table th {
+            background-color: var(--vscode-editorWidget-background);
+        }
+        
+        .color-sample {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .color-table-section {
+            margin-top: 20px;
+        }
+        
+        .collapsible {
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            background-color: var(--vscode-editor-inactiveSelectionBackground);
+            color: var(--vscode-foreground);
+            border: none;
+            outline: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: var(--vscode-editor-background);
+        }
+        
+        .active:after {
+            content: "▲";
+        }
+        
+        .collapsible:after {
+            content: "▼";
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formatador de Logs ANSI</h1>
+        
+        <div class="section">
+            <h2>Entrada</h2>
+            <div class="form-group">
+                <label for="input-text">Cole o texto com códigos ANSI:</label>
+                <textarea id="input-text" placeholder="Cole aqui o texto contendo códigos ANSI..."></textarea>
+            </div>
+            
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="strip-ansi" checked>
+                    <label for="strip-ansi">Remover códigos ANSI</label>
+                    <div class="tooltip">?
+                        <span class="tooltip-text">Remove todos os códigos ANSI do texto, mantendo apenas o conteúdo</span>
+                    </div>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="render-ansi">
+                    <label for="render-ansi">Renderizar códigos ANSI</label>
+                    <div class="tooltip">?
+                        <span class="tooltip-text">Aplica formatação visual aos códigos ANSI (cores, negrito, etc.)</span>
+                    </div>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="highlight-ansi">
+                    <label for="highlight-ansi">Destacar códigos ANSI</label>
+                    <div class="tooltip">?
+                        <span class="tooltip-text">Mantém os códigos ANSI no texto, mas os destaca visualmente</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-row">
+                <div class="btn-group">
+                    <button id="process-btn">Processar</button>
+                    <button id="clear-btn">Limpar</button>
+                </div>
+            </div>
+            
+            <div id="error-alert" class="alert alert-error"></div>
+        </div>
+        
+        <div class="section">
+            <h2>Saída</h2>
+            <div id="output-container"></div>
+            
+            <div class="btn-row">
+                <div class="btn-group">
+                    <button id="copy-btn">Copiar Texto Processado</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="collapsible">Códigos ANSI Comuns</button>
+        <div class="collapsible-content">
+            <div class="section color-table-section">
+                <h3>Códigos de Estilo</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estilo</th>
+                            <th>Código ANSI</th>
+                            <th>Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Reset</td>
+                            <td>\x1b[0m</td>
+                            <td>Restaura para o padrão</td>
+                        </tr>
+                        <tr>
+                            <td>Negrito</td>
+                            <td>\x1b[1m</td>
+                            <td><strong>Texto em negrito</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Fraco</td>
+                            <td>\x1b[2m</td>
+                            <td><span style="opacity: 0.7">Texto com menor intensidade</span></td>
+                        </tr>
+                        <tr>
+                            <td>Itálico</td>
+                            <td>\x1b[3m</td>
+                            <td><em>Texto em itálico</em></td>
+                        </tr>
+                        <tr>
+                            <td>Sublinhado</td>
+                            <td>\x1b[4m</td>
+                            <td><u>Texto sublinhado</u></td>
+                        </tr>
+                        <tr>
+                            <td>Piscante</td>
+                            <td>\x1b[5m</td>
+                            <td>Texto piscante</td>
+                        </tr>
+                        <tr>
+                            <td>Invertido</td>
+                            <td>\x1b[7m</td>
+                            <td><span style="background-color: var(--vscode-foreground); color: var(--vscode-editor-background);">Texto invertido</span></td>
+                        </tr>
+                        <tr>
+                            <td>Oculto</td>
+                            <td>\x1b[8m</td>
+                            <td>Texto oculto</td>
+                        </tr>
+                        <tr>
+                            <td>Tachado</td>
+                            <td>\x1b[9m</td>
+                            <td><del>Texto tachado</del></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Cores de Texto (Foreground)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cor</th>
+                            <th>Código ANSI</th>
+                            <th>Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: black;"></span>Preto</td>
+                            <td>\x1b[30m</td>
+                            <td><span style="color: black;">Texto em preto</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: red;"></span>Vermelho</td>
+                            <td>\x1b[31m</td>
+                            <td><span style="color: red;">Texto em vermelho</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: green;"></span>Verde</td>
+                            <td>\x1b[32m</td>
+                            <td><span style="color: green;">Texto em verde</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: yellow;"></span>Amarelo</td>
+                            <td>\x1b[33m</td>
+                            <td><span style="color: yellow;">Texto em amarelo</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: blue;"></span>Azul</td>
+                            <td>\x1b[34m</td>
+                            <td><span style="color: blue;">Texto em azul</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: magenta;"></span>Magenta</td>
+                            <td>\x1b[35m</td>
+                            <td><span style="color: magenta;">Texto em magenta</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: cyan;"></span>Ciano</td>
+                            <td>\x1b[36m</td>
+                            <td><span style="color: cyan;">Texto em ciano</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: white;"></span>Branco</td>
+                            <td>\x1b[37m</td>
+                            <td><span style="color: white;">Texto em branco</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Cores de Fundo (Background)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cor</th>
+                            <th>Código ANSI</th>
+                            <th>Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: black;"></span>Preto</td>
+                            <td>\x1b[40m</td>
+                            <td><span style="background-color: black; color: white;">Fundo preto</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: red;"></span>Vermelho</td>
+                            <td>\x1b[41m</td>
+                            <td><span style="background-color: red; color: white;">Fundo vermelho</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: green;"></span>Verde</td>
+                            <td>\x1b[42m</td>
+                            <td><span style="background-color: green; color: black;">Fundo verde</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: yellow;"></span>Amarelo</td>
+                            <td>\x1b[43m</td>
+                            <td><span style="background-color: yellow; color: black;">Fundo amarelo</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: blue;"></span>Azul</td>
+                            <td>\x1b[44m</td>
+                            <td><span style="background-color: blue; color: white;">Fundo azul</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: magenta;"></span>Magenta</td>
+                            <td>\x1b[45m</td>
+                            <td><span style="background-color: magenta; color: white;">Fundo magenta</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: cyan;"></span>Ciano</td>
+                            <td>\x1b[46m</td>
+                            <td><span style="background-color: cyan; color: black;">Fundo ciano</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="color-sample" style="background-color: white;"></span>Branco</td>
+                            <td>\x1b[47m</td>
+                            <td><span style="background-color: white; color: black;">Fundo branco</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <p><strong>Sobre códigos ANSI:</strong> Códigos ANSI são sequências de escape usadas em terminais para controlar cores, estilos de texto e posicionamento do cursor. São comuns em logs de aplicações, especialmente no ambiente de desenvolvimento.</p>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const vscode = acquireVsCodeApi();
+            
+            // Elementos do DOM
+            const inputText = document.getElementById('input-text');
+            const outputContainer = document.getElementById('output-container');
+            const processBtn = document.getElementById('process-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const errorAlert = document.getElementById('error-alert');
+            const stripAnsi = document.getElementById('strip-ansi');
+            const renderAnsi = document.getElementById('render-ansi');
+            const highlightAnsi = document.getElementById('highlight-ansi');
+            
+            // Configurar comportamento dos checkboxes
+            stripAnsi.addEventListener('change', function() {
+                if (this.checked) {
+                    renderAnsi.checked = false;
+                    highlightAnsi.checked = false;
+                }
+            });
+            
+            renderAnsi.addEventListener('change', function() {
+                if (this.checked) {
+                    stripAnsi.checked = false;
+                    highlightAnsi.checked = false;
+                }
+            });
+            
+            highlightAnsi.addEventListener('change', function() {
+                if (this.checked) {
+                    stripAnsi.checked = false;
+                    renderAnsi.checked = false;
+                }
+            });
+              // Processar texto
+            processBtn.addEventListener('click', function() {
+                const text = inputText.value;
+                
+                if (!text.trim()) {
+                    showError('Por favor, insira um texto para processar.');
+                    return;
+                }
+                
+                const options = {
+                    stripAnsi: stripAnsi.checked,
+                    renderAnsi: renderAnsi.checked,
+                    highlightAnsi: highlightAnsi.checked
+                };
+                
+                // Debug - mostrar mensagem no output
+                console.log('Enviando texto para processamento:', { 
+                    textLength: text.length,
+                    options: options
+                });
+                
+                vscode.postMessage({
+                    command: 'processAnsi',
+                    text: text,
+                    options: options
+                });
+            });
+            
+            // Limpar campos
+            clearBtn.addEventListener('click', function() {
+                inputText.value = '';
+                outputContainer.innerHTML = '';
+                hideError();
+            });
+            
+            // Copiar resultado
+            copyBtn.addEventListener('click', function() {
+                const processedText = outputContainer.textContent;
+                
+                if (!processedText.trim()) {
+                    showError('Não há texto processado para copiar.');
+                    return;
+                }
+                
+                vscode.postMessage({
+                    command: 'copyToClipboard',
+                    text: processedText
+                });
+            });
+            
+            // Exibir erro
+            function showError(message) {
+                errorAlert.textContent = message;
+                errorAlert.style.display = 'block';
+            }
+            
+            // Ocultar erro
+            function hideError() {
+                errorAlert.style.display = 'none';
+            }
+            
+            // Configurar seções colapsáveis
+            const collapsibles = document.getElementsByClassName('collapsible');
+            for (let i = 0; i < collapsibles.length; i++) {
+                collapsibles[i].addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            }
+              // Lidar com mensagens do webview
+            window.addEventListener('message', event => {
+                console.log('Mensagem recebida do extension:', event.data);
+                const message = event.data;
+                
+                if (message.command === 'processed') {
+                    if (message.success) {
+                        outputContainer.innerHTML = message.result;
+                        hideError();
+                    } else {
+                        showError(message.error || 'Erro ao processar o texto');
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

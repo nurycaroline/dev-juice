@@ -6,6 +6,7 @@ import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeC
 
 // Lazy imports para providers (só carregados quando necessário)
 const lazyProviders = {
+  get AnsiFormatterProvider () { return require('./providers/ansiFormatterProvider').AnsiFormatterProvider },
   get Base64EncoderProvider () { return require('./providers/base64EncoderProvider').Base64EncoderProvider },
   get CNPJPanelProvider () { return require('./providers/cnpjPanelProvider').CNPJPanelProvider },
   get ColorConverterProvider () { return require('./providers/colorConverterProvider').ColorConverterProvider },
@@ -37,6 +38,44 @@ export function activate (context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider('devHelperExplorer', devHelperProvider)
 
   // Register commands - Organizados em ordem alfabética
+
+  // ANSI Formatter command
+  const ansiFormatterDisposable = vscode.commands.registerCommand('dev-helper.ansiFormatter', () => {
+    lazyProviders.AnsiFormatterProvider.createOrShow(context.extensionUri)
+  })
+
+  // ANSI Formatter Process Selection command
+  const ansiFormatterProcessSelectionDisposable = vscode.commands.registerCommand('dev-helper.ansiFormatterProcessSelection', () => {
+    const editor = vscode.window.activeTextEditor
+    if (!editor) {
+      vscode.window.showErrorMessage('Nenhum editor ativo para processar a seleção.')
+      return
+    }
+
+    const selection = editor.selection
+    if (selection.isEmpty) {
+      vscode.window.showErrorMessage('Nenhum texto selecionado. Selecione texto contendo códigos ANSI.')
+      return
+    }
+
+    const text = editor.document.getText(selection)
+    // Define o padrão ANSI para substituição
+    const ansiPattern = /\u001b\[[0-9;]*[A-Za-z]/g
+    
+    // Remove os códigos ANSI
+    const processedText = text.replace(ansiPattern, '')
+    
+    // Substitui o texto selecionado
+    editor.edit(editBuilder => {
+      editBuilder.replace(selection, processedText)
+    }).then(success => {
+      if (success) {
+        vscode.window.showInformationMessage('Códigos ANSI removidos com sucesso!')
+      } else {
+        vscode.window.showErrorMessage('Falha ao remover códigos ANSI.')
+      }
+    })
+  })
 
   // Base64 Encoder command
   const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
@@ -226,6 +265,8 @@ export function activate (context: vscode.ExtensionContext) {
 
   // Add the commands to the extension context - Organizados em ordem alfabética
   context.subscriptions.push(
+    ansiFormatterDisposable,
+    ansiFormatterProcessSelectionDisposable,
     base64EncoderDisposable,
     colorConverterDisposable,
     dateCalculatorDisposable,

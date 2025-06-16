@@ -60,7 +60,13 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
       } else if (element.label === 'Formatação') {
         return Promise.resolve([
           new DevToolItem(
-            'Formatação de texto',
+            'Formatador de Logs ANSI',
+            'Formatar logs com códigos ANSI',
+            'dev-helper.ansiFormatter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Formatador de Texto',
             'Formatar texto em vários estilos (camelCase, snake_case, etc.)',
             'dev-helper.textFormatter',
             vscode.TreeItemCollapsibleState.None
