@@ -106,6 +106,12 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
+            'Testador de Regex',
+            'Testar e validar expressões regulares',
+            'dev-helper.regexTester',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
             'URL Encoder/Decoder',
             'Codificar e decodificar URLs',
             'dev-helper.urlEncoder',

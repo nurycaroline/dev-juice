@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testador de Regex</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: var(--vscode-foreground);
+            background-color: var(--vscode-editor-background);
+        }
+
+        .container {
+            background-color: var(--vscode-editor-background);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--vscode-foreground);
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .regex-icon {
+            font-size: 24px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            background-color: var(--vscode-input-background);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: var(--vscode-foreground);
+            border-bottom: 1px solid var(--vscode-panel-border);
+            padding-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--vscode-foreground);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--vscode-input-border);
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: var(--vscode-input-background);
+            color: var(--vscode-input-foreground);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--vscode-focusBorder);
+            box-shadow: 0 0 0 1px var(--vscode-focusBorder);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .regex-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .regex-pattern {
+            flex: 1;
+        }
+
+        .regex-flags {
+            width: 120px;
+        }
+
+        .flags-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flag-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .flag-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .secondary-button {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+        }
+
+        .secondary-button:hover {
+            background-color: var(--vscode-button-secondaryHoverBackground);
+        }
+
+        .results-section {
+            background-color: var(--vscode-editor-background);
+        }
+
+        .result-summary {
+            background-color: var(--vscode-badge-background);
+            color: var(--vscode-badge-foreground);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background-color: var(--vscode-inputValidation-errorBackground);
+            color: var(--vscode-inputValidation-errorForeground);
+            border: 1px solid var(--vscode-inputValidation-errorBorder);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .match-item {
+            background-color: var(--vscode-list-hoverBackground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .match-header {
+            font-weight: 600;
+            color: var(--vscode-foreground);
+            margin-bottom: 8px;
+        }
+
+        .match-text {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 8px;
+            border-radius: 3px;
+            word-break: break-all;
+            border-left: 3px solid var(--vscode-charts-green);
+        }
+
+        .match-details {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .groups-container {
+            margin-top: 10px;
+        }
+
+        .group-item {
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 5px 8px;
+            border-radius: 3px;
+            margin: 3px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .no-matches {
+            text-align: center;
+            color: var(--vscode-descriptionForeground);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .highlighted-text {
+            background-color: var(--vscode-editor-findMatchHighlightBackground);
+            border: 1px solid var(--vscode-editor-findMatchBorder);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .quick-patterns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .pattern-button {
+            background-color: var(--vscode-button-secondaryBackground);
+            color: var(--vscode-button-secondaryForeground);
+            border: 1px solid var(--vscode-panel-border);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: left;
+            transition: background-color 0.2s;
+        }
+
+        .pattern-button:hover {
+            background-color: var(--vscode-button-secondaryHoverBackground);
+        }
+
+        .pattern-title {
+            font-weight: 600;
+            display: block;
+        }
+
+        .pattern-regex {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--vscode-descriptionForeground);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <span class="regex-icon">🔍</span>
+            Testador de Regex
+        </h1>
+
+        <div class="section">
+            <h2>Expressão Regular</h2>
+            <div class="regex-input-container">
+                <div class="regex-pattern">
+                    <label for="regexPattern">Padrão Regex:</label>
+                    <input type="text" id="regexPattern" placeholder="Digite sua expressão regular aqui... Ex: \d{3}\.\d{3}\.\d{3}-\d{2}">
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; font-weight: 500; color: var(--vscode-foreground);">Flags:</div>
+            <div class="flags-container">
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagG" value="g">
+                    <label for="flagG">g (global)</label>
+                </div>
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagI" value="i">
+                    <label for="flagI">i (ignore case)</label>
+                </div>
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagM" value="m">
+                    <label for="flagM">m (multiline)</label>
+                </div>
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagS" value="s">
+                    <label for="flagS">s (dotall)</label>
+                </div>
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagU" value="u">
+                    <label for="flagU">u (unicode)</label>
+                </div>
+                <div class="flag-checkbox">
+                    <input type="checkbox" id="flagY" value="y">
+                    <label for="flagY">y (sticky)</label>
+                </div>
+            </div>            <h3 style="margin-top: 25px;">Padrões Comuns:</h3>
+            <div class="quick-patterns">
+                <button class="pattern-button" onclick="setPattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 'gm')">
+                    <span class="pattern-title">Email (linha por linha)</span>
+                    <span class="pattern-regex">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', 'g')">
+                    <span class="pattern-title">Email (qualquer lugar)</span>
+                    <span class="pattern-regex">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', 'g')">
+                    <span class="pattern-title">CPF</span>
+                    <span class="pattern-regex">\d{3}\.\d{3}\.\d{3}-\d{2}</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}', 'g')">
+                    <span class="pattern-title">CNPJ</span>
+                    <span class="pattern-regex">\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}', 'g')">
+                    <span class="pattern-title">Telefone</span>
+                    <span class="pattern-regex">\(\d{2}\)\s?\d{4,5}-\d{4}</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('\\d{5}-\\d{3}', 'g')">
+                    <span class="pattern-title">CEP</span>
+                    <span class="pattern-regex">\d{5}-\d{3}</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?', 'g')">
+                    <span class="pattern-title">URL</span>
+                    <span class="pattern-regex">https?://[\w\-]+(\...)</span>
+                </button>
+                <button class="pattern-button" onclick="setPattern('^\\d+$', 'gm')">
+                    <span class="pattern-title">Números (linha por linha)</span>
+                    <span class="pattern-regex">^\d+$</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Texto de Teste</h2>
+            <label for="testText">Texto para testar o regex:</label>
+            <textarea id="testText" placeholder="Cole ou digite o texto que deseja testar aqui..."></textarea>
+            
+            <div class="button-container">
+                <button onclick="testRegex()">🔍 Testar Regex</button>
+                <button class="secondary-button" onclick="clearAll()">🗑️ Limpar Tudo</button>
+            </div>
+        </div>
+
+        <div class="section results-section" id="resultsSection" style="display: none;">
+            <h2>Resultados</h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+
+        function setPattern(pattern, flags) {
+            document.getElementById('regexPattern').value = pattern;
+            
+            // Reset all flags
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // Set specified flags
+            for (let flag of flags) {
+                const checkbox = document.getElementById(`flag${flag.toUpperCase()}`);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            }
+        }
+
+        function getSelectedFlags() {
+            const flags = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                flags.push(cb.value);
+            });
+            return flags.join('');
+        }
+
+        function testRegex() {
+            const pattern = document.getElementById('regexPattern').value;
+            const flags = getSelectedFlags();
+            const text = document.getElementById('testText').value;
+
+            if (!pattern) {
+                showError('Por favor, insira um padrão regex.');
+                return;
+            }
+
+            if (!text) {
+                showError('Por favor, insira um texto para testar.');
+                return;
+            }
+
+            vscode.postMessage({
+                command: 'testRegex',
+                pattern: pattern,
+                flags: flags,
+                text: text
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('regexPattern').value = '';
+            document.getElementById('testText').value = '';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        function showError(message) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            resultsContent.innerHTML = `
+                <div class="error-message">
+                    ❌ ${message}
+                </div>
+            `;
+            
+            resultsSection.style.display = 'block';
+        }        function displayResults(result) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContent = document.getElementById('resultsContent');
+
+            if (!result.isValid) {
+                showErrorResult(resultsContent, result.error);
+                resultsSection.style.display = 'block';
+                return;
+            }
+
+            const html = buildResultsHtml(result);
+            resultsContent.innerHTML = html;
+            resultsSection.style.display = 'block';
+        }
+
+        function showErrorResult(container, error) {
+            container.innerHTML = `
+                <div class="error-message">
+                    ❌ Erro no regex: ${error}
+                </div>
+            `;
+        }
+
+        function buildResultsHtml(result) {
+            let html = buildSummary(result);
+            html += buildLineMatches(result);
+            html += buildRegularMatches(result);
+            return html;
+        }
+
+        function buildSummary(result) {
+            let summary = `
+                <div class="result-summary">
+                    ✅ Regex válido: /${result.pattern}/${result.flags || ''}<br>
+                    📊 ${result.matchCount} ${result.matchCount === 1 ? 'correspondência encontrada' : 'correspondências encontradas'}<br>
+                    ${result.fullMatch ? '✅ O texto inteiro corresponde ao padrão' : '❌ O texto inteiro NÃO corresponde ao padrão'}
+            `;
+
+            if (result.hasAnchors && result.isMultiline && result.lineMatchCount > 0) {
+                summary += `<br>🎯 ${result.lineMatchCount} ${result.lineMatchCount === 1 ? 'linha corresponde' : 'linhas correspondem'} ao padrão`;
+            }
+
+            summary += '</div>';
+            return summary;
+        }
+
+        function buildLineMatches(result) {
+            if (!result.hasAnchors || !result.isMultiline || !result.lineMatches || result.lineMatches.length === 0) {
+                return '';
+            }
+
+            let html = '<h3>Correspondências por Linha:</h3>';
+            result.lineMatches.forEach((match) => {
+                html += buildMatchItem(match, `Linha ${match.line}`);
+            });
+            return html;
+        }
+
+        function buildRegularMatches(result) {
+            if (!result.matches || result.matches.length === 0) {
+                if (!result.hasAnchors || !result.isMultiline || !result.lineMatches || result.lineMatches.length === 0) {
+                    return '<div class="no-matches">Nenhuma correspondência encontrada</div>';
+                }
+                return '';
+            }
+
+            let html = '<h3>Todas as Correspondências:</h3>';
+            result.matches.forEach((match, index) => {
+                html += buildMatchItem(match, `Match ${index + 1}`, true);
+            });
+            return html;
+        }
+
+        function buildMatchItem(match, header, showGroups = false) {
+            let html = `
+                <div class="match-item">
+                    <div class="match-header">${header}:</div>
+                    <div class="match-text">${escapeHtml(match.match)}</div>
+                    <div class="match-details">
+                        <strong>Posição:</strong> ${match.index} - ${match.index + match.match.length - 1}
+                    </div>
+            `;
+            
+            if (showGroups) {
+                html += buildGroups(match);
+            }
+            
+            html += buildMatchButtons(match);
+            html += '</div>';
+            return html;
+        }
+
+        function buildGroups(match) {
+            let html = '';
+            
+            if (match.groups && match.groups.length > 0) {
+                html += '<div class="groups-container"><strong>Grupos capturados:</strong>';
+                match.groups.forEach((group, groupIndex) => {
+                    if (group !== undefined) {
+                        html += `<div class="group-item">Grupo ${groupIndex + 1}: ${escapeHtml(group)}</div>`;
+                    }
+                });
+                html += '</div>';
+            }
+
+            if (match.namedGroups && Object.keys(match.namedGroups).length > 0) {
+                html += '<div class="groups-container"><strong>Grupos nomeados:</strong>';
+                Object.entries(match.namedGroups).forEach(([name, value]) => {
+                    html += `<div class="group-item">${name}: ${escapeHtml(value)}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            return html;
+        }
+
+        function buildMatchButtons(match) {
+            const escapedMatch = escapeHtml(match.match).replace(/'/g, "\\'");
+            return `
+                <div class="button-container" style="margin-top: 10px;">
+                    <button class="secondary-button" onclick="copyToClipboard('${escapedMatch}')">
+                        📋 Copiar Match
+                    </button>
+                    <button class="secondary-button" onclick="insertInEditor('${escapedMatch}')">
+                        📝 Inserir no Editor
+                    </button>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function copyToClipboard(text) {
+            vscode.postMessage({
+                command: 'copyToClipboard',
+                text: text
+            });
+        }
+
+        function insertInEditor(text) {
+            vscode.postMessage({
+                command: 'insertInEditor',
+                text: text
+            });
+        }        // Handle messages from the extension
+        window.addEventListener('message', event => {
+            const message = event.data;
+            if (message.command === 'regexResult') {
+                displayResults(message.result);
+            }
+        });
+
+        // Add enter key support for testing
+        document.getElementById('regexPattern').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                testRegex();
+            }
+        });
+
+        document.getElementById('testText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                testRegex();
+            }
+        });
+    </script>
+</body>
+
+</html>

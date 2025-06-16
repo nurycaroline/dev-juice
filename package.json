@@ -177,6 +177,11 @@
         "icon": "$(device-camera)"
       },
       {
+        "command": "dev-helper.regexTester",
+        "title": "Testador de Regex",
+        "icon": "$(search)"
+      },
+      {
         "command": "dev-helper.textFormatter",
         "title": "Formatação de Texto",
         "icon": "$(symbol-string)"

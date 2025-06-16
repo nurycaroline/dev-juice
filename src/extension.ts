@@ -18,6 +18,7 @@ const lazyProviders = {
   get PixDecoderProvider () { return require('./providers/pixDecoderProvider').PixDecoderProvider },
   get PixPanelProvider () { return require('./providers/pixPanelProvider').PixPanelProvider },
   get QrReaderProvider () { return require('./providers/qrReaderProvider').QrReaderProvider },
+  get RegexTesterProvider () { return require('./providers/regexTesterProvider').RegexTesterProvider },
   get TextFormatterProvider () { return require('./providers/textFormatterProvider').TextFormatterProvider },
   get UrlEncoderProvider () { return require('./providers/urlEncoderProvider').UrlEncoderProvider },
   get UUIDPanelProvider () { return require('./providers/uuidPanelProvider').UUIDPanelProvider }
@@ -107,6 +108,11 @@ export function activate (context: vscode.ExtensionContext) {
   // QR Reader command
   const qrReaderDisposable = vscode.commands.registerCommand('dev-helper.qrReader', () => {
     lazyProviders.QrReaderProvider.createOrShow(context.extensionUri)
+  })
+
+  // Regex Tester command
+  const regexTesterDisposable = vscode.commands.registerCommand('dev-helper.regexTester', () => {
+    lazyProviders.RegexTesterProvider.createOrShow(context.extensionUri)
   })
 
   // Text Formatter command
@@ -253,6 +259,7 @@ export function activate (context: vscode.ExtensionContext) {
     passwordGeneratorDisposable,
     pixDecoderDisposable,
     qrReaderDisposable,
+    regexTesterDisposable,
     textFormatterDisposable,
     urlEncoderDisposable
   )
