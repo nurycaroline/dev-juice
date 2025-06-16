@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { insertText } from '../utils/insertUtils'
 import { loadTemplate } from '../utils/templateLoader'
+import { TextFormatter } from '../utils/textFormatter'
 
 export class TextFormatterProvider {
   // Making currentPanel readonly to fix SonarLint warning
@@ -58,16 +59,14 @@ export class TextFormatterProvider {
       },
       null
     )
-  }
-
-  private static handleFormatText (text: string, format: string): void {
+  }  private static handleFormatText (text: string, format: string): void {
     const panel = TextFormatterProvider.currentPanel
     if (!panel) {
       return
     }
 
     try {
-      const formattedText = TextFormatterProvider.formatText(text, format)
+      const formattedText = TextFormatter.format(text, format)
       panel.webview.postMessage({
         command: 'formatResult',
         result: formattedText,
@@ -77,146 +76,6 @@ export class TextFormatterProvider {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
       vscode.window.showErrorMessage(`Erro ao formatar texto: ${errorMessage}`)
     }
-  }
-
-  private static formatText (text: string, format: string): string {
-    if (!text) {
-      return ''
-    }
-
-    switch (format) {
-    case 'sentence':
-      return TextFormatterProvider.toSentenceCase(text)
-    case 'snake':
-      return TextFormatterProvider.toSnakeCase(text)
-    case 'camel':
-      return TextFormatterProvider.toCamelCase(text)
-    case 'kebab':
-      return TextFormatterProvider.toKebabCase(text)
-    case 'pascal':
-      return TextFormatterProvider.toPascalCase(text)
-    case 'lower':
-      return text.toLowerCase()
-    case 'upper':
-      return text.toUpperCase()
-    case 'capital':
-      return TextFormatterProvider.toCapitalizedCase(text)
-    case 'alternating':
-      return TextFormatterProvider.toAlternatingCase(text)
-    case 'inverse':
-      return TextFormatterProvider.toInverseCase(text)
-    case 'dot':
-      return TextFormatterProvider.toDotNotation(text)
-    case 'params':
-      return TextFormatterProvider.toParamsStyle(text)
-    case 'path':
-      return TextFormatterProvider.toPathStyle(text)
-    default:
-      return text
-    }
-  }
-
-  private static toSentenceCase (text: string): string {
-    return text.toLowerCase().replace(/^\w/, c => c.toUpperCase())
-  }
-
-  private static toSnakeCase (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join('_')
-  }
-
-  private static toCamelCase (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map((word, index) => {
-        if (index === 0) {
-          return word.toLowerCase()
-        }
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      })
-      .filter(word => word.length > 0)
-      .join('')
-  }
-
-  private static toKebabCase (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join('-')
-  }
-
-  private static toPascalCase (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .filter(word => word.length > 0)
-      .join('')
-  }
-
-  private static toCapitalizedCase (text: string): string {
-    return text
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ')
-  } private static toAlternatingCase (text: string): string {
-    const letterRegex = /[a-zA-Z]/
-    return text
-      .split('')
-      .map((char, index) => {
-        if (letterRegex.exec(char)) {
-          return index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
-        }
-        return char
-      })
-      .join('')
-  }
-
-  private static toInverseCase (text: string): string {
-    return text
-      .split('')
-      .map(char => {
-        if (char === char.toUpperCase()) {
-          return char.toLowerCase()
-        } else {
-          return char.toUpperCase()
-        }
-      })
-      .join('')
-  }
-
-  private static toDotNotation (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join('.')
-  }
-
-  private static toParamsStyle (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join(': ')
-  }
-
-  private static toPathStyle (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join('/')
   }
   
   private static getWebviewContent (extensionUri: vscode.Uri): string {
