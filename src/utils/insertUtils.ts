@@ -188,6 +188,18 @@ export async function formatToInverseCase (): Promise<void> {
   await formatSelectedText(toInverseCase, 'InVeRsE CaSe')
 }
 
+export async function formatToDotNotation (): Promise<void> {
+  await formatSelectedText(toDotNotation, 'Dot Notation')
+}
+
+export async function formatToParamsStyle (): Promise<void> {
+  await formatSelectedText(toParamsStyle, 'Params Style')
+}
+
+export async function formatToPathStyle (): Promise<void> {
+  await formatSelectedText(toPathStyle, 'Path Style')
+}
+
 // Funções auxiliares de formatação
 function toSentenceCase (text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
@@ -269,4 +281,40 @@ function toInverseCase (text: string): string {
       }
     })
     .join('')
+}
+
+function toDotNotation (text: string): string {
+  return text
+    .replace(/\W+/g, ' ')
+    .split(' ')
+    .map(word => word.toLowerCase())
+    .filter(word => word.length > 0)
+    .join('.')
+}
+
+function toParamsStyle (text: string): string {
+  // Split by lines first to handle multi-line text
+  const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0)
+  
+  // Process each line individually
+  return lines.map(line => {
+    const words = line.trim().split(/\s+/)
+    if (words.length >= 2) {
+      // If line has at least two words, format first word as parameter
+      return `${words[0]}: ${words.slice(1).join(' ')}`
+    } else if (words.length === 1) {
+      // If only one word, just return it with a colon
+      return `${words[0]}:`
+    }
+    return ''
+  }).join('\n')
+}
+
+function toPathStyle (text: string): string {
+  return text
+    .replace(/\W+/g, ' ')
+    .split(' ')
+    .map(word => word.toLowerCase())
+    .filter(word => word.length > 0)
+    .join('/')
 }

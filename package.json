@@ -88,6 +88,21 @@
         "category": "Editor"
       },
       {
+        "command": "dev-helper.formatTextDotNotation",
+        "title": "Dev Helper: Formatar para dot.notation",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextParamsStyle",
+        "title": "Dev Helper: Formatar para Params: Style",
+        "category": "Editor"
+      },
+      {
+        "command": "dev-helper.formatTextPathStyle",
+        "title": "Dev Helper: Formatar para path/style",
+        "category": "Editor"
+      },
+      {
         "command": "dev-helper.generateCNPJ",
         "title": "Gerar CNPJ Válido",
         "icon": "$(key)"

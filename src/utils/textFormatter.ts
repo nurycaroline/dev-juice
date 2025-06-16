@@ -84,15 +84,18 @@ export class TextFormatter {
       .map(word => word.toLowerCase())
       .filter(word => word.length > 0)
       .join('.')
-  }
-
-  static toParamsStyle (text: string): string {
-    return text
-      .replace(/\W+/g, ' ')
-      .split(' ')
-      .map(word => word.toLowerCase())
-      .filter(word => word.length > 0)
-      .join(': ')
+  }  static toParamsStyle (text: string): string {
+    const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0)
+    
+    return lines.map(line => {
+      const words = line.trim().split(/\s+/)
+      if (words.length >= 2) {
+        return `${words[0]}: ${words.slice(1).join(' ')}`
+      } else if (words.length === 1) {
+        return `${words[0]}:`
+      }
+      return ''
+    }).join('\n')
   }
 
   static toPathStyle (text: string): string {

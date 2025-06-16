@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
 import { DevHelperProvider } from './providers/devHelperProvider'
-import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeCase, formatToCamelCase, formatToKebabCase, formatToPascalCase, formatToLowerCase, formatToUpperCase, formatToCapitalizedCase, formatToAlternatingCase, formatToInverseCase } from './utils/insertUtils'
+import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeCase, formatToCamelCase, formatToKebabCase, formatToPascalCase, formatToLowerCase, formatToUpperCase, formatToCapitalizedCase, formatToAlternatingCase, formatToInverseCase, formatToDotNotation, formatToParamsStyle, formatToPathStyle } from './utils/insertUtils'
 
 // Lazy imports para providers (só carregados quando necessário)
 const lazyProviders = {
@@ -171,6 +171,21 @@ export function activate (context: vscode.ExtensionContext) {
     formatToUpperCase()
   })
 
+  // Formatar para dot.notation
+  const formatDotNotationDisposable = vscode.commands.registerCommand('dev-helper.formatTextDotNotation', () => {
+    formatToDotNotation()
+  })
+
+  // Formatar para Params: Style
+  const formatParamsStyleDisposable = vscode.commands.registerCommand('dev-helper.formatTextParamsStyle', () => {
+    formatToParamsStyle()
+  })
+
+  // Formatar para path/style
+  const formatPathStyleDisposable = vscode.commands.registerCommand('dev-helper.formatTextPathStyle', () => {
+    formatToPathStyle()
+  })
+
   // Comandos para inserir valores gerados diretamente no editor - Organizados em ordem alfabética
 
   // Inserir CNPJ formatado
@@ -220,6 +235,9 @@ export function activate (context: vscode.ExtensionContext) {
     formatSentenceCaseDisposable,
     formatSnakeCaseDisposable,
     formatUpperCaseDisposable,
+    formatDotNotationDisposable,
+    formatParamsStyleDisposable,
+    formatPathStyleDisposable,
     generateCNPJDisposable,
     generateCPFDisposable,
     generatePixDisposable,
