@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -197,39 +198,40 @@
             body {
                 padding: 10px;
             }
-            
+
             .container {
                 padding: 15px;
             }
-            
+
             .format-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .button-group {
                 flex-direction: column;
             }
-            
+
             button {
                 width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>✏️ Formatação de Texto</h1>
-        
+
         <div class="section">
             <h2>📝 Texto de Entrada</h2>
             <label for="inputText">Digite ou cole o texto que deseja formatar:</label>
             <textarea id="inputText" placeholder="Digite seu texto aqui..."></textarea>
-            
+
             <div class="button-group">
                 <button onclick="clearInput()">Limpar</button>
                 <button class="secondary-btn" onclick="loadExample()">Texto de Exemplo</button>
             </div>
-            
+
             <div class="example-text">
                 Exemplo: "Hello World Example Text" será formatado conforme a opção selecionada
             </div>
@@ -238,7 +240,7 @@
         <div id="resultArea" class="result-area">
             <h3>📋 Resultado</h3>
             <div id="resultPreview" class="result-preview"></div>
-            
+
             <div class="button-group">
                 <button class="secondary-btn" onclick="copyResult()">Copiar</button>
                 <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
@@ -247,72 +249,89 @@
         </div>
 
         <div class="info">
-            <strong>💡 Dica:</strong> Esta ferramenta é útil para converter nomes de variáveis, funções, constantes e outros elementos de código entre diferentes convenções de nomenclatura.
+            <strong>💡 Dica:</strong> Esta ferramenta é útil para converter nomes de variáveis, funções, constantes e
+            outros elementos de código entre diferentes convenções de nomenclatura.
         </div>
-        
+
         <div class="section">
             <h2>🎨 Formatos Disponíveis</h2>
-            <p>Clique em um formato para aplicar ao seu texto:</p>
-            
-            <div class="format-grid">
-                <div class="format-item" onclick="selectFormat('sentence')" data-format="sentence">
-                    <div class="format-title">Sentence case</div>
-                    <div class="format-example">Hello world example text</div>
-                    <div class="format-description">Primeira letra maiúscula, resto minúsculo</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('snake')" data-format="snake">
-                    <div class="format-title">snake_case</div>
-                    <div class="format-example">hello_world_example_text</div>
-                    <div class="format-description">Palavras separadas por underscores</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('camel')" data-format="camel">
-                    <div class="format-title">camelCase</div>
-                    <div class="format-example">helloWorldExampleText</div>
-                    <div class="format-description">Primeira palavra minúscula, demais capitalizadas</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('kebab')" data-format="kebab">
-                    <div class="format-title">kebab-case</div>
-                    <div class="format-example">hello-world-example-text</div>
-                    <div class="format-description">Palavras separadas por hífens</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('pascal')" data-format="pascal">
-                    <div class="format-title">PascalCase</div>
-                    <div class="format-example">HelloWorldExampleText</div>
-                    <div class="format-description">Todas as palavras capitalizadas</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('lower')" data-format="lower">
-                    <div class="format-title">lower case</div>
-                    <div class="format-example">hello world example text</div>
-                    <div class="format-description">Todas as letras minúsculas</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('upper')" data-format="upper">
-                    <div class="format-title">UPPER CASE</div>
-                    <div class="format-example">HELLO WORLD EXAMPLE TEXT</div>
-                    <div class="format-description">Todas as letras maiúsculas</div>
-                </div>
-                
-                <div class="format-item" onclick="selectFormat('capital')" data-format="capital">
-                    <div class="format-title">Capitalized Case</div>
-                    <div class="format-example">Hello World Example Text</div>
-                    <div class="format-description">Primeira letra de cada palavra maiúscula</div>
-                </div>
-                
+            <p>Clique em um formato para aplicar ao seu texto:</p>            <div class="format-grid">
                 <div class="format-item" onclick="selectFormat('alternating')" data-format="alternating">
                     <div class="format-title">aLtErNaTiNg cAsE</div>
                     <div class="format-example">hElLo WoRlD eXaMpLe TeXt</div>
                     <div class="format-description">Letras alternadas entre maiúscula e minúscula</div>
                 </div>
-                
+
+                <div class="format-item" onclick="selectFormat('camel')" data-format="camel">
+                    <div class="format-title">camelCase</div>
+                    <div class="format-example">helloWorldExampleText</div>
+                    <div class="format-description">Primeira palavra minúscula, demais capitalizadas</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('capital')" data-format="capital">
+                    <div class="format-title">Capitalized Case</div>
+                    <div class="format-example">Hello World Example Text</div>
+                    <div class="format-description">Primeira letra de cada palavra maiúscula</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('dot')" data-format="dot">
+                    <div class="format-title">Dot Notation</div>
+                    <div class="format-example">hello.world.example.text</div>
+                    <div class="format-description">Palavras separadas por pontos</div>
+                </div>
+
                 <div class="format-item" onclick="selectFormat('inverse')" data-format="inverse">
                     <div class="format-title">InVeRsE CaSe</div>
                     <div class="format-example">hELLO wORLD eXAMPLE tEXT</div>
                     <div class="format-description">Inverte maiúsculas e minúsculas</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('kebab')" data-format="kebab">
+                    <div class="format-title">kebab-case</div>
+                    <div class="format-example">hello-world-example-text</div>
+                    <div class="format-description">Palavras separadas por hífens</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('lower')" data-format="lower">
+                    <div class="format-title">lower case</div>
+                    <div class="format-example">hello world example text</div>
+                    <div class="format-description">Todas as letras minúsculas</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('params')" data-format="params">
+                    <div class="format-title">Params Style</div>
+                    <div class="format-example">hello: world: example: text</div>
+                    <div class="format-description">Palavras separadas por dois pontos e espaço</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('pascal')" data-format="pascal">
+                    <div class="format-title">PascalCase</div>
+                    <div class="format-example">HelloWorldExampleText</div>
+                    <div class="format-description">Todas as palavras capitalizadas</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('path')" data-format="path">
+                    <div class="format-title">Path Style</div>
+                    <div class="format-example">hello/world/example/text</div>
+                    <div class="format-description">Palavras separadas por barras</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('sentence')" data-format="sentence">
+                    <div class="format-title">Sentence case</div>
+                    <div class="format-example">Hello world example text</div>
+                    <div class="format-description">Primeira letra maiúscula, resto minúsculo</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('snake')" data-format="snake">
+                    <div class="format-title">snake_case</div>
+                    <div class="format-example">hello_world_example_text</div>
+                    <div class="format-description">Palavras separadas por underscores</div>
+                </div>
+
+                <div class="format-item" onclick="selectFormat('upper')" data-format="upper">
+                    <div class="format-title">UPPER CASE</div>
+                    <div class="format-example">HELLO WORLD EXAMPLE TEXT</div>
+                    <div class="format-description">Todas as letras maiúsculas</div>
                 </div>
             </div>
         </div>
@@ -325,15 +344,15 @@
 
         function selectFormat(format) {
             selectedFormat = format;
-            
+
             // Remove selection from all items
             document.querySelectorAll('.format-item').forEach(item => {
                 item.classList.remove('selected');
             });
-            
+
             // Add selection to clicked item
             document.querySelector('[data-format="' + format + '"]').classList.add('selected');
-            
+
             // Format text if there's input
             const inputText = document.getElementById('inputText').value;
             if (inputText.trim()) {
@@ -346,7 +365,7 @@
                 document.getElementById('resultArea').style.display = 'none';
                 return;
             }
-            
+
             vscode.postMessage({
                 command: 'formatText',
                 text: text,
@@ -361,7 +380,7 @@
 
         function loadExample() {
             document.getElementById('inputText').value = 'Hello World Example Text';
-            
+
             // Auto-format if a format is selected
             if (selectedFormat) {
                 formatText('Hello World Example Text', selectedFormat);
@@ -395,7 +414,7 @@
         // Listen for messages from the extension
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'formatResult':
                     currentResult = message.result;
@@ -407,7 +426,7 @@
 
         // Auto-format on input change with debounce
         let formatTimeout;
-        document.getElementById('inputText').addEventListener('input', function() {
+        document.getElementById('inputText').addEventListener('input', function () {
             clearTimeout(formatTimeout);
             formatTimeout = setTimeout(() => {
                 if (this.value.trim() !== '' && selectedFormat) {
@@ -419,4 +438,5 @@
         });
     </script>
 </body>
+
 </html>

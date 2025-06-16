@@ -57,6 +57,22 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           )
           // Add more generators here as needed
         ])
+      } else if (element.label === 'Formatação') {
+        return Promise.resolve([
+          new DevToolItem(
+            'Formatação de texto',
+            'Formatar texto em vários estilos (camelCase, snake_case, etc.)',
+            'dev-helper.textFormatter',
+            vscode.TreeItemCollapsibleState.None
+          ),
+          new DevToolItem(
+            'Formatador JSON',
+            'Formatar e validar código JSON',
+            'dev-helper.formatJson',
+            vscode.TreeItemCollapsibleState.None
+          )
+          // Add more formatting tools here as needed
+        ])
       } else if (element.label === 'Utilitários') {
         return Promise.resolve([
           new DevToolItem(
@@ -75,18 +91,6 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
             'Conversor de Cores',
             'Converter entre formatos de cores (HEX, RGB, HSL)',
             'dev-helper.colorConverter',
-            vscode.TreeItemCollapsibleState.None
-          ),
-          new DevToolItem(
-            'Formatação de texto',
-            'Formatar texto em vários estilos (camelCase, snake_case, etc.)',
-            'dev-helper.textFormatter',
-            vscode.TreeItemCollapsibleState.None
-          ),
-          new DevToolItem(
-            'Formatador JSON',
-            'Formatar e validar código JSON',
-            'dev-helper.formatJson',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
@@ -125,6 +129,12 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           'Ferramentas para geração de dados',
           '',
           vscode.TreeItemCollapsibleState.Expanded
+        ),
+        new DevToolItem(
+          'Formatação',
+          'Ferramentas de formatação de dados',
+          '',
+          vscode.TreeItemCollapsibleState.Collapsed
         ),
         new DevToolItem(
           'Utilitários',

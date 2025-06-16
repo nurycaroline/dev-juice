@@ -105,6 +105,12 @@ export class TextFormatterProvider {
       return TextFormatterProvider.toAlternatingCase(text)
     case 'inverse':
       return TextFormatterProvider.toInverseCase(text)
+    case 'dot':
+      return TextFormatterProvider.toDotNotation(text)
+    case 'params':
+      return TextFormatterProvider.toParamsStyle(text)
+    case 'path':
+      return TextFormatterProvider.toPathStyle(text)
     default:
       return text
     }
@@ -184,7 +190,36 @@ export class TextFormatterProvider {
         }
       })
       .join('')
-  }    private static getWebviewContent (extensionUri: vscode.Uri): string {
+  }
+
+  private static toDotNotation (text: string): string {
+    return text
+      .replace(/\W+/g, ' ')
+      .split(' ')
+      .map(word => word.toLowerCase())
+      .filter(word => word.length > 0)
+      .join('.')
+  }
+
+  private static toParamsStyle (text: string): string {
+    return text
+      .replace(/\W+/g, ' ')
+      .split(' ')
+      .map(word => word.toLowerCase())
+      .filter(word => word.length > 0)
+      .join(': ')
+  }
+
+  private static toPathStyle (text: string): string {
+    return text
+      .replace(/\W+/g, ' ')
+      .split(' ')
+      .map(word => word.toLowerCase())
+      .filter(word => word.length > 0)
+      .join('/')
+  }
+  
+  private static getWebviewContent (extensionUri: vscode.Uri): string {
     return loadTemplate(extensionUri, 'text-formatter')
   }
 }
