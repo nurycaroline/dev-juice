@@ -14,6 +14,14 @@ export function generateNonce (): string {
 }
 
 /**
+ * Alias para generateNonce, para manter compatibilidade com nomes comuns
+ * @returns String aleatória para usar como nonce
+ */
+export function getNonce (): string {
+  return generateNonce()
+}
+
+/**
  * Sanitiza string HTML para evitar XSS
  * @param html String com potencial conteúdo HTML
  * @returns String sanitizada
