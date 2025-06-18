@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { loadTemplate } from '../utils/templateLoader'
-import { validateUserInput, sanitizeHTML } from '../utils/securityUtils'
+import { validateUserInput } from '../utils/securityUtils'
 
 /**
  * Provider for the Base64 encoder/decoder webview panel

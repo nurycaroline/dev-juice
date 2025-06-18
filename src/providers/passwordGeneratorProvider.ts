@@ -2,13 +2,40 @@ import * as vscode from 'vscode'
 import { loadTemplate } from '../utils/templateLoader'
 
 /**
+ * Interface for password generation options
+ */
+interface PasswordOptions {
+  length: number;
+  lowercase: boolean;
+  uppercase: boolean;
+  numbers: boolean;
+  symbols: boolean;
+  customChars?: string;
+  avoidAmbiguous?: boolean;
+  avoidSequential?: boolean;
+}
+
+/**
  * Provider for the Password Generator webview panel
  */
-export class PasswordGeneratorProvider {
-  /**
+export class PasswordGeneratorProvider {  /**
      * Track the currently active panels. Only allow a single panel to exist at a time.
      */
-  public static currentPanel: PasswordGeneratorProvider | undefined
+  private static _currentPanel: PasswordGeneratorProvider | undefined
+
+  /**
+   * Get the current panel
+   */
+  public static get currentPanel (): PasswordGeneratorProvider | undefined {
+    return PasswordGeneratorProvider._currentPanel
+  }
+
+  /**
+   * Set the current panel
+   */
+  private static setCurrentPanel (panel: PasswordGeneratorProvider | undefined): void {
+    PasswordGeneratorProvider._currentPanel = panel
+  }
 
   public static readonly viewType = 'passwordGenerator'
 
@@ -25,9 +52,7 @@ export class PasswordGeneratorProvider {
     if (PasswordGeneratorProvider.currentPanel) {
       PasswordGeneratorProvider.currentPanel._panel.reveal(column)
       return
-    }
-
-    // Otherwise, create a new panel.
+    }    // Otherwise, create a new panel.
     const panel = vscode.window.createWebviewPanel(
       PasswordGeneratorProvider.viewType,
       'Gerador de Senhas',
@@ -40,7 +65,7 @@ export class PasswordGeneratorProvider {
       }
     )
 
-    PasswordGeneratorProvider.currentPanel = new PasswordGeneratorProvider(panel, extensionUri)
+    PasswordGeneratorProvider.setCurrentPanel(new PasswordGeneratorProvider(panel, extensionUri))
   }
 
   private constructor (panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -69,11 +94,10 @@ export class PasswordGeneratorProvider {
       this._disposables
     )
   }
-
   /**
      * Generates a password based on the provided options
      */
-  private _generatePassword (options: any) {
+  private _generatePassword (options: PasswordOptions) {
     try {
       const charset = this._buildCharset(options)
       if (charset.length === 0) {
@@ -102,11 +126,10 @@ export class PasswordGeneratorProvider {
       })
     }
   }
-
   /**
      * Builds the character set based on options
      */
-  private _buildCharset (options: any): string {
+  private _buildCharset (options: PasswordOptions): string {
     let charset = ''
         
     if (options.lowercase) {
@@ -141,10 +164,10 @@ export class PasswordGeneratorProvider {
     }
         
     return password
-  }    /**
+  }  /**
      * Calculates password strength
      */
-  private _calculateStrength (password: string, options: any): string {
+  private _calculateStrength (password: string, options: PasswordOptions): string {
     let score = 0
         
     // Length bonus
@@ -196,9 +219,8 @@ export class PasswordGeneratorProvider {
       vscode.window.showErrorMessage('Erro ao copiar senha para a área de transferência.')
     }
   }
-
   public dispose () {
-    PasswordGeneratorProvider.currentPanel = undefined
+    PasswordGeneratorProvider.setCurrentPanel(undefined)
 
     // Clean up our resources
     this._panel.dispose()

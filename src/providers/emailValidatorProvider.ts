@@ -2,13 +2,55 @@ import * as vscode from 'vscode'
 import { loadTemplate } from '../utils/templateLoader'
 
 /**
+ * Interface for email validation result
+ */
+interface EmailValidationResult {
+  isValid: boolean;
+  format: string;
+  details: string[];
+  warnings: string[];
+  suggestions: string[];
+}
+
+/**
+ * Interface for bulk validation summary
+ */
+interface ValidationSummary {
+  total: number;
+  valid: number;
+  invalid: number;
+  withWarnings: number;
+  validPercentage: number;
+}
+
+/**
+ * Interface for email validation with result
+ */
+interface EmailWithValidation {
+  email: string;
+  validation: EmailValidationResult;
+}
+
+/**
  * Provider for the Email Validator webview panel
  */
-export class EmailValidatorProvider {
-  /**
+export class EmailValidatorProvider {  /**
      * Track the currently active panels. Only allow a single panel to exist at a time.
      */
-  public static currentPanel: EmailValidatorProvider | undefined
+  private static _currentPanel: EmailValidatorProvider | undefined
+  /**
+   * Get the current panel
+   */
+  public static get currentPanel (): EmailValidatorProvider | undefined {
+    return EmailValidatorProvider._currentPanel
+  }
+
+  /**
+   * Set the current panel
+   */
+  private static setCurrentPanel (panel: EmailValidatorProvider | undefined): void {
+    EmailValidatorProvider._currentPanel = panel
+  }
 
   public static readonly viewType = 'emailValidator'
 
@@ -25,9 +67,7 @@ export class EmailValidatorProvider {
     if (EmailValidatorProvider.currentPanel) {
       EmailValidatorProvider.currentPanel._panel.reveal(column)
       return
-    }
-
-    // Otherwise, create a new panel.
+    }    // Otherwise, create a new panel.
     const panel = vscode.window.createWebviewPanel(
       EmailValidatorProvider.viewType,
       'Validador de Email',
@@ -40,7 +80,7 @@ export class EmailValidatorProvider {
       }
     )
 
-    EmailValidatorProvider.currentPanel = new EmailValidatorProvider(panel, extensionUri)
+    EmailValidatorProvider.setCurrentPanel(new EmailValidatorProvider(panel, extensionUri))
   }
 
   private constructor (panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -106,18 +146,16 @@ export class EmailValidatorProvider {
       summary: this._generateSummary(results),
       success: true
     })
-  }
-
-  /**
+  }  /**
      * Performs detailed email validation
      */
-  private _performEmailValidation (email: string): any {
-    const result = {
+  private _performEmailValidation (email: string): EmailValidationResult {
+    const result: EmailValidationResult = {
       isValid: false,
       format: 'Inválido',
-      details: [] as string[],
-      warnings: [] as string[],
-      suggestions: [] as string[]
+      details: [],
+      warnings: [],
+      suggestions: []
     }
 
     // Basic format validation
@@ -163,12 +201,10 @@ export class EmailValidatorProvider {
     this._checkCommonDomains(domain, result)
 
     return result
-  }
-
-  /**
+  }  /**
      * Validates the local part (before @)
      */
-  private _checkLocalPart (localPart: string, result: any) {
+  private _checkLocalPart (localPart: string, result: EmailValidationResult) {
     if (localPart.length > 64) {
       result.warnings.push('Parte local muito longa (máximo 64 caracteres)')
     }
@@ -187,11 +223,10 @@ export class EmailValidatorProvider {
       result.warnings.push('Parte local contém caracteres inválidos')
     }
   }
-
   /**
      * Validates the domain part (after @)
      */
-  private _checkDomain (domain: string, result: any) {
+  private _checkDomain (domain: string, result: EmailValidationResult) {
     if (domain.length > 253) {
       result.warnings.push('Domínio muito longo (máximo 253 caracteres)')
     }
@@ -221,11 +256,10 @@ export class EmailValidatorProvider {
       result.warnings.push('Domínio parece ser um IP - geralmente inválido para email')
     }
   }
-
   /**
      * Checks for common email issues
      */
-  private _checkCommonIssues (email: string, result: any) {
+  private _checkCommonIssues (email: string, result: EmailValidationResult) {
     // Multiple @ symbols
     if ((email.match(/@/g) || []).length > 1) {
       result.warnings.push('Email contém múltiplos símbolos @')
@@ -248,10 +282,10 @@ export class EmailValidatorProvider {
     if (typo) {
       result.suggestions.push(`Você quis dizer ${email.replace(typo.wrong, typo.correct)}?`)
     }
-  }    /**
+  }  /**
      * Provides information about common email providers
      */
-  private _checkCommonDomains (domain: string, result: any) {
+  private _checkCommonDomains (domain: string, result: EmailValidationResult) {
     const providers: { [key: string]: string } = {
       'gmail.com': 'Google Gmail',
       'yahoo.com': 'Yahoo Mail',
@@ -272,11 +306,10 @@ export class EmailValidatorProvider {
       result.details.push(`Provedor: ${provider}`)
     }
   }
-
   /**
      * Generates summary for bulk validation
      */
-  private _generateSummary (results: any[]) {
+  private _generateSummary (results: EmailWithValidation[]): ValidationSummary {
     const total = results.length
     const valid = results.filter(r => r.validation.isValid).length
     const invalid = total - valid
@@ -303,9 +336,8 @@ export class EmailValidatorProvider {
       vscode.window.showErrorMessage('Erro ao copiar texto para a área de transferência.')
     }
   }
-
   public dispose () {
-    EmailValidatorProvider.currentPanel = undefined
+    EmailValidatorProvider.setCurrentPanel(undefined)
 
     // Clean up our resources
     this._panel.dispose()
@@ -316,7 +348,7 @@ export class EmailValidatorProvider {
         x.dispose()
       }
     }
-  }  private _update () {
+  }private _update () {
     this._panel.webview.html = loadTemplate(this._extensionUri, 'email-validator')
   }
 }

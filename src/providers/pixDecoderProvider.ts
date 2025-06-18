@@ -2,6 +2,53 @@ import * as vscode from 'vscode'
 import { insertText } from '../utils/insertUtils'
 import { loadTemplate } from '../utils/templateLoader'
 
+/**
+ * Interface for PIX merchant information
+ */
+interface PixMerchantInfo {
+  gui?: string;
+  pixKey?: string;
+  keyType?: string;
+  name?: string;
+  city?: string;
+  additionalInfo?: string;
+  unknownFields?: Record<string, string>;
+}
+
+/**
+ * Interface for PIX transaction information
+ */
+interface PixTransactionInfo {
+  categoryCode?: string;
+  currency?: string;
+  currencyName?: string;
+  amount?: number;
+  countryCode?: string;
+}
+
+/**
+ * Interface for PIX additional information
+ */
+interface PixAdditionalInfo {
+  referenceLabel?: string;
+  paymentSystemTemplate?: string;
+  unknownFields?: Record<string, string>;
+}
+
+/**
+ * Interface for decoded PIX data
+ */
+interface DecodedPixData {
+  version: string;
+  initMethod: string;
+  merchantInfo: PixMerchantInfo;
+  transactionInfo: PixTransactionInfo;
+  additionalInfo: PixAdditionalInfo;
+  crc: string;
+  crcValid?: boolean;
+  unknownFields?: Record<string, string>;
+}
+
 export class PixDecoderProvider {
   // Making currentPanel readonly to fix SonarLint warning
   private static currentPanel: vscode.WebviewPanel | undefined
@@ -99,8 +146,7 @@ export class PixDecoderProvider {
       imageData: imageData 
     })
   }
-
-  private static decodePixPayload (payload: string): any {
+  private static decodePixPayload (payload: string): DecodedPixData {
     // Remove whitespace and validate basic format
     const cleanPayload = payload.trim()
         
@@ -112,7 +158,7 @@ export class PixDecoderProvider {
       throw new Error('Formato de código PIX inválido')
     }
 
-    const result: any = {
+    const result: DecodedPixData = {
       version: '',
       initMethod: '',
       merchantInfo: {},
@@ -182,8 +228,8 @@ export class PixDecoderProvider {
     } catch (error) {
       throw new Error(`Erro ao decodificar PIX: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
     }
-  }    private static parsePixMerchantInfo (value: string): any {
-    const info: any = {}
+  }  private static parsePixMerchantInfo (value: string): PixMerchantInfo {
+    const info: PixMerchantInfo = {}
     let index = 0
 
     while (index < value.length) {
@@ -212,8 +258,8 @@ export class PixDecoderProvider {
     }
 
     return info
-  }    private static parseAdditionalInfo (value: string): any {
-    const info: any = {}
+  }  private static parseAdditionalInfo (value: string): PixAdditionalInfo {
+    const info: PixAdditionalInfo = {}
     let index = 0
 
     while (index < value.length) {
