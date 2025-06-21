@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
-import { DevHelperProvider } from './providers/devHelperProvider'
+import { DevJuiceProvider } from './providers/devJuiceProvider'
 import { insertCNPJ, insertCPF, insertUUID, formatToSentenceCase, formatToSnakeCase, formatToCamelCase, formatToKebabCase, formatToPascalCase, formatToLowerCase, formatToUpperCase, formatToCapitalizedCase, formatToAlternatingCase, formatToInverseCase, formatToDotNotation, formatToParamsStyle, formatToPathStyle } from './utils/insertUtils'
 
 // Lazy imports para providers (só carregados quando necessário)
@@ -52,8 +52,8 @@ export function activate (context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "dev-juice" is now active!')
 
   // Register the tree data provider for the view
-  const devHelperProvider = new DevHelperProvider()
-  vscode.window.registerTreeDataProvider('devHelperExplorer', devHelperProvider)
+  const devJuiceProvider = new DevJuiceProvider()
+  vscode.window.registerTreeDataProvider('devJuiceExplorer', devJuiceProvider)
 
   // Register commands - Organizados em ordem alfabética
 

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 
 type TreeDataEvent = DevToolItem | undefined | null | void;
 
-export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
+export class DevJuiceProvider implements vscode.TreeDataProvider<DevToolItem> {
   private readonly _onDidChangeTreeData: vscode.EventEmitter<TreeDataEvent> = new vscode.EventEmitter<TreeDataEvent>()
   readonly onDidChangeTreeData: vscode.Event<TreeDataEvent> = this._onDidChangeTreeData.event
 
