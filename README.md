@@ -1,4 +1,4 @@
-# Dev Helper
+# Dev Juice
 
 Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
 
@@ -43,12 +43,12 @@ Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
 
 A extensão oferece comandos para inserção rápida de valores gerados diretamente no editor:
 
-- `Dev Helper: Inserir CNPJ Formatado`
-- `Dev Helper: Inserir CNPJ Não Formatado`
-- `Dev Helper: Inserir CPF Formatado`
-- `Dev Helper: Inserir CPF Não Formatado`
-- `Dev Helper: Inserir UUID Formatado`
-- `Dev Helper: Inserir UUID Não Formatado`
+- `Dev Juice: Inserir CNPJ Formatado`
+- `Dev Juice: Inserir CNPJ Não Formatado`
+- `Dev Juice: Inserir CPF Formatado`
+- `Dev Juice: Inserir CPF Não Formatado`
+- `Dev Juice: Inserir UUID Formatado`
+- `Dev Juice: Inserir UUID Não Formatado`
 
 E vários comandos para formatação de texto (camelCase, snake_case, PascalCase, etc.)
 
@@ -56,7 +56,7 @@ E vários comandos para formatação de texto (camelCase, snake_case, PascalCase
 
 Veja detalhes de uso de cada funcionalidade no arquivo [FEATURES.md](FEATURES.md).
 
-1. Abra o painel do Dev Helper clicando no ícone na Activity Bar
+1. Abra o painel do Dev Juice clicando no ícone na Activity Bar
 2. Selecione a ferramenta desejada na lista
 3. Para geradores com interface gráfica, uma nova aba será aberta com o formulário
 4. Para inserção rápida no código, use os comandos disponíveis na paleta de comandos (Ctrl+Shift+P ou Cmd+Shift+P)

@@ -1,18 +1,18 @@
 {
-  "name": "dev-helper",
-  "displayName": "Dev Helper",
+  "name": "dev-juice",
+  "displayName": "Dev Juice",
   "description": "Conjunto de ferramentas úteis para desenvolvedores incluindo conversores, formatadores, geradores e validadores",
   "version": "0.0.1",
   "publisher": "NuryStudio",
   "author": "Nurielly Caroline Brizola",
   "license": "MIT",
-  "homepage": "https://github.com/nurycaroline/dev-helper",
+  "homepage": "https://github.com/nurycaroline/dev-juice",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nurycaroline/dev-helper.git"
+    "url": "https://github.com/nurycaroline/dev-juice.git"
   },
   "bugs": {
-    "url": "https://github.com/nurycaroline/dev-helper/issues"
+    "url": "https://github.com/nurycaroline/dev-juice/issues"
   },
   "keywords": [
     "developer tools",
@@ -35,191 +35,191 @@
   "contributes": {
     "commands": [
       {
-        "command": "dev-helper.ansiFormatter",
+        "command": "dev-juice.ansiFormatter",
         "title": "Formatador de Logs ANSI",
         "icon": "$(terminal)"
       },
       {
-        "command": "dev-helper.ansiFormatterProcessSelection",
-        "title": "Dev Helper: Remover Códigos ANSI da Seleção",
+        "command": "dev-juice.ansiFormatterProcessSelection",
+        "title": "Dev Juice: Remover Códigos ANSI da Seleção",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.base64Encoder",
+        "command": "dev-juice.base64Encoder",
         "title": "Codificador Base64",
         "icon": "$(lock)"
       },
       {
-        "command": "dev-helper.colorConverter",
+        "command": "dev-juice.colorConverter",
         "title": "Conversor de Cores",
         "icon": "$(color-mode)"
       },
       {
-        "command": "dev-helper.dateCalculator",
+        "command": "dev-juice.dateCalculator",
         "title": "Calculadora de Data",
         "icon": "$(calendar)"
       },
       {
-        "command": "dev-helper.emailValidator",
+        "command": "dev-juice.emailValidator",
         "title": "Validador de Email",
         "icon": "$(mail)"
       },
       {
-        "command": "dev-helper.formatJson",
+        "command": "dev-juice.formatJson",
         "title": "Formatador JSON",
         "icon": "$(json)"
       },
       {
-        "command": "dev-helper.formatTextAlternatingCase",
-        "title": "Dev Helper: Formatar para aLtErNaTiNg cAsE",
+        "command": "dev-juice.formatTextAlternatingCase",
+        "title": "Dev Juice: Formatar para aLtErNaTiNg cAsE",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextCamelCase",
-        "title": "Dev Helper: Formatar para camelCase",
+        "command": "dev-juice.formatTextCamelCase",
+        "title": "Dev Juice: Formatar para camelCase",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextCapitalizedCase",
-        "title": "Dev Helper: Formatar para Capitalized Case",
+        "command": "dev-juice.formatTextCapitalizedCase",
+        "title": "Dev Juice: Formatar para Capitalized Case",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextInverseCase",
-        "title": "Dev Helper: Formatar para InVeRsE CaSe",
+        "command": "dev-juice.formatTextInverseCase",
+        "title": "Dev Juice: Formatar para InVeRsE CaSe",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextKebabCase",
-        "title": "Dev Helper: Formatar para kebab-case",
+        "command": "dev-juice.formatTextKebabCase",
+        "title": "Dev Juice: Formatar para kebab-case",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextLowerCase",
-        "title": "Dev Helper: Formatar para lower case",
+        "command": "dev-juice.formatTextLowerCase",
+        "title": "Dev Juice: Formatar para lower case",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextPascalCase",
-        "title": "Dev Helper: Formatar para PascalCase",
+        "command": "dev-juice.formatTextPascalCase",
+        "title": "Dev Juice: Formatar para PascalCase",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextSentenceCase",
-        "title": "Dev Helper: Formatar para Sentence case",
+        "command": "dev-juice.formatTextSentenceCase",
+        "title": "Dev Juice: Formatar para Sentence case",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextSnakeCase",
-        "title": "Dev Helper: Formatar para snake_case",
+        "command": "dev-juice.formatTextSnakeCase",
+        "title": "Dev Juice: Formatar para snake_case",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextUpperCase",
-        "title": "Dev Helper: Formatar para UPPER CASE",
+        "command": "dev-juice.formatTextUpperCase",
+        "title": "Dev Juice: Formatar para UPPER CASE",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextDotNotation",
-        "title": "Dev Helper: Formatar para dot.notation",
+        "command": "dev-juice.formatTextDotNotation",
+        "title": "Dev Juice: Formatar para dot.notation",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextParamsStyle",
-        "title": "Dev Helper: Formatar para Params: Style",
+        "command": "dev-juice.formatTextParamsStyle",
+        "title": "Dev Juice: Formatar para Params: Style",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.formatTextPathStyle",
-        "title": "Dev Helper: Formatar para path/style",
+        "command": "dev-juice.formatTextPathStyle",
+        "title": "Dev Juice: Formatar para path/style",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.generateCNPJ",
+        "command": "dev-juice.generateCNPJ",
         "title": "Gerar CNPJ Válido",
         "icon": "$(key)"
       },
       {
-        "command": "dev-helper.generateCPF",
+        "command": "dev-juice.generateCPF",
         "title": "Gerar CPF Válido",
         "icon": "$(key)"
       },
       {
-        "command": "dev-helper.generatePix",
+        "command": "dev-juice.generatePix",
         "title": "Gerar PIX QR Code",
         "icon": "$(credit-card)"
       },
       {
-        "command": "dev-helper.generateUUID",
+        "command": "dev-juice.generateUUID",
         "title": "Gerar UUID",
         "icon": "$(key)"
       },
       {
-        "command": "dev-helper.hashGenerator",
+        "command": "dev-juice.hashGenerator",
         "title": "Gerador de Hash",
         "icon": "$(key)"
       },
       {
-        "command": "dev-helper.helloWorld",
+        "command": "dev-juice.helloWorld",
         "title": "Hello World"
       },
       {
-        "command": "dev-helper.insertCNPJFormatted",
-        "title": "Dev Helper: Inserir CNPJ Formatado",
+        "command": "dev-juice.insertCNPJFormatted",
+        "title": "Dev Juice: Inserir CNPJ Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.insertCNPJUnformatted",
-        "title": "Dev Helper: Inserir CNPJ Não Formatado",
+        "command": "dev-juice.insertCNPJUnformatted",
+        "title": "Dev Juice: Inserir CNPJ Não Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.insertCPFFormatted",
-        "title": "Dev Helper: Inserir CPF Formatado",
+        "command": "dev-juice.insertCPFFormatted",
+        "title": "Dev Juice: Inserir CPF Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.insertCPFUnformatted",
-        "title": "Dev Helper: Inserir CPF Não Formatado",
+        "command": "dev-juice.insertCPFUnformatted",
+        "title": "Dev Juice: Inserir CPF Não Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.insertUUIDFormatted",
-        "title": "Dev Helper: Inserir UUID Formatado",
+        "command": "dev-juice.insertUUIDFormatted",
+        "title": "Dev Juice: Inserir UUID Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.insertUUIDUnformatted",
-        "title": "Dev Helper: Inserir UUID Não Formatado",
+        "command": "dev-juice.insertUUIDUnformatted",
+        "title": "Dev Juice: Inserir UUID Não Formatado",
         "category": "Editor"
       },
       {
-        "command": "dev-helper.passwordGenerator",
+        "command": "dev-juice.passwordGenerator",
         "title": "Gerador de Senhas",
         "icon": "$(shield)"
       },
       {
-        "command": "dev-helper.pixDecoder",
+        "command": "dev-juice.pixDecoder",
         "title": "PIX QR Code Decoder",
         "icon": "$(zap)"
       },
       {
-        "command": "dev-helper.qrReader",
+        "command": "dev-juice.qrReader",
         "title": "QR Code Reader",
         "icon": "$(device-camera)"
       },
       {
-        "command": "dev-helper.regexTester",
+        "command": "dev-juice.regexTester",
         "title": "Testador de Regex",
         "icon": "$(search)"
       },
       {
-        "command": "dev-helper.textFormatter",
+        "command": "dev-juice.textFormatter",
         "title": "Formatação de Texto",
         "icon": "$(symbol-string)"
       },
       {
-        "command": "dev-helper.urlEncoder",
+        "command": "dev-juice.urlEncoder",
         "title": "URL Encoder/Decoder",
         "icon": "$(link)"
       }
@@ -227,14 +227,14 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "dev-helper",
-          "title": "Dev Helper",
+          "id": "dev-juice",
+          "title": "Dev Juice",
           "icon": "$(tools)"
         }
       ]
     },
     "views": {
-      "dev-helper": [
+      "dev-juice": [
         {
           "id": "devHelperExplorer",
           "name": "Dev Tools",
@@ -245,7 +245,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "dev-helper.generateCNPJ",
+          "command": "dev-juice.generateCNPJ",
           "when": "view == devHelperExplorer",
           "group": "navigation"
         }

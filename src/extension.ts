@@ -49,7 +49,7 @@ export function activate (context: vscode.ExtensionContext) {
 
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "dev-helper" is now active!')
+  console.log('Congratulations, your extension "dev-juice" is now active!')
 
   // Register the tree data provider for the view
   const devHelperProvider = new DevHelperProvider()
@@ -58,12 +58,12 @@ export function activate (context: vscode.ExtensionContext) {
   // Register commands - Organizados em ordem alfabética
 
   // ANSI Formatter command
-  const ansiFormatterDisposable = vscode.commands.registerCommand('dev-helper.ansiFormatter', () => {
+  const ansiFormatterDisposable = vscode.commands.registerCommand('dev-juice.ansiFormatter', () => {
     lazyProviders.AnsiFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // ANSI Formatter Process Selection command
-  const ansiFormatterProcessSelectionDisposable = vscode.commands.registerCommand('dev-helper.ansiFormatterProcessSelection', () => {
+  const ansiFormatterProcessSelectionDisposable = vscode.commands.registerCommand('dev-juice.ansiFormatterProcessSelection', () => {
     const editor = vscode.window.activeTextEditor
     if (!editor) {
       vscode.window.showErrorMessage('Nenhum editor ativo para processar a seleção.')
@@ -96,278 +96,278 @@ export function activate (context: vscode.ExtensionContext) {
   })
 
   // Base64 Encoder command
-  const base64EncoderDisposable = vscode.commands.registerCommand('dev-helper.base64Encoder', () => {
+  const base64EncoderDisposable = vscode.commands.registerCommand('dev-juice.base64Encoder', () => {
     lazyProviders.Base64EncoderProvider.createOrShow(context.extensionUri)
   })
 
   // Color Converter command
-  const colorConverterDisposable = vscode.commands.registerCommand('dev-helper.colorConverter', () => {
+  const colorConverterDisposable = vscode.commands.registerCommand('dev-juice.colorConverter', () => {
     lazyProviders.ColorConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Date Calculator command
-  const dateCalculatorDisposable = vscode.commands.registerCommand('dev-helper.dateCalculator', () => {
+  const dateCalculatorDisposable = vscode.commands.registerCommand('dev-juice.dateCalculator', () => {
     lazyProviders.DateCalculatorProvider.createOrShow(context.extensionUri)
   })
   
   // Email Validator command
-  const emailValidatorDisposable = vscode.commands.registerCommand('dev-helper.emailValidator', () => {
+  const emailValidatorDisposable = vscode.commands.registerCommand('dev-juice.emailValidator', () => {
     lazyProviders.EmailValidatorProvider.createOrShow(context.extensionUri)
   })
 
   // Format JSON command
-  const formatJsonDisposable = vscode.commands.registerCommand('dev-helper.formatJson', () => {
+  const formatJsonDisposable = vscode.commands.registerCommand('dev-juice.formatJson', () => {
     lazyProviders.JsonFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // Generate CNPJ command - now opens the webview panel
-  const generateCNPJDisposable = vscode.commands.registerCommand('dev-helper.generateCNPJ', () => {
+  const generateCNPJDisposable = vscode.commands.registerCommand('dev-juice.generateCNPJ', () => {
     lazyProviders.CNPJPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Generate CPF command
-  const generateCPFDisposable = vscode.commands.registerCommand('dev-helper.generateCPF', () => {
+  const generateCPFDisposable = vscode.commands.registerCommand('dev-juice.generateCPF', () => {
     lazyProviders.CPFPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Generate PIX command
-  const generatePixDisposable = vscode.commands.registerCommand('dev-helper.generatePix', () => {
+  const generatePixDisposable = vscode.commands.registerCommand('dev-juice.generatePix', () => {
     lazyProviders.PixPanelProvider.createOrShow(context.extensionUri)
   })
   
   // Generate UUID command
-  const generateUUIDDisposable = vscode.commands.registerCommand('dev-helper.generateUUID', () => {
+  const generateUUIDDisposable = vscode.commands.registerCommand('dev-juice.generateUUID', () => {
     lazyProviders.UUIDPanelProvider.createOrShow(context.extensionUri)
   })
 
   // Hash Generator command
-  const hashGeneratorDisposable = vscode.commands.registerCommand('dev-helper.hashGenerator', () => {
+  const hashGeneratorDisposable = vscode.commands.registerCommand('dev-juice.hashGenerator', () => {
     lazyProviders.HashGeneratorProvider.createOrShow(context.extensionUri)
   })
 
   // Hello World command (from template)
-  const helloWorldDisposable = vscode.commands.registerCommand('dev-helper.helloWorld', () => {
+  const helloWorldDisposable = vscode.commands.registerCommand('dev-juice.helloWorld', () => {
     // The code you place here will be executed every time your command is executed
     // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from Dev Helper!')
+    vscode.window.showInformationMessage('Hello World from Dev Juice!')
   })
 
   // Password Generator command
-  const passwordGeneratorDisposable = vscode.commands.registerCommand('dev-helper.passwordGenerator', () => {
+  const passwordGeneratorDisposable = vscode.commands.registerCommand('dev-juice.passwordGenerator', () => {
     lazyProviders.PasswordGeneratorProvider.createOrShow(context.extensionUri)
   })
 
   // PIX Decoder command
-  const pixDecoderDisposable = vscode.commands.registerCommand('dev-helper.pixDecoder', () => {
+  const pixDecoderDisposable = vscode.commands.registerCommand('dev-juice.pixDecoder', () => {
     lazyProviders.PixDecoderProvider.createOrShow(context.extensionUri)
   })
 
   // QR Reader command
-  const qrReaderDisposable = vscode.commands.registerCommand('dev-helper.qrReader', () => {
+  const qrReaderDisposable = vscode.commands.registerCommand('dev-juice.qrReader', () => {
     lazyProviders.QrReaderProvider.createOrShow(context.extensionUri)
   })
 
   // Regex Tester command
-  const regexTesterDisposable = vscode.commands.registerCommand('dev-helper.regexTester', () => {
+  const regexTesterDisposable = vscode.commands.registerCommand('dev-juice.regexTester', () => {
     lazyProviders.RegexTesterProvider.createOrShow(context.extensionUri)
   })
 
   // Text Formatter command
-  const textFormatterDisposable = vscode.commands.registerCommand('dev-helper.textFormatter', () => {
+  const textFormatterDisposable = vscode.commands.registerCommand('dev-juice.textFormatter', () => {
     lazyProviders.TextFormatterProvider.createOrShow(context.extensionUri)
   })
 
   // URL Encoder command
-  const urlEncoderDisposable = vscode.commands.registerCommand('dev-helper.urlEncoder', () => {
+  const urlEncoderDisposable = vscode.commands.registerCommand('dev-juice.urlEncoder', () => {
     lazyProviders.UrlEncoderProvider.createOrShow(context.extensionUri)
   })
 
   // Comandos de formatação de texto para seleção no editor - Organizados em ordem alfabética
 
   // Formatar para aLtErNaTiNg cAsE
-  const formatAlternatingCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextAlternatingCase', () => {
+  const formatAlternatingCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextAlternatingCase', () => {
     formatToAlternatingCase()
   })
 
   // Formatar para camelCase
-  const formatCamelCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCamelCase', () => {
+  const formatCamelCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextCamelCase', () => {
     formatToCamelCase()
   })
 
   // Formatar para Capitalized Case
-  const formatCapitalizedCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextCapitalizedCase', () => {
+  const formatCapitalizedCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextCapitalizedCase', () => {
     formatToCapitalizedCase()
   })
 
   // Formatar para InVeRsE CaSe
-  const formatInverseCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextInverseCase', () => {
+  const formatInverseCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextInverseCase', () => {
     formatToInverseCase()
   })
 
   // Formatar para kebab-case
-  const formatKebabCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextKebabCase', () => {
+  const formatKebabCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextKebabCase', () => {
     formatToKebabCase()
   })
 
   // Formatar para lower case
-  const formatLowerCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextLowerCase', () => {
+  const formatLowerCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextLowerCase', () => {
     formatToLowerCase()
   })
 
   // Formatar para PascalCase
-  const formatPascalCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextPascalCase', () => {
+  const formatPascalCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextPascalCase', () => {
     formatToPascalCase()
   })
 
   // Formatar para Sentence case
-  const formatSentenceCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextSentenceCase', () => {
+  const formatSentenceCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextSentenceCase', () => {
     formatToSentenceCase()
   })
 
   // Formatar para snake_case
-  const formatSnakeCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextSnakeCase', () => {
+  const formatSnakeCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextSnakeCase', () => {
     formatToSnakeCase()
   })
 
   // Formatar para UPPER CASE
-  const formatUpperCaseDisposable = vscode.commands.registerCommand('dev-helper.formatTextUpperCase', () => {
+  const formatUpperCaseDisposable = vscode.commands.registerCommand('dev-juice.formatTextUpperCase', () => {
     formatToUpperCase()
   })
 
   // Formatar para dot.notation
-  const formatDotNotationDisposable = vscode.commands.registerCommand('dev-helper.formatTextDotNotation', () => {
+  const formatDotNotationDisposable = vscode.commands.registerCommand('dev-juice.formatTextDotNotation', () => {
     formatToDotNotation()
   })
 
   // Formatar para Params: Style
-  const formatParamsStyleDisposable = vscode.commands.registerCommand('dev-helper.formatTextParamsStyle', () => {
+  const formatParamsStyleDisposable = vscode.commands.registerCommand('dev-juice.formatTextParamsStyle', () => {
     formatToParamsStyle()
   })
 
   // Formatar para path/style
-  const formatPathStyleDisposable = vscode.commands.registerCommand('dev-helper.formatTextPathStyle', () => {
+  const formatPathStyleDisposable = vscode.commands.registerCommand('dev-juice.formatTextPathStyle', () => {
     formatToPathStyle()
   })
 
   // Comandos para inserir valores gerados diretamente no editor - Organizados em ordem alfabética
 
   // Inserir CNPJ formatado
-  const insertCNPJFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertCNPJFormatted', () => {
+  const insertCNPJFormattedDisposable = vscode.commands.registerCommand('dev-juice.insertCNPJFormatted', () => {
     insertCNPJ(true)
   })
 
   // Inserir CNPJ não formatado
-  const insertCNPJUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertCNPJUnformatted', () => {
+  const insertCNPJUnformattedDisposable = vscode.commands.registerCommand('dev-juice.insertCNPJUnformatted', () => {
     insertCNPJ(false)
   })
 
   // Inserir CPF formatado
-  const insertCPFFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertCPFFormatted', () => {
+  const insertCPFFormattedDisposable = vscode.commands.registerCommand('dev-juice.insertCPFFormatted', () => {
     insertCPF(true)
   })
 
   // Inserir CPF não formatado
-  const insertCPFUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertCPFUnformatted', () => {
+  const insertCPFUnformattedDisposable = vscode.commands.registerCommand('dev-juice.insertCPFUnformatted', () => {
     insertCPF(false)
   })
 
   // Inserir UUID formatado
-  const insertUUIDFormattedDisposable = vscode.commands.registerCommand('dev-helper.insertUUIDFormatted', () => {
+  const insertUUIDFormattedDisposable = vscode.commands.registerCommand('dev-juice.insertUUIDFormatted', () => {
     insertUUID(true)
   })
 
   // Inserir UUID não formatado
-  const insertUUIDUnformattedDisposable = vscode.commands.registerCommand('dev-helper.insertUUIDUnformatted', () => {
+  const insertUUIDUnformattedDisposable = vscode.commands.registerCommand('dev-juice.insertUUIDUnformatted', () => {
     insertUUID(false)
   })
 
   // Area Converter command
-  const areaConverterDisposable = vscode.commands.registerCommand('dev-helper.areaConverter', () => {
+  const areaConverterDisposable = vscode.commands.registerCommand('dev-juice.areaConverter', () => {
     lazyProviders.AreaConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Length Converter command
-  const lengthConverterDisposable = vscode.commands.registerCommand('dev-helper.lengthConverter', () => {
+  const lengthConverterDisposable = vscode.commands.registerCommand('dev-juice.lengthConverter', () => {
     lazyProviders.LengthConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Temperature Converter command
-  const temperatureConverterDisposable = vscode.commands.registerCommand('dev-helper.temperatureConverter', () => {
+  const temperatureConverterDisposable = vscode.commands.registerCommand('dev-juice.temperatureConverter', () => {
     lazyProviders.TemperatureConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Volume Converter command
-  const volumeConverterDisposable = vscode.commands.registerCommand('dev-helper.volumeConverter', () => {
+  const volumeConverterDisposable = vscode.commands.registerCommand('dev-juice.volumeConverter', () => {
     lazyProviders.VolumeConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Weight Converter command
-  const weightConverterDisposable = vscode.commands.registerCommand('dev-helper.weightConverter', () => {
+  const weightConverterDisposable = vscode.commands.registerCommand('dev-juice.weightConverter', () => {
     lazyProviders.WeightConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Angle Converter command
-  const angleConverterDisposable = vscode.commands.registerCommand('dev-helper.angleConverter', () => {
+  const angleConverterDisposable = vscode.commands.registerCommand('dev-juice.angleConverter', () => {
     lazyProviders.AngleConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Case Converter command
-  const caseConverterDisposable = vscode.commands.registerCommand('dev-helper.caseConverter', () => {
+  const caseConverterDisposable = vscode.commands.registerCommand('dev-juice.caseConverter', () => {
     lazyProviders.CaseConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Currency Converter command
-  const currencyConverterDisposable = vscode.commands.registerCommand('dev-helper.currencyConverter', () => {
+  const currencyConverterDisposable = vscode.commands.registerCommand('dev-juice.currencyConverter', () => {
     lazyProviders.CurrencyConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Data Storage Converter command
-  const dataStorageConverterDisposable = vscode.commands.registerCommand('dev-helper.dataStorageConverter', () => {
+  const dataStorageConverterDisposable = vscode.commands.registerCommand('dev-juice.dataStorageConverter', () => {
     lazyProviders.DataStorageConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Dry Volume Converter command
-  const dryVolumeConverterDisposable = vscode.commands.registerCommand('dev-helper.dryVolumeConverter', () => {
+  const dryVolumeConverterDisposable = vscode.commands.registerCommand('dev-juice.dryVolumeConverter', () => {
     lazyProviders.DryVolumeConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Energy Converter command
-  const energyConverterDisposable = vscode.commands.registerCommand('dev-helper.energyConverter', () => {
+  const energyConverterDisposable = vscode.commands.registerCommand('dev-juice.energyConverter', () => {
     lazyProviders.EnergyConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Force Converter command
-  const forceConverterDisposable = vscode.commands.registerCommand('dev-helper.forceConverter', () => {
+  const forceConverterDisposable = vscode.commands.registerCommand('dev-juice.forceConverter', () => {
     lazyProviders.ForceConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Fuel Consumption Converter command
-  const fuelConsumptionConverterDisposable = vscode.commands.registerCommand('dev-helper.fuelConsumptionConverter', () => {
+  const fuelConsumptionConverterDisposable = vscode.commands.registerCommand('dev-juice.fuelConsumptionConverter', () => {
     lazyProviders.FuelConsumptionConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Numbers Converter command
-  const numbersConverterDisposable = vscode.commands.registerCommand('dev-helper.numbersConverter', () => {
+  const numbersConverterDisposable = vscode.commands.registerCommand('dev-juice.numbersConverter', () => {
     lazyProviders.NumbersConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Power Converter command
-  const powerConverterDisposable = vscode.commands.registerCommand('dev-helper.powerConverter', () => {
+  const powerConverterDisposable = vscode.commands.registerCommand('dev-juice.powerConverter', () => {
     lazyProviders.PowerConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Pressure Converter command
-  const pressureConverterDisposable = vscode.commands.registerCommand('dev-helper.pressureConverter', () => {
+  const pressureConverterDisposable = vscode.commands.registerCommand('dev-juice.pressureConverter', () => {
     lazyProviders.PressureConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Speed Converter command
-  const speedConverterDisposable = vscode.commands.registerCommand('dev-helper.speedConverter', () => {
+  const speedConverterDisposable = vscode.commands.registerCommand('dev-juice.speedConverter', () => {
     lazyProviders.SpeedConverterProvider.createOrShow(context.extensionUri)
   })
 
   // Time Converter command
-  const timeConverterDisposable = vscode.commands.registerCommand('dev-helper.timeConverter', () => {
+  const timeConverterDisposable = vscode.commands.registerCommand('dev-juice.timeConverter', () => {
     lazyProviders.TimeConverterProvider.createOrShow(context.extensionUri)
   })
 

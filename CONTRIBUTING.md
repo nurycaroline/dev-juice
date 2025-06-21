@@ -1,6 +1,6 @@
-# Contribuindo para o Dev Helper
+# Contribuindo para o Dev Juice
 
-Obrigado pelo seu interesse em contribuir para o Dev Helper! Aqui estão algumas diretrizes para ajudá-lo a contribuir com o projeto.
+Obrigado pelo seu interesse em contribuir para o Dev Juice! Aqui estão algumas diretrizes para ajudá-lo a contribuir com o projeto.
 
 ## Como Contribuir
 

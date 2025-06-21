@@ -1,6 +1,6 @@
-# Checklist de Segurança para a Extensão Dev Helper
+# Checklist de Segurança para a Extensão Dev Juice
 
-Este documento fornece um checklist de segurança e as práticas recomendadas para o desenvolvimento e manutenção da extensão Dev Helper.
+Este documento fornece um checklist de segurança e as práticas recomendadas para o desenvolvimento e manutenção da extensão Dev Juice.
 
 ## Auditoria de Dependências
 

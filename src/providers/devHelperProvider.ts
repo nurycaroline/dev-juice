@@ -22,37 +22,37 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           new DevToolItem(
             'CNPJ',
             'Gerar número de CNPJ válido',
-            'dev-helper.generateCNPJ',
+            'dev-juice.generateCNPJ',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'CPF',
             'Gerar número de CPF válido',
-            'dev-helper.generateCPF',
+            'dev-juice.generateCPF',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Gerador de Hash',
             'Gerar hashes MD5, SHA1, SHA256',
-            'dev-helper.hashGenerator',
+            'dev-juice.hashGenerator',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Gerador de Senhas',
             'Gerar senhas seguras com opções customizáveis',
-            'dev-helper.passwordGenerator',
+            'dev-juice.passwordGenerator',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'PIX QR Code',
             'Gerar código PIX com QR Code',
-            'dev-helper.generatePix',
+            'dev-juice.generatePix',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'UUID',
             'Gerar UUID (Identificador Único Universal)',
-            'dev-helper.generateUUID',
+            'dev-juice.generateUUID',
             vscode.TreeItemCollapsibleState.None
           )
           // Add more generators here as needed
@@ -62,19 +62,19 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           new DevToolItem(
             'Formatador de Logs ANSI',
             'Formatar logs com códigos ANSI',
-            'dev-helper.ansiFormatter',
+            'dev-juice.ansiFormatter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Formatador de Texto',
             'Formatar texto em vários estilos (camelCase, snake_case, etc.)',
-            'dev-helper.textFormatter',
+            'dev-juice.textFormatter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Formatador JSON',
             'Formatar e validar código JSON',
-            'dev-helper.formatJson',
+            'dev-juice.formatJson',
             vscode.TreeItemCollapsibleState.None
           )
           // Add more formatting tools here as needed
@@ -83,115 +83,115 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           new DevToolItem(
             'Conversor de Ângulo',
             'Converter entre diferentes unidades de ângulo',
-            'dev-helper.angleConverter',
+            'dev-juice.angleConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Área',
             'Converter entre diferentes unidades de área',
-            'dev-helper.areaConverter',
+            'dev-juice.areaConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Armazenamento de Dados',
             'Converter entre diferentes unidades de armazenamento de dados',
-            'dev-helper.dataStorageConverter',
+            'dev-juice.dataStorageConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Case',
             'Converter entre diferentes estilos de case (camelCase, snake_case, etc.)',
-            'dev-helper.caseConverter',
+            'dev-juice.caseConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Comprimento',
             'Converter entre diferentes unidades de comprimento',
-            'dev-helper.lengthConverter',
+            'dev-juice.lengthConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Consumo de Combustível',
             'Converter entre diferentes unidades de consumo de combustível',
-            'dev-helper.fuelConsumptionConverter',
+            'dev-juice.fuelConsumptionConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Cores',
             'Converter entre formatos de cores (HEX, RGB, HSL)',
-            'dev-helper.colorConverter',
+            'dev-juice.colorConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Energia',
             'Converter entre diferentes unidades de energia',
-            'dev-helper.energyConverter',
+            'dev-juice.energyConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Força',
             'Converter entre diferentes unidades de força',
-            'dev-helper.forceConverter',
+            'dev-juice.forceConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Moedas',
             'Converter entre diferentes moedas',
-            'dev-helper.currencyConverter',
+            'dev-juice.currencyConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Números',
             'Converter entre diferentes bases numéricas (decimal, binário, hexadecimal, etc.)',
-            'dev-helper.numbersConverter',
+            'dev-juice.numbersConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Peso e Massa',
             'Converter entre diferentes unidades de peso e massa',
-            'dev-helper.weightConverter',
+            'dev-juice.weightConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Potência',
             'Converter entre diferentes unidades de potência',
-            'dev-helper.powerConverter',
+            'dev-juice.powerConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Pressão',
             'Converter entre diferentes unidades de pressão',
-            'dev-helper.pressureConverter',
+            'dev-juice.pressureConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Temperatura',
             'Converter entre diferentes unidades de temperatura',
-            'dev-helper.temperatureConverter',
+            'dev-juice.temperatureConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Tempo',
             'Converter entre diferentes unidades de tempo',
-            'dev-helper.timeConverter',
+            'dev-juice.timeConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Velocidade',
             'Converter entre diferentes unidades de velocidade',
-            'dev-helper.speedConverter',
+            'dev-juice.speedConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Volume',
             'Converter entre diferentes unidades de volume',
-            'dev-helper.volumeConverter',
+            'dev-juice.volumeConverter',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Conversor de Volume (Seco)',
             'Converter entre diferentes unidades de volume para materiais secos',
-            'dev-helper.dryVolumeConverter',
+            'dev-juice.dryVolumeConverter',
             vscode.TreeItemCollapsibleState.None
           )
         ])
@@ -203,43 +203,43 @@ export class DevHelperProvider implements vscode.TreeDataProvider<DevToolItem> {
           new DevToolItem(
             'Calculadora de Data',
             'Calcular diferenças entre datas e formatos',
-            'dev-helper.dateCalculator',
+            'dev-juice.dateCalculator',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Codificador Base64',
             'Codificar/decodificar texto em Base64',
-            'dev-helper.base64Encoder',
+            'dev-juice.base64Encoder',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'PIX Decoder',
             'Decodificar códigos PIX QR',
-            'dev-helper.pixDecoder',
+            'dev-juice.pixDecoder',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'QR Code Reader',
             'Ler e decodificar códigos QR',
-            'dev-helper.qrReader',
+            'dev-juice.qrReader',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Testador de Regex',
             'Testar e validar expressões regulares',
-            'dev-helper.regexTester',
+            'dev-juice.regexTester',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'URL Encoder/Decoder',
             'Codificar e decodificar URLs',
-            'dev-helper.urlEncoder',
+            'dev-juice.urlEncoder',
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
             'Validador de Email',
             'Validar formato de endereços de email',
-            'dev-helper.emailValidator',
+            'dev-juice.emailValidator',
             vscode.TreeItemCollapsibleState.None
           )
           // Add more utilities here as needed

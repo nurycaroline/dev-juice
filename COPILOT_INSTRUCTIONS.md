@@ -18,7 +18,7 @@ Este documento descreve as melhores práticas e padrões para o desenvolvimento 
   - Classes: `PascalCase` (ex., `JsonFormatterProvider`)
   - Métodos e propriedades: `camelCase`
   - Constantes: `UPPER_SNAKE_CASE` para constantes verdadeiras
-  - Comandos: formato `prefixo.acao` (ex., `dev-helper.formatJson`)
+  - Comandos: formato `prefixo.acao` (ex., `dev-juice.formatJson`)
   - Mantenha a nomenclatura do provedor consistente (ex., sempre use `AlgumaCoisa`Provider para provedores de WebView)
 
 ## Organização do Código

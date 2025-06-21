@@ -1,6 +1,6 @@
-# Dev Helper - Detalhamento das Funcionalidades
+# Dev Juice - Detalhamento das Funcionalidades
 
-Este documento descreve em detalhes como utilizar cada uma das funcionalidades da extensão Dev Helper.
+Este documento descreve em detalhes como utilizar cada uma das funcionalidades da extensão Dev Juice.
 
 ## Índice
 
@@ -48,8 +48,8 @@ Gera números de CNPJ válidos para uso em desenvolvimento e testes.
 
 **Inserção rápida no editor:**
 
-- Comando `Dev Helper: Inserir CNPJ Formatado` - Insere um CNPJ com formato XX.XXX.XXX/XXXX-XX
-- Comando `Dev Helper: Inserir CNPJ Não Formatado` - Insere um CNPJ sem formatação (apenas números)
+- Comando `Dev Juice: Inserir CNPJ Formatado` - Insere um CNPJ com formato XX.XXX.XXX/XXXX-XX
+- Comando `Dev Juice: Inserir CNPJ Não Formatado` - Insere um CNPJ sem formatação (apenas números)
 
 ### Gerador de CPF
 
@@ -57,7 +57,7 @@ Gera números de CPF válidos para uso em desenvolvimento e testes.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Gerador de CPF"
 3. Clique em "Gerar CPF" para obter um número válido
 4. Use os botões para copiar no formato desejado
@@ -70,8 +70,8 @@ Gera números de CPF válidos para uso em desenvolvimento e testes.
 
 **Inserção rápida no editor:**
 
-- Comando `Dev Helper: Inserir CPF Formatado` - Insere um CPF com formato XXX.XXX.XXX-XX
-- Comando `Dev Helper: Inserir CPF Não Formatado` - Insere um CPF sem formatação (apenas números)
+- Comando `Dev Juice: Inserir CPF Formatado` - Insere um CPF com formato XXX.XXX.XXX-XX
+- Comando `Dev Juice: Inserir CPF Não Formatado` - Insere um CPF sem formatação (apenas números)
 
 ### Gerador de UUID
 
@@ -79,7 +79,7 @@ Gera identificadores únicos universais (UUID) para uso em aplicações.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Gerador de UUID"
 3. Um novo UUID será gerado automaticamente
 4. Use os botões para copiar no formato desejado
@@ -91,8 +91,8 @@ Gera identificadores únicos universais (UUID) para uso em aplicações.
 
 **Inserção rápida no editor:**
 
-- Comando `Dev Helper: Inserir UUID Formatado` - Insere um UUID com formato XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-- Comando `Dev Helper: Inserir UUID Não Formatado` - Insere um UUID sem hífens
+- Comando `Dev Juice: Inserir UUID Formatado` - Insere um UUID com formato XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+- Comando `Dev Juice: Inserir UUID Não Formatado` - Insere um UUID sem hífens
 
 ### Gerador de PIX QR Code
 
@@ -100,7 +100,7 @@ Gera códigos PIX completos com QR Code para testes de pagamento.
 
 **Como usar:**
 
-1. Abra o painel do Dev Helper
+1. Abra o painel do Dev Juice
 2. Clique em "PIX QR Code"
 3. Preencha os campos obrigatórios:
    - **Chave PIX**: Sua chave PIX (CPF, CNPJ, email, etc.)
@@ -129,7 +129,7 @@ Gera hashes criptográficos com múltiplos algoritmos.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Gerador de Hash"
 3. Insira o texto para gerar os hashes
 4. Selecione o algoritmo desejado ou gere todos
@@ -152,7 +152,7 @@ Gera senhas seguras com opções totalmente customizáveis.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Gerador de Senhas"
 3. Configure as opções desejadas:
    - Comprimento da senha
@@ -181,7 +181,7 @@ Formata e minifica strings JSON para melhor visualização e depuração.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Formatador JSON"
 3. Cole seu JSON no campo de entrada
 4. Escolha entre formatar (pretty) ou minificar
@@ -201,7 +201,7 @@ Codifica e decodifica textos e arquivos usando Base64.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Codificador Base64"
 3. Escolha a operação (codificar ou decodificar)
 4. Insira o texto ou selecione o arquivo
@@ -221,7 +221,7 @@ Valida endereços de email com análise detalhada.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Validador de Email"
 3. Insira o email a ser validado
 4. Visualize o resultado da validação e detalhes
@@ -246,7 +246,7 @@ Converte texto entre diferentes formatos de caso e estilo.
 
 **Como usar via painel:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Formatação de texto"
 3. Insira o texto a ser formatado
 4. Escolha o formato desejado
@@ -256,7 +256,7 @@ Converte texto entre diferentes formatos de caso e estilo.
 
 1. Selecione o texto no editor
 2. Abra a paleta de comandos (Ctrl+Shift+P ou Cmd+Shift+P)
-3. Digite "Dev Helper: Formatar" para ver as opções
+3. Digite "Dev Juice: Formatar" para ver as opções
 4. Escolha o formato desejado
 
 **Formatos suportados:**
@@ -278,7 +278,7 @@ Converte cores entre diferentes formatos.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Cores"
 3. Insira a cor em qualquer formato suportado
 4. Visualize a conversão para todos os outros formatos
@@ -298,7 +298,7 @@ Ferramenta completa para cálculos com datas.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Calculadora de Data"
 3. Escolha a operação desejada:
    - Diferença entre datas
@@ -320,7 +320,7 @@ Codifica e decodifica URLs de forma segura.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "URL Encoder/Decoder"
 3. Escolha a operação (codificar ou decodificar)
 4. Insira a URL ou texto
@@ -340,7 +340,7 @@ Lê e decodifica códigos QR de imagens.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "QR Code Reader"
 3. Faça upload de uma imagem contendo um QR code
    - Arraste e solte ou use o botão de upload
@@ -361,7 +361,7 @@ Decodifica códigos PIX QR para análise e verificação.
 
 **Como usar:**
 
-1. Abra o painel do Dev Helper
+1. Abra o painel do Dev Juice
 2. Navegue até "PIX Decoder"
 3. Escolha o método:
    - **Aba "Código PIX"**: Cole a string completa do código PIX
@@ -389,7 +389,7 @@ Converte valores entre diferentes unidades de ângulo.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Ângulos"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -409,7 +409,7 @@ Converte valores entre diferentes unidades de área.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Área"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -433,7 +433,7 @@ Converte números entre diferentes sistemas numéricos.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Base"
 3. Insira o número na base de origem
 4. Selecione a base de origem
@@ -453,7 +453,7 @@ Converte texto entre diferentes formatos de caso.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Caso"
 3. Insira o texto a ser convertido
 4. Visualize a conversão para todos os formatos de caso
@@ -476,7 +476,7 @@ Converte valores entre diferentes moedas.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Moeda"
 3. Insira o valor na moeda de origem
 4. Selecione a moeda de origem e destino
@@ -495,7 +495,7 @@ Converte valores entre diferentes unidades de armazenamento digital.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Armazenamento"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -521,7 +521,7 @@ Converte valores entre diferentes unidades de volume seco.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Volume Seco"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -545,7 +545,7 @@ Converte valores entre diferentes unidades de energia.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Energia"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -569,7 +569,7 @@ Converte valores entre diferentes unidades de força.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Força"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -590,7 +590,7 @@ Converte valores entre diferentes unidades de consumo de combustível.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Consumo de Combustível"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
@@ -610,7 +610,7 @@ Converte valores entre diferentes unidades de comprimento.
 
 **Como usar:**
 
-1. Acesse o painel do Dev Helper
+1. Acesse o painel do Dev Juice
 2. Selecione "Conversor de Comprimento"
 3. Insira o valor na unidade de origem
 4. Visualize a conversão para todas as outras unidades
