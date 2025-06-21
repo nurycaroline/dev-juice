@@ -9,3 +9,14 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+.env
+node_modules/**
+.git/**
+.DS_Store
+*.vsix
+.eslintrc*
+.github/**
+CONTRIBUTING.md
+COPILOT_INSTRUCTIONS.md
+FEATURES.md
+SECURITY.md
