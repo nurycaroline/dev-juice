@@ -31,6 +31,7 @@
   "categories": [
     "Other"
   ],
+  "icon": "icon.png",
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -229,16 +230,16 @@
         {
           "id": "dev-juice",
           "title": "Dev Juice",
-          "icon": "$(tools)"
+          "icon": "./icon.svg"
         }
       ]
     },
     "views": {
       "dev-juice": [
         {
-          "id": "devHelperExplorer",
+          "id": "devJuiceExplorer",
           "name": "Dev Tools",
-          "icon": "$(tools)"
+          "icon": "./icon.svg"
         }
       ]
     },
@@ -246,7 +247,7 @@
       "view/title": [
         {
           "command": "dev-juice.generateCNPJ",
-          "when": "view == devHelperExplorer",
+          "when": "view == devJuiceExplorer",
           "group": "navigation"
         }
       ]
