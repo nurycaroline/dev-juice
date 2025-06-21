@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +37,8 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        textarea, select {
+        textarea,
+        select {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid var(--vscode-input-border);
@@ -53,7 +55,8 @@
             height: 120px;
         }
 
-        textarea:focus, select:focus {
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
@@ -174,10 +177,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Gerador de Hash</h1>
-        
+
         <div class="info-box">
             <h3>Sobre Algoritmos de Hash</h3>
             <ul>
@@ -253,9 +257,7 @@
 
         function generateSingleHash() {
             const text = document.getElementById('inputText').value;
-            const algorithm = document.getElementById('algorithm').value;
-            
-            if (!text.trim()) {
+            const algorithm = document.getElementById('algorithm').value; if (!text.trim()) {
                 showMessage('Por favor, insira um texto para gerar o hash.', 'error');
                 return;
             }
@@ -268,9 +270,7 @@
         }
 
         function generateAllHashes() {
-            const text = document.getElementById('inputText').value;
-            
-            if (!text.trim()) {
+            const text = document.getElementById('inputText').value; if (!text.trim()) {
                 showMessage('Por favor, insira um texto para gerar os hashes.', 'error');
                 return;
             }
@@ -320,7 +320,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'hashGenerated':
                     if (message.success) {
@@ -352,4 +352,5 @@
         });
     </script>
 </body>
+
 </html>

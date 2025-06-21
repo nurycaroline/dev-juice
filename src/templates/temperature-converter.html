@@ -9,8 +9,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -341,8 +339,7 @@
 
             // Event listeners
             convertBtn.addEventListener('click', convert);
-            
-            // Também converter quando o usuário pressionar Enter
+// Também converter quando o usuário pressionar Enter
             inputValue.addEventListener('keyup', function(event) {
                 if (event.key === 'Enter') {
                     convert();
@@ -352,9 +349,7 @@
             // Converter quando mudar as unidades
             fromUnit.addEventListener('change', function() {
                 if (inputValue.value) convert();
-            });
-            
-            toUnit.addEventListener('change', function() {
+            });toUnit.addEventListener('change', function() {
                 if (inputValue.value) convert();
             });
 

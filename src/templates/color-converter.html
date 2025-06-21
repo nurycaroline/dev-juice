@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +45,8 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid var(--vscode-input-border);
@@ -56,7 +58,8 @@
             box-sizing: border-box;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
@@ -171,10 +174,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Conversor de Cores</h1>
-        
+
         <div class="input-section">
             <div class="form-group">
                 <label for="inputFormat">Formato de Entrada</label>
@@ -189,8 +193,7 @@
                 <div class="form-group">
                     <label for="colorInput">Valor da Cor</label>
                     <div class="color-picker-container">
-                        <input type="text" id="colorInput" placeholder="#FF5733" 
-                               oninput="convertColorRealTime()">
+                        <input type="text" id="colorInput" placeholder="#FF5733" oninput="convertColorRealTime()">
                         <input type="color" id="colorPicker" onchange="updateFromColorPicker()">
                     </div>
                 </div>
@@ -246,7 +249,7 @@
         function updateInputPlaceholder() {
             const format = document.getElementById('inputFormat').value;
             const input = document.getElementById('colorInput');
-            
+
             switch (format) {
                 case 'hex':
                     input.placeholder = '#FF5733';
@@ -263,9 +266,7 @@
         function updateFromColorPicker() {
             const colorPicker = document.getElementById('colorPicker');
             const colorInput = document.getElementById('colorInput');
-            const format = document.getElementById('inputFormat');
-            
-            format.value = 'hex';
+            const format = document.getElementById('inputFormat'); format.value = 'hex';
             colorInput.value = colorPicker.value.toUpperCase();
             updateInputPlaceholder();
             convertColor();
@@ -290,9 +291,7 @@
                 return;
             }
 
-            hideError();
-            
-            vscode.postMessage({
+            hideError(); vscode.postMessage({
                 command: 'convertColor',
                 color: color,
                 fromFormat: format
@@ -329,7 +328,6 @@
 
         function displayResult(result) {
             currentResult = result;
-            
             // Update color preview
             const preview = document.getElementById('colorPreview');
             preview.style.backgroundColor = result.hex;
@@ -351,7 +349,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'colorConverted':
                     if (message.success) {
@@ -367,4 +365,5 @@
         updateInputPlaceholder();
     </script>
 </body>
+
 </html>

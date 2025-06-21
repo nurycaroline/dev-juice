@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +20,6 @@
             background-color: var(--vscode-editor-background);
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -136,43 +136,44 @@
             body {
                 padding: 10px;
             }
-            
+
             .container {
                 padding: 15px;
             }
-            
+
             .button-group {
                 flex-direction: column;
             }
-            
+
             button {
                 width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>URL Encoder/Decoder</h1>
-        
+
         <div class="section">
             <h2>Codificar URL</h2>
             <label for="inputEncode">Texto para codificar:</label>
             <textarea id="inputEncode" placeholder="Digite o texto que deseja codificar para URL..."></textarea>
-            
+
             <div class="button-group">
                 <button onclick="encodeUrl()">Codificar</button>
                 <button class="secondary-btn" onclick="clearEncode()">Limpar</button>
             </div>
-            
+
             <label for="resultEncode">Resultado codificado:</label>
             <textarea id="resultEncode" readonly placeholder="O resultado aparecerá aqui..."></textarea>
-            
+
             <div class="button-group">
                 <button class="secondary-btn" onclick="copyToClipboard('resultEncode')">Copiar</button>
                 <button class="secondary-btn" onclick="insertInEditor('resultEncode')">Inserir no Editor</button>
             </div>
-            
+
             <div class="example">
                 <strong>Exemplo:</strong><br>
                 Entrada: https://example.com/search?q=hello world&type=text<br>
@@ -184,20 +185,20 @@
             <h2>Decodificar URL</h2>
             <label for="inputDecode">URL codificada para decodificar:</label>
             <textarea id="inputDecode" placeholder="Cole a URL codificada aqui..."></textarea>
-            
+
             <div class="button-group">
                 <button onclick="decodeUrl()">Decodificar</button>
                 <button class="secondary-btn" onclick="clearDecode()">Limpar</button>
             </div>
-            
+
             <label for="resultDecode">Resultado decodificado:</label>
             <textarea id="resultDecode" readonly placeholder="O resultado aparecerá aqui..."></textarea>
-            
+
             <div class="button-group">
                 <button class="secondary-btn" onclick="copyToClipboard('resultDecode')">Copiar</button>
                 <button class="secondary-btn" onclick="insertInEditor('resultDecode')">Inserir no Editor</button>
             </div>
-            
+
             <div class="example">
                 <strong>Exemplo:</strong><br>
                 Entrada: https%3A//example.com/search%3Fq%3Dhello%20world%26type%3Dtext<br>
@@ -206,7 +207,8 @@
         </div>
 
         <div class="warning">
-            <strong>⚠️ Nota:</strong> Alguns caracteres como números e letras básicas não são alterados durante a codificação, pois já são seguros para URLs.
+            <strong>⚠️ Nota:</strong> Alguns caracteres como números e letras básicas não são alterados durante a
+            codificação, pois já são seguros para URLs.
         </div>
     </div>
 
@@ -219,7 +221,7 @@
                 document.getElementById('resultEncode').value = '';
                 return;
             }
-            
+
             vscode.postMessage({
                 command: 'encode',
                 text: input
@@ -232,7 +234,7 @@
                 document.getElementById('resultDecode').value = '';
                 return;
             }
-            
+
             vscode.postMessage({
                 command: 'decode',
                 text: input
@@ -251,12 +253,10 @@
 
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
-            const text = element.value;
-            
-            if (text.trim() === '') {
+            const text = element.value; if (text.trim() === '') {
                 return;
             }
-            
+
             vscode.postMessage({
                 command: 'copyToClipboard',
                 text: text
@@ -265,12 +265,10 @@
 
         function insertInEditor(elementId) {
             const element = document.getElementById(elementId);
-            const text = element.value;
-            
-            if (text.trim() === '') {
+            const text = element.value; if (text.trim() === '') {
                 return;
             }
-            
+
             vscode.postMessage({
                 command: 'insertInEditor',
                 text: text
@@ -280,7 +278,7 @@
         // Listen for messages from the extension
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'encodeResult':
                     document.getElementById('resultEncode').value = message.result;
@@ -295,7 +293,7 @@
         let encodeTimeout;
         let decodeTimeout;
 
-        document.getElementById('inputEncode').addEventListener('input', function() {
+        document.getElementById('inputEncode').addEventListener('input', function () {
             clearTimeout(encodeTimeout);
             encodeTimeout = setTimeout(() => {
                 if (this.value.trim() !== '') {
@@ -306,7 +304,7 @@
             }, 500);
         });
 
-        document.getElementById('inputDecode').addEventListener('input', function() {
+        document.getElementById('inputDecode').addEventListener('input', function () {
             clearTimeout(decodeTimeout);
             decodeTimeout = setTimeout(() => {
                 if (this.value.trim() !== '') {
@@ -318,4 +316,5 @@
         });
     </script>
 </body>
+
 </html>

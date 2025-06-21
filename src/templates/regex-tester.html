@@ -20,7 +20,6 @@
             background-color: var(--vscode-editor-background);
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -278,10 +277,11 @@
             <div class="regex-input-container">
                 <div class="regex-pattern">
                     <label for="regexPattern">Padrão Regex:</label>
-                    <input type="text" id="regexPattern" placeholder="Digite sua expressão regular aqui... Ex: \d{3}\.\d{3}\.\d{3}-\d{2}">
+                    <input type="text" id="regexPattern"
+                        placeholder="Digite sua expressão regular aqui... Ex: \d{3}\.\d{3}\.\d{3}-\d{2}">
                 </div>
             </div>
-            
+
             <div style="margin-top: 15px; font-weight: 500; color: var(--vscode-foreground);">Flags:</div>
             <div class="flags-container">
                 <div class="flag-checkbox">
@@ -308,13 +308,16 @@
                     <input type="checkbox" id="flagY" value="y">
                     <label for="flagY">y (sticky)</label>
                 </div>
-            </div>            <h3 style="margin-top: 25px;">Padrões Comuns:</h3>
+            </div>
+            <h3 style="margin-top: 25px;">Padrões Comuns:</h3>
             <div class="quick-patterns">
-                <button class="pattern-button" onclick="setPattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 'gm')">
+                <button class="pattern-button"
+                    onclick="setPattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 'gm')">
                     <span class="pattern-title">Email (linha por linha)</span>
                     <span class="pattern-regex">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', 'g')">
+                <button class="pattern-button"
+                    onclick="setPattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', 'g')">
                     <span class="pattern-title">Email (qualquer lugar)</span>
                     <span class="pattern-regex">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</span>
                 </button>
@@ -334,7 +337,8 @@
                     <span class="pattern-title">CEP</span>
                     <span class="pattern-regex">\d{5}-\d{3}</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?', 'g')">
+                <button class="pattern-button"
+                    onclick="setPattern('https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?', 'g')">
                     <span class="pattern-title">URL</span>
                     <span class="pattern-regex">https?://[\w\-]+(\...)</span>
                 </button>
@@ -349,7 +353,7 @@
             <h2>Texto de Teste</h2>
             <label for="testText">Texto para testar o regex:</label>
             <textarea id="testText" placeholder="Cole ou digite o texto que deseja testar aqui..."></textarea>
-            
+
             <div class="button-container">
                 <button onclick="testRegex()">Testar Regex</button>
                 <button class="secondary-button" onclick="clearAll()">Limpar Tudo</button>
@@ -367,10 +371,8 @@
 
         function setPattern(pattern, flags) {
             document.getElementById('regexPattern').value = pattern;
-            
             // Reset all flags
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            
             // Set specified flags
             for (let flag of flags) {
                 const checkbox = document.getElementById(`flag${flag.toUpperCase()}`);
@@ -420,16 +422,12 @@
 
         function showError(message) {
             const resultsSection = document.getElementById('resultsSection');
-            const resultsContent = document.getElementById('resultsContent');
-            
-            resultsContent.innerHTML = `
+            const resultsContent = document.getElementById('resultsContent'); resultsContent.innerHTML = `
                 <div class="error-message">
                     ❌ ${message}
                 </div>
-            `;
-            
-            resultsSection.style.display = 'block';
-        }        function displayResults(result) {
+            `; resultsSection.style.display = 'block';
+        } function displayResults(result) {
             const resultsSection = document.getElementById('resultsSection');
             const resultsContent = document.getElementById('resultsContent');
 
@@ -510,21 +508,17 @@
                     <div class="match-details">
                         <strong>Posição:</strong> ${match.index} - ${match.index + match.match.length - 1}
                     </div>
-            `;
-            
-            if (showGroups) {
+            `; if (showGroups) {
                 html += buildGroups(match);
             }
-            
+
             html += buildMatchButtons(match);
             html += '</div>';
             return html;
         }
 
         function buildGroups(match) {
-            let html = '';
-            
-            if (match.groups && match.groups.length > 0) {
+            let html = ''; if (match.groups && match.groups.length > 0) {
                 html += '<div class="groups-container"><strong>Grupos capturados:</strong>';
                 match.groups.forEach((group, groupIndex) => {
                     if (group !== undefined) {
@@ -541,7 +535,7 @@
                 });
                 html += '</div>';
             }
-            
+
             return html;
         }
 
@@ -567,7 +561,7 @@
                 '"': '&quot;',
                 "'": '&#039;'
             };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            return text.replace(/[&<>"']/g, function (m) { return map[m]; });
         }
 
         function copyToClipboard(text) {
@@ -591,13 +585,13 @@
         });
 
         // Add enter key support for testing
-        document.getElementById('regexPattern').addEventListener('keypress', function(e) {
+        document.getElementById('regexPattern').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 testRegex();
             }
         });
 
-        document.getElementById('testText').addEventListener('keypress', function(e) {
+        document.getElementById('testText').addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && e.ctrlKey) {
                 testRegex();
             }

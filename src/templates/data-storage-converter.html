@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,8 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select {
+        input,
+        select {
             display: block;
             width: 90%;
             border: none;
@@ -75,7 +75,8 @@
             background-color: var(--vscode-input-background);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -122,7 +123,8 @@
             margin-top: 10px;
         }
 
-        .common-table th, .common-table td {
+        .common-table th,
+        .common-table td {
             text-align: left;
             padding: 8px;
             border-bottom: 1px solid var(--vscode-widget-shadow);
@@ -137,13 +139,13 @@
             margin-top: 10px;
             display: none;
         }
-        
+
         .tabs {
             display: flex;
             margin-bottom: 15px;
             border-bottom: 1px solid var(--vscode-widget-shadow);
         }
-        
+
         .tab {
             padding: 8px 16px;
             cursor: pointer;
@@ -152,17 +154,18 @@
             color: var(--vscode-foreground);
             border-bottom: 2px solid transparent;
         }
-        
+
         .tab.active {
             border-bottom: 2px solid var(--vscode-focusBorder);
             font-weight: bold;
         }
-        
+
         .tab:hover {
             background-color: var(--vscode-button-hoverBackground);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -175,7 +178,7 @@
                 <button id="tab-binary" class="tab active">Binário (1024)</button>
                 <button id="tab-decimal" class="tab">Decimal (1000)</button>
             </div>
-            
+
             <div class="conversion-form">
                 <div class="input-group">
                     <label for="input-value">Valor:</label>
@@ -294,14 +297,12 @@
     </div>
 
     <script>
-        (function() {
+        (function () {
             // Modo binário (padrão, 1024)
             let isBinaryMode = true;
-            
             // Tabs
             const tabBinary = document.getElementById('tab-binary');
             const tabDecimal = document.getElementById('tab-decimal');
-            
             // Elementos UI
             const inputValue = document.getElementById('input-value');
             const fromUnit = document.getElementById('from-unit');
@@ -309,18 +310,16 @@
             const convertBtn = document.getElementById('convert-btn');
             const resultElement = document.getElementById('result');
             const errorElement = document.getElementById('error-message');
-            
             // Constantes para conversão
             const BITS_IN_BYTE = 8;
             const BINARY_BASE = 1024;
             const DECIMAL_BASE = 1000;
-            
             // Fatores de conversão para bytes (padrão binário)
             function getConversionFactors() {
                 const base = isBinaryMode ? BINARY_BASE : DECIMAL_BASE;
-                
+
                 return {
-                    bit: 1/BITS_IN_BYTE,       // bits para bytes
+                    bit: 1 / BITS_IN_BYTE,       // bits para bytes
                     byte: 1,                    // bytes (base)
                     kb: Math.pow(base, 1),      // kilobytes para bytes
                     mb: Math.pow(base, 2),      // megabytes para bytes
@@ -330,7 +329,7 @@
                     eb: Math.pow(base, 6),      // exabytes para bytes
                     zb: Math.pow(base, 7),      // zettabytes para bytes
                     yb: Math.pow(base, 8),      // yottabytes para bytes
-                    
+
                     // IEC (sempre usa base 1024, independente do modo)
                     kib: Math.pow(BINARY_BASE, 1), // kibibytes para bytes
                     mib: Math.pow(BINARY_BASE, 2), // mebibytes para bytes
@@ -346,26 +345,26 @@
             // Função para converter valores
             function convert() {
                 const value = parseFloat(inputValue.value);
-                
+
                 if (isNaN(value)) {
                     showError('Por favor, insira um valor numérico válido.');
                     return;
                 }
 
                 hideError();
-                
+
                 const from = fromUnit.value;
                 const to = toUnit.value;
                 const conversionFactors = getConversionFactors();
-                
+
                 // Converter para bytes e depois para a unidade de destino
                 const bytes = value * conversionFactors[from];
                 const result = bytes / conversionFactors[to];
-                
+
                 const formattedResult = formatNumber(result);
                 const fromUnitText = fromUnit.options[fromUnit.selectedIndex].text;
                 const toUnitText = toUnit.options[toUnit.selectedIndex].text;
-                
+
                 resultElement.innerHTML = `
                     <strong>${value} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>
                 `;
@@ -374,14 +373,14 @@
             // Formatar número com separadores adequados
             function formatNumber(num) {
                 if (num === 0) return '0';
-                
+
                 // Para números muito grandes ou muito pequenos, use notação científica
                 if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
                     return num.toExponential(6);
                 }
-                
+
                 // Para outros números, use formatação padrão com até 6 casas decimais
-                return num.toLocaleString('pt-BR', { 
+                return num.toLocaleString('pt-BR', {
                     maximumFractionDigits: 6,
                     minimumFractionDigits: 0
                 });
@@ -396,11 +395,11 @@
             function hideError() {
                 errorElement.style.display = 'none';
             }
-            
+
             // Alternar entre modos binário e decimal
             function setMode(binary) {
                 isBinaryMode = binary;
-                
+
                 if (binary) {
                     tabBinary.classList.add('active');
                     tabDecimal.classList.remove('active');
@@ -408,7 +407,7 @@
                     tabBinary.classList.remove('active');
                     tabDecimal.classList.add('active');
                 }
-                
+
                 // Reconverter se houver um valor
                 if (inputValue.value) {
                     convert();
@@ -417,29 +416,28 @@
 
             // Event listeners
             convertBtn.addEventListener('click', convert);
-            
             // Também converter quando o usuário pressionar Enter
-            inputValue.addEventListener('keyup', function(event) {
+            inputValue.addEventListener('keyup', function (event) {
                 if (event.key === 'Enter') {
                     convert();
                 }
             });
 
             // Converter quando mudar as unidades
-            fromUnit.addEventListener('change', function() {
+            fromUnit.addEventListener('change', function () {
                 if (inputValue.value) convert();
             });
-            
-            toUnit.addEventListener('change', function() {
+
+            toUnit.addEventListener('change', function () {
                 if (inputValue.value) convert();
             });
-            
+
             // Tabs para alternar entre modos binário e decimal
-            tabBinary.addEventListener('click', function() {
+            tabBinary.addEventListener('click', function () {
                 setMode(true);
             });
-            
-            tabDecimal.addEventListener('click', function() {
+
+            tabDecimal.addEventListener('click', function () {
                 setMode(false);
             });
 
@@ -448,4 +446,5 @@
         })();
     </script>
 </body>
+
 </html>

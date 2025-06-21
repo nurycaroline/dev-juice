@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,9 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid var(--vscode-input-border);
@@ -49,7 +52,9 @@
             box-sizing: border-box;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus,
+        textarea:focus,
+        select:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
@@ -176,10 +181,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Gerador de PIX QR Code</h1>
-        
+
         <form id="pixForm">
             <div class="form-group">
                 <label for="pixKey">Chave PIX *</label>
@@ -189,7 +195,8 @@
 
             <div class="form-group">
                 <label for="merchantName">Nome do Recebedor *</label>
-                <input type="text" id="merchantName" placeholder="Nome completo ou razão social" maxlength="25" required>
+                <input type="text" id="merchantName" placeholder="Nome completo ou razão social" maxlength="25"
+                    required>
             </div>
 
             <div class="form-group">
@@ -210,7 +217,8 @@
 
             <div class="form-group">
                 <label for="description">Descrição</label>
-                <textarea id="description" placeholder="Descrição da transação (opcional)" maxlength="72" rows="3"></textarea>
+                <textarea id="description" placeholder="Descrição da transação (opcional)" maxlength="72"
+                    rows="3"></textarea>
             </div>
 
             <div class="form-group">
@@ -223,13 +231,14 @@
             <div id="loading" class="loading hidden">
                 Gerando QR Code...
             </div>
-            
+
             <div id="qrResult" class="hidden">
                 <h3>PIX Gerado com Sucesso! 🎉</h3>
-                
+
                 <div class="qr-code-container">
                     <img id="qrCodeImage" class="qr-code-image" alt="QR Code PIX">
-                </div>                <div>
+                </div>
+                <div>
                     <p><strong>Código PIX:</strong></p>
                     <div class="pix-code" id="pixCodeText"></div>
                     <button type="button" class="button copy-button" onclick="copyPixCode()">Copiar Código</button>
@@ -251,11 +260,9 @@
         let currentQRDataUrl = '';
 
         // Validação da chave PIX em tempo real
-        document.getElementById('pixKey').addEventListener('input', function() {
+        document.getElementById('pixKey').addEventListener('input', function () {
             const pixKey = this.value.trim();
-            const validation = document.getElementById('keyValidation');
-            
-            if (pixKey) {
+            const validation = document.getElementById('keyValidation'); if (pixKey) {
                 vscode.postMessage({
                     command: 'validatePixKey',
                     pixKey: pixKey
@@ -266,10 +273,8 @@
         });
 
         // Submissão do formulário
-        document.getElementById('pixForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const pixKey = document.getElementById('pixKey').value.trim();
+        document.getElementById('pixForm').addEventListener('submit', function (e) {
+            e.preventDefault(); const pixKey = document.getElementById('pixKey').value.trim();
             const merchantName = document.getElementById('merchantName').value.trim();
             const merchantCity = document.getElementById('merchantCity').value.trim();
             const amount = parseFloat(document.getElementById('amount').value) || 0;
@@ -281,9 +286,7 @@
                 return;
             }
 
-            showLoading();
-            
-            vscode.postMessage({
+            showLoading(); vscode.postMessage({
                 command: 'generatePix',
                 data: {
                     pixKey,
@@ -299,7 +302,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'pixKeyValidation':
                     showPixKeyValidation(message.validation);
@@ -316,7 +319,7 @@
         function showPixKeyValidation(validation) {
             const validationDiv = document.getElementById('keyValidation');
             validationDiv.className = `key-validation ${validation.isValid ? 'valid' : 'invalid'}`;
-            validationDiv.textContent = validation.isValid 
+            validationDiv.textContent = validation.isValid
                 ? `✅ Chave PIX válida (${validation.type})`
                 : '❌ Formato de chave PIX inválido';
         }
@@ -330,13 +333,9 @@
 
         function showPixResult(pixCode, qrCodeDataUrl) {
             currentPixCode = pixCode;
-            currentQRDataUrl = qrCodeDataUrl;
-            
-            document.getElementById('loading').classList.add('hidden');
+            currentQRDataUrl = qrCodeDataUrl; document.getElementById('loading').classList.add('hidden');
             document.getElementById('qrResult').classList.remove('hidden');
-            document.getElementById('error').classList.add('hidden');
-            
-            document.getElementById('qrCodeImage').src = qrCodeDataUrl;
+            document.getElementById('error').classList.add('hidden'); document.getElementById('qrCodeImage').src = qrCodeDataUrl;
             document.getElementById('pixCodeText').textContent = pixCode;
         }
 
@@ -381,4 +380,5 @@
         }
     </script>
 </body>
+
 </html>

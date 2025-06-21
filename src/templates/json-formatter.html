@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,10 +117,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Formatador JSON</h1>
-        
+
         <div class="form-group">
             <label for="inputJson">JSON de Entrada</label>
             <textarea id="inputJson" placeholder="Cole aqui o JSON que deseja formatar..."></textarea>
@@ -136,14 +138,15 @@
             <label for="outputJson">JSON Formatado</label>
             <div class="textarea-container">
                 <textarea id="outputJson" readonly placeholder="O JSON formatado aparecerá aqui..."></textarea>
-                <button type="button" class="button copy-button hidden" id="copyButton" onclick="copyFormatted()">Copiar</button>
+                <button type="button" class="button copy-button hidden" id="copyButton"
+                    onclick="copyFormatted()">Copiar</button>
             </div>
         </div>
     </div>
 
     <script>
         const vscode = acquireVsCodeApi();
-        
+
         function formatJson() {
             const input = document.getElementById('inputJson').value.trim();
             if (!input) {
@@ -186,7 +189,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'jsonFormatted':
                     if (message.isValid) {
@@ -203,4 +206,5 @@
         });
     </script>
 </body>
+
 </html>

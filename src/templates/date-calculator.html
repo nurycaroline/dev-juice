@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,7 +67,8 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        input, select {
+        input,
+        select {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid var(--vscode-input-border);
@@ -78,7 +80,8 @@
             box-sizing: border-box;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
@@ -183,10 +186,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Calculadora de Data</h1>
-        
+
         <div class="tabs">
             <div class="tab active" onclick="switchTab('difference')">Diferença entre Datas</div>
             <div class="tab" onclick="switchTab('add')">Adicionar/Subtrair Tempo</div>
@@ -384,9 +388,7 @@
         }
 
         function displayDifferenceResult(result) {
-            const resultDiv = document.getElementById('differenceResult');
-            
-            let html = `
+            const resultDiv = document.getElementById('differenceResult'); let html = `
                 <div class="breakdown">
                     <strong>Detalhamento:</strong> ${result.breakdown.years} anos, ${result.breakdown.months} meses, ${result.breakdown.days} dias
                     <br><small>${result.isDate1Earlier ? 'A primeira data é anterior à segunda' : 'A segunda data é anterior à primeira'}</small>
@@ -421,9 +423,7 @@
         function displayAddTimeResult(result) {
             const resultDiv = document.getElementById('addTimeResult');
             const operation = result.operation;
-            const amount = Math.abs(result.amount);
-            
-            resultDiv.innerHTML = `
+            const amount = Math.abs(result.amount); resultDiv.innerHTML = `
                 <div class="result-item">
                     <span class="result-label">Data Original:</span>
                     <span class="result-value">${new Date(result.originalDate).toLocaleString('pt-BR')}</span>
@@ -443,9 +443,7 @@
         }
 
         function displayFormatResult(result) {
-            const resultDiv = document.getElementById('formatResult');
-            
-            const formatLabels = {
+            const resultDiv = document.getElementById('formatResult'); const formatLabels = {
                 'iso': 'ISO 8601',
                 'locale-br': 'Data Brasileira',
                 'locale-us': 'Data Americana',
@@ -478,7 +476,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'differenceCalculated':
                     if (message.success) {
@@ -510,4 +508,5 @@
         });
     </script>
 </body>
+
 </html>

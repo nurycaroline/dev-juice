@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,8 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select {
+        input,
+        select {
             display: block;
             width: 90%;
             border: none;
@@ -75,7 +75,8 @@
             background-color: var(--vscode-input-background);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -139,6 +140,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -195,7 +197,7 @@
             <div class="conversion-result" id="result">
                 Insira um valor e selecione as moedas para ver o resultado.
             </div>
-            
+
             <div class="last-updated" id="last-updated">
                 Taxas de câmbio atualizadas em: 16 de junho de 2025
             </div>
@@ -204,14 +206,17 @@
 
             <div class="disclaimer">
                 <h3>Aviso Importante</h3>
-                <p>Este conversor utiliza taxas de câmbio estáticas e aproximadas para fins de demonstração. As taxas reais de câmbio flutuam constantemente e podem diferir significativamente dos valores mostrados aqui.</p>
-                <p>Para transações financeiras reais, consulte sempre as taxas atuais fornecidas por bancos ou serviços financeiros.</p>
+                <p>Este conversor utiliza taxas de câmbio estáticas e aproximadas para fins de demonstração. As taxas
+                    reais de câmbio flutuam constantemente e podem diferir significativamente dos valores mostrados
+                    aqui.</p>
+                <p>Para transações financeiras reais, consulte sempre as taxas atuais fornecidas por bancos ou serviços
+                    financeiros.</p>
             </div>
         </div>
     </div>
 
     <script>
-        (function() {
+        (function () {
             // Taxas de câmbio aproximadas com base no USD (16/06/2025)
             // Observe que estas são taxas de demonstração aproximadas
             const exchangeRates = {
@@ -238,25 +243,25 @@
             // Função para converter valores
             function convert() {
                 const value = parseFloat(inputValue.value);
-                
+
                 if (isNaN(value)) {
                     showError('Por favor, insira um valor numérico válido.');
                     return;
                 }
 
                 hideError();
-                
+
                 const from = fromCurrency.value;
                 const to = toCurrency.value;
-                
+
                 // Converter para USD (moeda base) primeiro, e depois para a moeda alvo
                 const usdAmount = value / exchangeRates[from];
                 const targetAmount = usdAmount * exchangeRates[to];
-                
+
                 // Formatar o valor com a moeda correta
                 const fromFormatted = formatCurrency(value, from);
                 const toFormatted = formatCurrency(targetAmount, to);
-                  resultElement.innerHTML = `
+                resultElement.innerHTML = `
                     <strong>${fromFormatted}</strong> = <strong>${toFormatted}</strong><br>
                     <small>Taxa de câmbio: 1 ${from} = ${formatNumber(exchangeRates[to] / exchangeRates[from])} ${to}</small>
                 `;
@@ -265,7 +270,7 @@
             // Formatar número como moeda
             function formatCurrency(num, currency) {
                 let formatter;
-                
+
                 switch (currency) {
                     case 'USD':
                         formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
@@ -303,21 +308,21 @@
                     default:
                         formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
                 }
-                
+
                 return formatter.format(num);
             }
 
             // Formatar número para taxa de câmbio
             function formatNumber(num) {
                 if (num === 0) return '0';
-                
+
                 // Para números muito grandes ou muito pequenos, use notação científica
                 if (Math.abs(num) < 0.000001 || Math.abs(num) > 1000000000) {
                     return num.toExponential(6);
                 }
-                
+
                 // Para outros números, use formatação padrão com até 6 casas decimais
-                return num.toLocaleString('en-US', { 
+                return num.toLocaleString('en-US', {
                     maximumFractionDigits: 6,
                     minimumFractionDigits: 2
                 });
@@ -335,20 +340,17 @@
 
             // Event listeners
             convertBtn.addEventListener('click', convert);
-            
             // Também converter quando o usuário pressionar Enter
-            inputValue.addEventListener('keyup', function(event) {
+            inputValue.addEventListener('keyup', function (event) {
                 if (event.key === 'Enter') {
                     convert();
                 }
             });
 
             // Converter quando mudar as moedas
-            fromCurrency.addEventListener('change', function() {
+            fromCurrency.addEventListener('change', function () {
                 if (inputValue.value) convert();
-            });
-            
-            toCurrency.addEventListener('change', function() {
+            }); toCurrency.addEventListener('change', function () {
                 if (inputValue.value) convert();
             });
 
@@ -357,4 +359,5 @@
         })();
     </script>
 </body>
+
 </html>

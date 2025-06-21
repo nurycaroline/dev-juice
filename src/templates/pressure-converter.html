@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,8 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select {
+        input,
+        select {
             display: block;
             width: 90%;
             border: none;
@@ -75,7 +75,8 @@
             background-color: var(--vscode-input-background);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -146,6 +147,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -212,7 +214,8 @@
             </div>
             <div class="example-item">
                 <div class="example-input">14.7 psi ≈ 1 atm</div>
-                <div class="example-output">14.7 libras por polegada quadrada é aproximadamente igual a uma atmosfera.</div>
+                <div class="example-output">14.7 libras por polegada quadrada é aproximadamente igual a uma atmosfera.
+                </div>
             </div>
             <div class="example-item">
                 <div class="example-input">760 mmHg = 1 atm</div>
@@ -246,40 +249,31 @@
         };
 
         function convert() {
-            const fromValue = parseFloat(fromValueInput.value);
-            
-            if (isNaN(fromValue)) {
+            const fromValue = parseFloat(fromValueInput.value); if (isNaN(fromValue)) {
                 errorDiv.textContent = 'Por favor, digite um valor numérico válido.';
                 errorDiv.style.display = 'block';
                 resultDiv.textContent = 'O resultado aparecerá aqui.';
                 return;
             }
-            
-            errorDiv.style.display = 'none';
-            
-            const fromUnit = fromUnitSelect.value;
+
+            errorDiv.style.display = 'none'; const fromUnit = fromUnitSelect.value;
             const toUnit = toUnitSelect.value;
-            
             // Converter para a unidade base (Pa)
             const valueInPa = fromValue * conversionFactors[fromUnit];
-            
             // Converter da unidade base para a unidade desejada
-            const result = valueInPa / conversionFactors[toUnit];
-            
-            const fromUnitText = fromUnitSelect.options[fromUnitSelect.selectedIndex].text;
-            const toUnitText = toUnitSelect.options[toUnitSelect.selectedIndex].text;
-            
-            resultDiv.innerHTML = `<strong>${fromValue} ${fromUnitText}</strong> = <strong>${result.toFixed(6)} ${toUnitText}</strong>`;
+            const result = valueInPa / conversionFactors[toUnit]; const fromUnitText = fromUnitSelect.options[fromUnitSelect.selectedIndex].text;
+            const toUnitText = toUnitSelect.options[toUnitSelect.selectedIndex].text; resultDiv.innerHTML = `<strong>${fromValue} ${fromUnitText}</strong> = <strong>${result.toFixed(6)} ${toUnitText}</strong>`;
         }
 
         convertBtn.addEventListener('click', convert);
-        
+
         // Converter ao pressionar Enter no campo de entrada
-        fromValueInput.addEventListener('keypress', function(e) {
+        fromValueInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 convert();
             }
         });
     </script>
 </body>
+
 </html>

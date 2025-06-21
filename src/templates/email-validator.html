@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +63,8 @@
             color: var(--vscode-descriptionForeground);
         }
 
-        input, textarea {
+        input,
+        textarea {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid var(--vscode-input-border);
@@ -79,7 +81,8 @@
             resize: vertical;
         }
 
-        input:focus, textarea:focus {
+        input:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
         }
@@ -239,10 +242,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Validador de Email</h1>
-        
+
         <div class="tabs">
             <div class="tab active" onclick="switchTab('single')">Validação Única</div>
             <div class="tab" onclick="switchTab('bulk')">Validação em Lote</div>
@@ -252,8 +256,7 @@
         <div id="singleTab" class="tab-content active">
             <div class="form-group">
                 <label for="singleEmail">Endereço de Email</label>
-                <input type="email" id="singleEmail" placeholder="digite@exemplo.com" 
-                       oninput="validateEmailRealTime()">
+                <input type="email" id="singleEmail" placeholder="digite@exemplo.com" oninput="validateEmailRealTime()">
             </div>
 
             <div class="form-group">
@@ -267,8 +270,10 @@
         <!-- Bulk Email Validation -->
         <div id="bulkTab" class="tab-content">
             <div class="form-group">
-                <label for="bulkEmails">Lista de Emails (separados por vírgula, ponto e vírgula ou quebra de linha)</label>
-                <textarea id="bulkEmails" placeholder="email1@exemplo.com, email2@exemplo.com&#10;email3@exemplo.com"></textarea>
+                <label for="bulkEmails">Lista de Emails (separados por vírgula, ponto e vírgula ou quebra de
+                    linha)</label>
+                <textarea id="bulkEmails"
+                    placeholder="email1@exemplo.com, email2@exemplo.com&#10;email3@exemplo.com"></textarea>
             </div>
 
             <div class="form-group">
@@ -352,9 +357,7 @@
 
         function displaySingleResult(email, validation) {
             const resultDiv = document.getElementById('singleResult');
-            const isValid = validation.isValid;
-            
-            let html = `
+            const isValid = validation.isValid; let html = `
                 <div class="validation-result ${isValid ? 'valid' : 'invalid'}">
                     <div class="email-display">
                         <span class="status-icon">${isValid ? '✅' : '❌'}</span>
@@ -425,9 +428,7 @@
 
             // Display results
             const resultsDiv = document.getElementById('bulkResults');
-            let html = '<div class="bulk-results">';
-            
-            results.forEach(result => {
+            let html = '<div class="bulk-results">'; results.forEach(result => {
                 const isValid = result.validation.isValid;
                 html += `
                     <div class="bulk-item">
@@ -445,7 +446,7 @@
         // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
-            
+
             switch (message.command) {
                 case 'emailValidated':
                     if (message.success) {
@@ -461,4 +462,5 @@
         });
     </script>
 </body>
+
 </html>

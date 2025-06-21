@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,9 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             display: block;
             width: 100%;
             border: none;
@@ -80,7 +81,9 @@
             resize: vertical;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -135,7 +138,8 @@
             margin-top: 10px;
         }
 
-        .case-table th, .case-table td {
+        .case-table th,
+        .case-table td {
             text-align: left;
             padding: 8px;
             border-bottom: 1px solid var(--vscode-widget-shadow);
@@ -165,6 +169,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -250,13 +255,12 @@
     </div>
 
     <script>
-        (function() {
+        (function () {
             // Elementos da UI
             const inputText = document.getElementById('input-text');
             const outputText = document.getElementById('output-text');
             const errorElement = document.getElementById('error-message');
             const copyBtn = document.getElementById('copy-btn');
-            
             // Botões de conversão
             const camelCaseBtn = document.getElementById('camel-case-btn');
             const pascalCaseBtn = document.getElementById('pascal-case-btn');
@@ -313,16 +317,17 @@
                     .map(word => word.toLowerCase())
                     .join('-');
             }
-            
+
             function toUpperCase(text) {
                 return text.toUpperCase();
             }
-            
+
             function toLowerCase(text) {
                 return text.toLowerCase();
             }
-            
-            function toSentenceCase(text) {                return text
+
+            function toSentenceCase(text) {
+                return text
                     .replace(/\s+/g, ' ')
                     .replace(/(^\s+)|(\s+$)/g, '')
                     .split('. ')
@@ -332,7 +337,7 @@
                     })
                     .join('. ');
             }
-            
+
             function toTitleCase(text) {
                 return text
                     .replace(/\s+/g, ' ')
@@ -343,7 +348,7 @@
                     })
                     .join(' ');
             }
-            
+
             function toDotCase(text) {
                 return text
                     .replace(/\s+/g, ' ')
@@ -352,7 +357,7 @@
                     .map(word => word.toLowerCase())
                     .join('.');
             }
-            
+
             function toPathCase(text) {
                 return text
                     .replace(/\s+/g, ' ')
@@ -361,7 +366,7 @@
                     .map(word => word.toLowerCase())
                     .join('/');
             }
-            
+
             function toConstantCase(text) {
                 return text
                     .replace(/\s+/g, ' ')
@@ -370,14 +375,14 @@
                     .map(word => word.toUpperCase())
                     .join('_');
             }
-            
+
             function toAlternatingCase(text) {
                 return text
                     .split('')
                     .map((char, index) => index % 2 === 0 ? char.toLowerCase() : char.toUpperCase())
                     .join('');
             }
-            
+
             function toInverseCase(text) {
                 return text
                     .split('')
@@ -394,14 +399,14 @@
             // Função para converter o texto
             function convertText(conversionFn) {
                 const text = inputText.value;
-                
+
                 if (!text.trim()) {
                     showError('Por favor, insira um texto para converter.');
                     return;
                 }
 
                 hideError();
-                
+
                 try {
                     const result = conversionFn(text);
                     outputText.textContent = result;
@@ -419,7 +424,7 @@
             function hideError() {
                 errorElement.style.display = 'none';
             }
-            
+
             // Função para copiar para o clipboard
             function copyToClipboard() {
                 const textToCopy = outputText.textContent;
@@ -427,18 +432,18 @@
                     showError('Não há texto para copiar. Faça uma conversão primeiro.');
                     return;
                 }
-                
+
                 navigator.clipboard.writeText(textToCopy).then(
-                    function() {
+                    function () {
                         // Feedback visual
                         const originalText = copyBtn.textContent;
                         copyBtn.textContent = 'Copiado!';
-                        
+
                         setTimeout(() => {
                             copyBtn.textContent = originalText;
                         }, 2000);
                     },
-                    function() {
+                    function () {
                         showError('Falha ao copiar para o clipboard.');
                     }
                 );
@@ -457,13 +462,12 @@
             pathCaseBtn.addEventListener('click', () => convertText(toPathCase));
             constantCaseBtn.addEventListener('click', () => convertText(toConstantCase));
             alternatingCaseBtn.addEventListener('click', () => convertText(toAlternatingCase));
-            inverseCaseBtn.addEventListener('click', () => convertText(toInverseCase));
-            
-            copyBtn.addEventListener('click', copyToClipboard);
+            inverseCaseBtn.addEventListener('click', () => convertText(toInverseCase)); copyBtn.addEventListener('click', copyToClipboard);
 
             // Inicialização
             inputText.focus();
         })();
     </script>
 </body>
+
 </html>

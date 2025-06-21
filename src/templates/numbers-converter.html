@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,8 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select {
+        input,
+        select {
             display: block;
             width: 90%;
             border: none;
@@ -75,7 +75,8 @@
             background-color: var(--vscode-input-background);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -146,7 +147,8 @@
             margin-top: 10px;
         }
 
-        .base-table th, .base-table td {
+        .base-table th,
+        .base-table td {
             text-align: left;
             padding: 8px;
             border-bottom: 1px solid var(--vscode-widget-shadow);
@@ -163,6 +165,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -281,14 +284,13 @@
     </div>
 
     <script>
-        (function() {
+        (function () {
             // Elementos da UI
             const inputValue = document.getElementById('input-value');
             const fromBase = document.getElementById('from-base');
             const convertBtn = document.getElementById('convert-btn');
             const errorElement = document.getElementById('error-message');
             const copyButtons = document.querySelectorAll('.copy-button');
-            
             // Elementos de resultado para cada base
             const base2El = document.getElementById('base2');
             const base8El = document.getElementById('base8');
@@ -296,40 +298,38 @@
             const base16El = document.getElementById('base16');
             const base32El = document.getElementById('base32');
             const base36El = document.getElementById('base36');
-            
             // Objeto para armazenar os resultados em cada base
             let results = {};
-            
             // Função principal de conversão
             function convert() {
                 const value = inputValue.value.trim();
                 const base = parseInt(fromBase.value, 10);
-                
+
                 if (!value) {
                     showError('Por favor, insira um valor para converter.');
                     return;
                 }
-                
+
                 hideError();
-                
+
                 try {
                     // Primeiro convertemos para decimal
                     let decimalValue;
-                    
+
                     // Verificar caracteres válidos para a base selecionada
                     if (!isValidForBase(value, base)) {
                         showError(`O valor contém caracteres inválidos para a base ${base}.`);
                         return;
                     }
-                    
+
                     // Converter para decimal
                     decimalValue = parseInt(value, base);
-                    
+
                     if (isNaN(decimalValue)) {
                         showError('O valor não pode ser convertido. Verifique se é um número válido para a base selecionada.');
                         return;
                     }
-                    
+
                     // Convertemos para todas as bases
                     results = {
                         2: decimalValue.toString(2),
@@ -339,7 +339,7 @@
                         32: toBase32(decimalValue),
                         36: decimalValue.toString(36).toUpperCase()
                     };
-                    
+
                     // Atualizamos a UI
                     base2El.textContent = results[2];
                     base8El.textContent = results[8];
@@ -347,16 +347,16 @@
                     base16El.textContent = results[16];
                     base32El.textContent = results[32];
                     base36El.textContent = results[36];
-                    
+
                 } catch (error) {
                     showError('Erro ao converter: ' + error.message);
                 }
             }
-            
+
             // Função para verificar se um valor é válido para uma determinada base
             function isValidForBase(value, base) {
                 let validChars;
-                
+
                 if (base <= 10) {
                     // Para bases até 10, os caracteres válidos são de 0 até base-1
                     validChars = '0123456789'.slice(0, base);
@@ -366,27 +366,27 @@
                 } else {
                     throw new Error('Base não suportada.');
                 }
-                
+
                 const regex = new RegExp(`^[${validChars}]+$`, 'i'); // case insensitive
                 return regex.test(value);
             }
-            
+
             // Função especial para converter para Base32
             function toBase32(decimalValue) {
                 const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
                 let result = '';
                 let value = decimalValue;
-                
+
                 if (value === 0) return '0';
-                
+
                 while (value > 0) {
                     result = base32Chars[value % 32] + result;
                     value = Math.floor(value / 32);
                 }
-                
+
                 return result;
             }
-            
+
             // Função para copiar um valor para o clipboard
             function copyToClipboard(base) {
                 const value = results[base];
@@ -394,24 +394,24 @@
                     showError('Não há valor para copiar. Faça uma conversão primeiro.');
                     return;
                 }
-                
+
                 navigator.clipboard.writeText(value).then(
-                    function() {
+                    function () {
                         // Feedback visual
                         const button = document.querySelector(`.copy-button[data-base="${base}"]`);
                         const originalText = button.textContent;
                         button.textContent = 'Copiado!';
-                        
+
                         setTimeout(() => {
                             button.textContent = originalText;
                         }, 2000);
                     },
-                    function() {
+                    function () {
                         showError('Falha ao copiar para o clipboard.');
                     }
                 );
             }
-            
+
             function showError(message) {
                 errorElement.textContent = message;
                 errorElement.style.display = 'block';
@@ -423,17 +423,15 @@
 
             // Event listeners
             convertBtn.addEventListener('click', convert);
-            
             // Também converter quando o usuário pressionar Enter
-            inputValue.addEventListener('keyup', function(event) {
+            inputValue.addEventListener('keyup', function (event) {
                 if (event.key === 'Enter') {
                     convert();
                 }
             });
-            
             // Botões de cópia
             copyButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const base = parseInt(this.getAttribute('data-base'), 10);
                     copyToClipboard(base);
                 });
@@ -444,4 +442,5 @@
         })();
     </script>
 </body>
+
 </html>

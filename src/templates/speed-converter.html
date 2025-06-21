@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,6 @@
             --container-padding: 20px;
             --input-padding-vertical: 6px;
             --input-padding-horizontal: 12px;
-            --input-margin-vertical: 4px;
-            --input-margin-horizontal: 0;
         }
 
         body {
@@ -64,7 +63,8 @@
             color: var(--vscode-editor-foreground);
         }
 
-        input, select {
+        input,
+        select {
             display: block;
             width: 90%;
             border: none;
@@ -75,7 +75,8 @@
             background-color: var(--vscode-input-background);
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             outline-color: var(--vscode-focusBorder);
         }
 
@@ -146,6 +147,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -194,15 +196,18 @@
             <h3>Exemplos de Conversão</h3>
             <div class="example-item">
                 <div class="example-input">100 km/h ≈ 27,78 m/s</div>
-                <div class="example-output">100 quilômetros por hora é aproximadamente igual a 27,78 metros por segundo.</div>
+                <div class="example-output">100 quilômetros por hora é aproximadamente igual a 27,78 metros por segundo.
+                </div>
             </div>
             <div class="example-item">
                 <div class="example-input">60 mph ≈ 96,56 km/h</div>
-                <div class="example-output">60 milhas por hora é aproximadamente igual a 96,56 quilômetros por hora.</div>
+                <div class="example-output">60 milhas por hora é aproximadamente igual a 96,56 quilômetros por hora.
+                </div>
             </div>
             <div class="example-item">
                 <div class="example-input">1 mach ≈ 343 m/s (no ar a 20°C)</div>
-                <div class="example-output">Mach 1 (velocidade do som) é aproximadamente igual a 343 metros por segundo no ar a 20°C.</div>
+                <div class="example-output">Mach 1 (velocidade do som) é aproximadamente igual a 343 metros por segundo
+                    no ar a 20°C.</div>
             </div>
             <div class="example-item">
                 <div class="example-input">1 knot ≈ 1,852 km/h</div>
@@ -222,7 +227,7 @@
         // Fatores de conversão para m/s
         const conversionFactors = {
             m_s: 1,
-            km_h: 1/3.6,
+            km_h: 1 / 3.6,
             mph: 0.44704,
             ft_s: 0.3048,
             knot: 0.514444,
@@ -231,29 +236,20 @@
         };
 
         function convert() {
-            const fromValue = parseFloat(fromValueInput.value);
-            
-            if (isNaN(fromValue)) {
+            const fromValue = parseFloat(fromValueInput.value); if (isNaN(fromValue)) {
                 errorDiv.textContent = 'Por favor, digite um valor numérico válido.';
                 errorDiv.style.display = 'block';
                 resultDiv.textContent = 'O resultado aparecerá aqui.';
                 return;
             }
-            
-            errorDiv.style.display = 'none';
-            
-            const fromUnit = fromUnitSelect.value;
+
+            errorDiv.style.display = 'none'; const fromUnit = fromUnitSelect.value;
             const toUnit = toUnitSelect.value;
-            
             // Converter para a unidade base (m/s)
             const valueInMetersPerSecond = fromValue * conversionFactors[fromUnit];
-            
             // Converter da unidade base para a unidade desejada
-            const result = valueInMetersPerSecond / conversionFactors[toUnit];
-            
-            const fromUnitText = fromUnitSelect.options[fromUnitSelect.selectedIndex].text;
+            const result = valueInMetersPerSecond / conversionFactors[toUnit]; const fromUnitText = fromUnitSelect.options[fromUnitSelect.selectedIndex].text;
             const toUnitText = toUnitSelect.options[toUnitSelect.selectedIndex].text;
-            
             // Formatar o resultado de acordo com a magnitude
             let formattedResult;
             if (Math.abs(result) < 0.000001 || Math.abs(result) > 999999999) {
@@ -261,18 +257,19 @@
             } else {
                 formattedResult = result.toLocaleString('pt-BR', { maximumFractionDigits: 6 });
             }
-            
+
             resultDiv.innerHTML = `<strong>${fromValue} ${fromUnitText}</strong> = <strong>${formattedResult} ${toUnitText}</strong>`;
         }
 
         convertBtn.addEventListener('click', convert);
-        
+
         // Converter ao pressionar Enter no campo de entrada
-        fromValueInput.addEventListener('keypress', function(e) {
+        fromValueInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 convert();
             }
         });
     </script>
 </body>
+
 </html>

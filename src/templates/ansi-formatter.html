@@ -172,7 +172,6 @@
             margin-left: -100px;
             opacity: 0;
             transition: opacity 0.3s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             font-size: 0.85em;
         }
 
@@ -501,7 +500,6 @@
             // Processar texto
             processBtn.addEventListener('click', function () {
                 const text = inputText.value;
-
                 if (!text.trim()) {
                     showError('Por favor, insira um texto para processar.');
                     return;
@@ -512,13 +510,11 @@
                     renderAnsi: renderAnsi.checked,
                     highlightAnsi: highlightAnsi.checked
                 };
-
                 // Debug - mostrar mensagem no output
                 console.log('Enviando texto para processamento:', {
                     textLength: text.length,
                     options: options
                 });
-
                 vscode.postMessage({
                     command: 'processAnsi',
                     text: text,
@@ -536,7 +532,6 @@
             // Copiar resultado
             copyBtn.addEventListener('click', function () {
                 const processedText = outputContainer.textContent;
-
                 if (!processedText.trim()) {
                     showError('Não há texto processado para copiar.');
                     return;
@@ -576,7 +571,6 @@
             window.addEventListener('message', event => {
                 console.log('Mensagem recebida do extension:', event.data);
                 const message = event.data;
-
                 if (message.command === 'processed') {
                     if (message.success) {
                         outputContainer.innerHTML = message.result;
