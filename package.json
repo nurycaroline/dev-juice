@@ -2,7 +2,7 @@
   "name": "dev-juice",
   "displayName": "Dev Juice",
   "description": "Conjunto de ferramentas úteis para desenvolvedores incluindo conversores, formatadores, geradores e validadores",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "NuryStudio",
   "author": "Nurielly Caroline Brizola",
   "license": "MIT",
