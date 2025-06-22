@@ -2,7 +2,7 @@
   "name": "dev-juice",
   "displayName": "Dev Juice",
   "description": "Conjunto de ferramentas úteis para desenvolvedores incluindo conversores, formatadores, geradores e validadores",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "publisher": "NuryStudio",
   "author": "Nurielly Caroline Brizola",
   "license": "MIT",
@@ -31,9 +31,30 @@
   "categories": [
     "Other"
   ],
+  "activationEvents": [
+    "onView:devJuiceExplorer"
+  ],
   "icon": "icon.png",
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dev-juice",
+          "title": "Dev Juice",
+          "icon": "./icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "dev-juice": [
+        {
+          "id": "devJuiceExplorer",
+          "name": "Dev Tools",
+          "icon": "./icon.svg"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "dev-juice.ansiFormatter",
@@ -225,24 +246,6 @@
         "icon": "$(link)"
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "dev-juice",
-          "title": "Dev Juice",
-          "icon": "./icon.svg"
-        }
-      ]
-    },
-    "views": {
-      "dev-juice": [
-        {
-          "id": "devJuiceExplorer",
-          "name": "Dev Tools",
-          "icon": "./icon.svg"
-        }
-      ]
-    },
     "menus": {
       "view/title": [
         {

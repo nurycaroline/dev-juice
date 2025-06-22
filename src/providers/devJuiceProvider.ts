@@ -10,11 +10,9 @@ export class DevJuiceProvider implements vscode.TreeDataProvider<DevToolItem> {
     this._onDidChangeTreeData.fire()
   }
 
-
   getTreeItem (element: DevToolItem): vscode.TreeItem {
     return element
   }
-
   getChildren (element?: DevToolItem): Thenable<DevToolItem[]> {
     if (element) {
       if (element.label === 'Geradores') {
@@ -78,7 +76,8 @@ export class DevJuiceProvider implements vscode.TreeDataProvider<DevToolItem> {
             vscode.TreeItemCollapsibleState.None
           )
           // Add more formatting tools here as needed
-        ])      } else if (element.label === 'Conversores') {
+        ])
+      } else if (element.label === 'Conversores') {
         return Promise.resolve([
           new DevToolItem(
             'Conversor de Ângulo',
