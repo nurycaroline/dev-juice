@@ -3,17 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Reader</title>
-    <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
-    <script>
-        // Fallback para jsQR se não carregar do CDN
-        if (typeof jsQR === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
-            document.head.appendChild(script);
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>QR Code Reader</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -302,8 +292,7 @@
             if (files.length > 0) {
                 processFile(files[0]);
             }
-        }
-        function processFile(file) {
+        }        function processFile(file) {
             if (!file.type.startsWith('image/')) {
                 showError('Por favor, selecione um arquivo de imagem válido.');
                 return;
@@ -311,37 +300,32 @@
 
             showLoading();
 
-            // Check if createImageBitmap is supported
+            // Use createImageBitmap to get image data and send to provider for processing
             if (typeof createImageBitmap === 'function') {
-                // Use createImageBitmap to avoid CSP issues
                 createImageBitmap(file)
                     .then(imageBitmap => {
-                        decodeQRCodeFromBitmap(imageBitmap, file.name);
+                        extractImageDataAndProcess(imageBitmap, file.name);
                     })
                     .catch(error => {
                         hideLoading();
                         showError('Erro ao processar a imagem: ' + error.message);
                     });
             } else {
-                // Fallback: use FileReader and Canvas directly
+                // Fallback: use FileReader
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    processImageWithArrayBuffer(e.target.result, file.name);
+                    processImageWithFileReader(e.target.result, file.name);
                 };
                 reader.onerror = function () {
                     hideLoading();
                     showError('Erro ao ler o arquivo.');
                 };
-                reader.readAsArrayBuffer(file);
+                reader.readAsDataURL(file);
             }
-        } function decodeQRCodeFromBitmap(imageBitmap, fileName = '') {
+        }
+
+        function extractImageDataAndProcess(imageBitmap, fileName = '') {
             try {
-
-                // Check if jsQR is available
-                if (typeof jsQR === 'undefined') {
-                    throw new Error('jsQR library not loaded');
-                }
-
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
@@ -351,37 +335,62 @@
                 // Draw ImageBitmap to canvas
                 ctx.drawImage(imageBitmap, 0, 0);
 
+                // Get image data
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-                hideLoading();
-
-                if (code) {
-                    showResult(code.data, '', true, fileName);
-                } else {
-                    showResult('', '', false, fileName);
-                }
+                // Send image data to provider for QR code processing
+                vscode.postMessage({
+                    command: 'processQRImage',
+                    imageData: {
+                        data: Array.from(imageData.data),
+                        width: imageData.width,
+                        height: imageData.height
+                    },
+                    fileName: fileName
+                });
 
                 // Clean up
                 imageBitmap.close();
             } catch (error) {
                 hideLoading();
-                showError('Erro ao processar a imagem: ' + error.message);
+                showError('Erro ao extrair dados da imagem: ' + error.message);
             }
         }
 
-        function processImageWithArrayBuffer(arrayBuffer, fileName) {
+        function processImageWithFileReader(dataURL, fileName) {
             try {
-                // This is a more complex fallback that would require additional image processing
-                // For now, show an error message asking to use a different browser/environment
-                hideLoading();
-                showError('Seu navegador não suporta o processamento de imagens necessário. Tente usar uma versão mais recente do VS Code.');
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    // Send image data to provider for QR code processing
+                    vscode.postMessage({
+                        command: 'processQRImage',
+                        imageData: {
+                            data: Array.from(imageData.data),
+                            width: imageData.width,
+                            height: imageData.height
+                        },
+                        fileName: fileName
+                    });
+                };
+                img.onerror = function() {
+                    hideLoading();
+                    showError('Erro ao carregar a imagem.');
+                };
+                img.src = dataURL;
             } catch (error) {
                 hideLoading();
                 showError('Erro ao processar a imagem: ' + error.message);
             }
-        } function showLoading() {
+        }function showLoading() {
             document.getElementById('loadingArea').style.display = 'block';
             document.getElementById('resultArea').style.display = 'none';
         }
@@ -487,13 +496,27 @@
 
             if (insertButton) {
                 insertButton.addEventListener('click', insertResult);
-            }
-
-            if (clearButton) {
+            }            if (clearButton) {
                 clearButton.addEventListener('click', clearResult);
             }
-
         }
+
+        // Listen for messages from the extension
+        window.addEventListener('message', event => {
+            const message = event.data;
+
+            switch (message.command) {
+                case 'qrProcessResult':
+                    hideLoading();
+                    if (message.success) {
+                        showResult(message.data, '', true, message.fileName);
+                    } else {
+                        showResult('', '', false, message.fileName);
+                        showError(message.error || 'Erro ao processar QR Code');
+                    }
+                    break;
+            }
+        });
     </script>
 </body>
 

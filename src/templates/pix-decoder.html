@@ -3,9 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIX QR Code Decoder</title>
-    <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>PIX QR Code Decoder</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -231,6 +229,16 @@
             margin: 10px 0;
         }
 
+        .file-info {
+            padding: 15px;
+            background-color: var(--vscode-list-hoverBackground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            margin: 10px 0;
+            color: var(--vscode-foreground);
+            font-size: 14px;
+        }
+
         .info {
             background-color: var(--vscode-editorInfo-background);
             border-left: 4px solid var(--vscode-editorInfo-foreground);
@@ -437,54 +445,100 @@ Exemplo de código PIX válido para teste:
             if (files.length > 0) {
                 processFile(files[0]);
             }
-        }
-
-        function processFile(file) {
+        }        function processFile(file) {
             if (!file.type.startsWith('image/')) {
                 showError('Por favor, selecione um arquivo de imagem válido.');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.onload = function () {
-                    showLoading();
-                    decodeQRCode(img, e.target.result);
+            showLoading();
+
+            // Use createImageBitmap to get image data and send to provider for processing
+            if (typeof createImageBitmap === 'function') {
+                createImageBitmap(file)
+                    .then(imageBitmap => {
+                        extractImageDataAndProcess(imageBitmap, file.name);
+                    })
+                    .catch(error => {
+                        hideLoading();
+                        showError('Erro ao processar a imagem: ' + error.message);
+                    });
+            } else {
+                // Fallback: use FileReader
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    processImageWithFileReader(e.target.result, file.name);
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+                reader.onerror = function () {
+                    hideLoading();
+                    showError('Erro ao ler o arquivo.');
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        function decodeQRCode(img, imageSrc) {
+        function extractImageDataAndProcess(imageBitmap, fileName = '') {
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                canvas.width = img.width;
-                canvas.height = img.height;
+                canvas.width = imageBitmap.width;
+                canvas.height = imageBitmap.height;
 
-                ctx.drawImage(img, 0, 0);
+                // Draw ImageBitmap to canvas
+                ctx.drawImage(imageBitmap, 0, 0);
 
+                // Get image data
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
 
+                // Send image data to provider for QR code processing
+                vscode.postMessage({
+                    command: 'processQRImage',
+                    imageData: {
+                        data: Array.from(imageData.data),
+                        width: imageData.width,
+                        height: imageData.height
+                    },
+                    fileName: fileName
+                });
+
+                // Clean up
+                imageBitmap.close();
+            } catch (error) {
                 hideLoading();
+                showError('Erro ao extrair dados da imagem: ' + error.message);
+            }
+        }
 
-                if (code) {
-                    // Show image preview
-                    document.getElementById('imagePreview').innerHTML =
-                        '<img src="' + imageSrc + '" class="image-preview" alt="QR Code PIX Image">';
+        function processImageWithFileReader(dataURL, fileName) {
+            try {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
 
-                    // Decode the PIX code
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    // Send image data to provider for QR code processing
                     vscode.postMessage({
-                        command: 'decodePixString',
-                        pixCode: code.data
+                        command: 'processQRImage',
+                        imageData: {
+                            data: Array.from(imageData.data),
+                            width: imageData.width,
+                            height: imageData.height
+                        },
+                        fileName: fileName
                     });
-                } else {
-                    showError('Nenhum QR Code encontrado na imagem. Verifique se a imagem contém um QR Code PIX válido e se está bem visível.');
-                }
+                };
+                img.onerror = function() {
+                    hideLoading();
+                    showError('Erro ao carregar a imagem.');
+                };
+                img.src = dataURL;
             } catch (error) {
                 hideLoading();
                 showError('Erro ao processar a imagem: ' + error.message);
@@ -630,12 +684,24 @@ Exemplo de código PIX válido para teste:
 
         // Listen for messages from the extension
         window.addEventListener('message', event => {
-            const message = event.data;
-
-            switch (message.command) {
+            const message = event.data;            switch (message.command) {
                 case 'pixDecodeResult':
                     hideLoading();
                     showResult(message.result, message.success);
+                    break;
+                case 'qrProcessResult':
+                    hideLoading();
+                    if (message.success) {
+                        // Show file info
+                        if (message.fileName) {
+                            document.getElementById('imagePreview').innerHTML = '<div class="file-info"><strong>📁 Arquivo processado:</strong> ' + message.fileName + '</div>';
+                        } else {
+                            document.getElementById('imagePreview').innerHTML = '<div class="file-info"><strong>📁 Imagem processada</strong></div>';
+                        }
+                        // The PIX decoding result will come in a separate pixDecodeResult message
+                    } else {
+                        showError(message.error || 'Erro ao processar QR Code');
+                    }
                     break;
             }
         });        // Remove dragover class when dragging leaves the area

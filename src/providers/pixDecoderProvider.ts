@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { insertText } from '../utils/insertUtils'
 import { loadTemplate } from '../utils/templateLoader'
+import { QRCodeProcessor } from '../utils/qrCodeProcessor'
 
 /**
  * Interface for PIX merchant information
@@ -62,13 +63,11 @@ export class PixDecoderProvider {
     if (PixDecoderProvider.currentPanel) {
       PixDecoderProvider.currentPanel.reveal(column)
       return
-    }
-
-    // Otherwise, create a new panel.
+    }    // Otherwise, create a new panel.
     const panel = vscode.window.createWebviewPanel(
       'pixDecoder',
       'PIX QR Code Decoder',
-      column ?? vscode.ViewColumn.One, {
+      column ?? vscode.ViewColumn.One,      {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [
@@ -78,9 +77,7 @@ export class PixDecoderProvider {
     )
 
     PixDecoderProvider.currentPanel = panel        // Set the webview's initial html content
-    panel.webview.html = PixDecoderProvider.getWebviewContent(extensionUri)
-
-    // Handle messages from the webview
+    panel.webview.html = PixDecoderProvider.getWebviewContent(extensionUri)    // Handle messages from the webview
     panel.webview.onDidReceiveMessage(
       message => {
         switch (message.command) {
@@ -89,6 +86,9 @@ export class PixDecoderProvider {
           break
         case 'decodeQrImage':
           PixDecoderProvider.handleDecodeQrImage(message.imageData)
+          break
+        case 'processQRImage':
+          PixDecoderProvider.handleProcessQRImage(message.imageData, message.fileName)
           break
         case 'insertInEditor':
           insertText(message.text)
@@ -358,8 +358,65 @@ export class PixDecoderProvider {
       }
     }
 
-    return crc.toString(16).toUpperCase().padStart(4, '0')
-  } private static getWebviewContent (extensionUri: vscode.Uri): string {
+    return crc.toString(16).toUpperCase().padStart(4, '0')  } private static getWebviewContent (extensionUri: vscode.Uri): string {
     return loadTemplate(extensionUri, 'pix-decoder')
+  }
+
+  private static handleProcessQRImage (imageData: { data: number[], width: number, height: number }, fileName?: string): void {
+    const panel = PixDecoderProvider.currentPanel
+    if (!panel) {
+      return
+    }
+
+    try {
+      // Convert the image data array back to Uint8ClampedArray
+      const uint8Data = new Uint8ClampedArray(imageData.data)
+      
+      // Process the QR code using our utility
+      const result = QRCodeProcessor.processImageData(uint8Data, imageData.width, imageData.height, fileName)
+      
+      if (result.success && result.data) {
+        // Send success message to webview
+        panel.webview.postMessage({
+          command: 'qrProcessResult',
+          success: true,
+          fileName: result.fileName,
+          data: result.data
+        })
+        
+        // Also decode the PIX data immediately
+        try {
+          const decodedData = PixDecoderProvider.decodePixPayload(result.data)
+          panel.webview.postMessage({
+            command: 'pixDecodeResult',
+            result: decodedData,
+            success: true
+          })
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+          panel.webview.postMessage({
+            command: 'pixDecodeResult',
+            result: { error: errorMessage },
+            success: false
+          })
+        }
+      } else {
+        // Send error message to webview
+        panel.webview.postMessage({
+          command: 'qrProcessResult',
+          success: false,
+          error: result.error || 'Erro desconhecido ao processar QR Code',
+          fileName: result.fileName
+        })
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
+      panel.webview.postMessage({
+        command: 'qrProcessResult',
+        success: false,
+        error: errorMessage,
+        fileName: fileName
+      })
+    }
   }
 }
