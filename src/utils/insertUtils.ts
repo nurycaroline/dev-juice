@@ -3,6 +3,7 @@ import { generateCNPJ } from './cnpjGenerator'
 import { generateCPF } from './cpfGenerator'
 import { generateUUID } from './uuidGenerator'
 import { PixGenerator, PixData } from './pixGenerator'
+import { TextFormatter } from './textFormatter'
 
 /**
  * Insere um valor gerado no cursor do editor de texto ativo
@@ -200,46 +201,25 @@ export async function formatToPathStyle (): Promise<void> {
   await formatSelectedText(toPathStyle, 'Path Style')
 }
 
-// Funções auxiliares de formatação
+// Funções auxiliares de formatação - agora usando TextFormatter aprimorado
 function toSentenceCase (text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+  return TextFormatter.toSentenceCase(text)
 }
 
 function toSnakeCase (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(/ |\B(?=[A-Z])/)
-    .map(word => word.toLowerCase())
-    .join('_')
+  return TextFormatter.toSnakeCase(text)
 }
 
 function toCamelCase (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(' ')
-    .map((word, index) => {
-      if (index === 0) {
-        return word.toLowerCase()
-      }
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    })
-    .join('')
+  return TextFormatter.toCamelCase(text)
 }
 
 function toKebabCase (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(/ |\B(?=[A-Z])/)
-    .map(word => word.toLowerCase())
-    .join('-')
+  return TextFormatter.toKebabCase(text)
 }
 
 function toPascalCase (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('')
+  return TextFormatter.toPascalCase(text)
 }
 
 function toLowerCase (text: string): string {
@@ -251,70 +231,25 @@ function toUpperCase (text: string): string {
 }
 
 function toCapitalizedCase (text: string): string {
-  return text
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
+  return TextFormatter.toCapitalizedCase(text)
 }
 
 function toAlternatingCase (text: string): string {
-  const letterRegex = /[a-zA-Z]/
-  return text
-    .split('')
-    .map((char, index) => {
-      if (letterRegex.exec(char)) {
-        return index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
-      }
-      return char
-    })
-    .join('')
+  return TextFormatter.toAlternatingCase(text)
 }
 
 function toInverseCase (text: string): string {
-  return text
-    .split('')
-    .map(char => {
-      if (char === char.toUpperCase()) {
-        return char.toLowerCase()
-      } else {
-        return char.toUpperCase()
-      }
-    })
-    .join('')
+  return TextFormatter.toInverseCase(text)
 }
 
 function toDotNotation (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(' ')
-    .map(word => word.toLowerCase())
-    .filter(word => word.length > 0)
-    .join('.')
+  return TextFormatter.toDotNotation(text)
 }
 
 function toParamsStyle (text: string): string {
-  // Split by lines first to handle multi-line text
-  const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0)
-  
-  // Process each line individually
-  return lines.map(line => {
-    const words = line.trim().split(/\s+/)
-    if (words.length >= 2) {
-      // If line has at least two words, format first word as parameter
-      return `${words[0]}: ${words.slice(1).join(' ')}`
-    } else if (words.length === 1) {
-      // If only one word, just return it with a colon
-      return `${words[0]}:`
-    }
-    return ''
-  }).join('\n')
+  return TextFormatter.toParamsStyle(text)
 }
 
 function toPathStyle (text: string): string {
-  return text
-    .replace(/\W+/g, ' ')
-    .split(' ')
-    .map(word => word.toLowerCase())
-    .filter(word => word.length > 0)
-    .join('/')
+  return TextFormatter.toPathStyle(text)
 }
