@@ -323,31 +323,29 @@
 
         <div class="section">
             <h2>Decodificar PIX</h2>
-
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('string')">Código PIX</button>
-                <button class="tab" onclick="switchTab('image')">Imagem QR</button>
+                <button id="stringTabBtn" class="tab active">Código PIX</button>
+                <button id="imageTabBtn" class="tab">Imagem QR</button>
             </div>
 
             <div id="stringTab" class="tab-content active">
-                <label for="pixInput">Cole o código PIX aqui:</label>
-                <textarea id="pixInput"
-                    placeholder="Cole o código PIX completo aqui (ex: 00020101021226...)"></textarea>
+                <label for="pixInput">Cole o código PIX aqui:</label> <textarea id="pixInput" placeholder="Cole o código PIX completo aqui (ex: 00020101021226...)
 
+Exemplo de código PIX válido para teste:
+00020101021226330014BR.GOV.BCB.PIX0111123456789015204000053039865802BR5910JOAO SILVA6009SAO PAULO63046B78"></textarea>
                 <div class="button-group">
-                    <button onclick="decodePixString()">Decodificar PIX</button>
-                    <button class="secondary-btn" onclick="clearPixInput()">Limpar</button>
+                    <button id="decodePixBtn">Decodificar PIX</button>
+                    <button id="loadTestPixBtn">Carregar PIX de Teste</button>
+                    <button id="clearPixInputBtn" class="secondary-btn">Limpar</button>
                 </div>
             </div>
-
             <div id="imageTab" class="tab-content">
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()"
-                    ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                <div id="uploadArea" class="upload-area">
                     <p><strong>Clique aqui ou arraste uma imagem de QR Code PIX</strong></p>
                     <p>Formatos suportados: PNG, JPG, JPEG, GIF, BMP, WEBP</p>
                 </div>
 
-                <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+                <input type="file" id="fileInput" accept="image/*">
             </div>
         </div>
 
@@ -364,9 +362,9 @@
                 <div id="resultStatus"></div>
                 <div id="resultData"></div>
                 <div class="button-group">
-                    <button class="secondary-btn" onclick="copyResult()">Copiar Informações</button>
-                    <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
-                    <button onclick="clearResult()">Limpar</button>
+                    <button id="copyResultBtn" class="secondary-btn">Copiar Informações</button>
+                    <button id="insertResultBtn" class="secondary-btn">Inserir no Editor</button>
+                    <button id="clearResultBtn">Limpar</button>
                 </div>
             </div>
         </div>
@@ -410,11 +408,15 @@
                 command: 'decodePixString',
                 pixCode: input
             });
-        }
-
-        function clearPixInput() {
+        } function clearPixInput() {
             document.getElementById('pixInput').value = '';
             clearResult();
+        }
+
+        function loadTestPix() {
+            const testPixCode = '00020101021226330014BR.GOV.BCB.PIX0111123456789015204000053039865802BR5910JOAO SILVA6009SAO PAULO63046B78';
+            document.getElementById('pixInput').value = testPixCode;
+            decodePixString();
         }
 
         function handleFileSelect(event) {
@@ -636,13 +638,69 @@
                     showResult(message.result, message.success);
                     break;
             }
-        });
-
-        // Remove dragover class when dragging leaves the area
+        });        // Remove dragover class when dragging leaves the area
         document.addEventListener('dragleave', function (e) {
             if (!e.currentTarget.contains(e.relatedTarget)) {
-                document.querySelector('.upload-area').classList.remove('dragover');
+                document.querySelector('#uploadArea').classList.remove('dragover');
             }
+        });
+
+        // Inicializar todos os event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab navigation
+            document.getElementById('stringTabBtn').addEventListener('click', function () {
+                switchTab('string');
+            });
+
+            document.getElementById('imageTabBtn').addEventListener('click', function () {
+                switchTab('image');
+            });
+
+            // String tab buttons
+            document.getElementById('decodePixBtn').addEventListener('click', function () {
+                decodePixString();
+            });
+
+            document.getElementById('loadTestPixBtn').addEventListener('click', function () {
+                loadTestPix();
+            });
+
+            document.getElementById('clearPixInputBtn').addEventListener('click', function () {
+                clearPixInput();
+            });
+
+            // Image upload
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            uploadArea.addEventListener('dragover', function (event) {
+                handleDragOver(event);
+            });
+
+            uploadArea.addEventListener('drop', function (event) {
+                handleDrop(event);
+            });
+
+            fileInput.addEventListener('change', function (event) {
+                handleFileSelect(event);
+            });
+
+            // Result buttons
+            document.getElementById('copyResultBtn').addEventListener('click', function () {
+                copyResult();
+            });
+
+            document.getElementById('insertResultBtn').addEventListener('click', function () {
+                insertResult();
+            });
+
+            document.getElementById('clearResultBtn').addEventListener('click', function () {
+                clearResult();
+            });
         });
     </script>
 </body>

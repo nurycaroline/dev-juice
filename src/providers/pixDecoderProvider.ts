@@ -68,7 +68,7 @@ export class PixDecoderProvider {
     const panel = vscode.window.createWebviewPanel(
       'pixDecoder',
       'PIX QR Code Decoder',
-      column ?? vscode.ViewColumn.One,            {
+      column ?? vscode.ViewColumn.One, {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [
@@ -110,7 +110,6 @@ export class PixDecoderProvider {
       null
     )
   }
-
   private static handleDecodePixString (pixCode: string): void {
     const panel = PixDecoderProvider.currentPanel
     if (!panel) {
@@ -119,15 +118,15 @@ export class PixDecoderProvider {
 
     try {
       const decodedData = PixDecoderProvider.decodePixPayload(pixCode)
-      panel.webview.postMessage({ 
-        command: 'pixDecodeResult', 
+      panel.webview.postMessage({
+        command: 'pixDecodeResult',
         result: decodedData,
         success: true
       })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
-      panel.webview.postMessage({ 
-        command: 'pixDecodeResult', 
+      panel.webview.postMessage({
+        command: 'pixDecodeResult',
         result: { error: errorMessage },
         success: false
       })
@@ -141,22 +140,23 @@ export class PixDecoderProvider {
     }
 
     // Send message to webview to process the QR code using jsQR
-    panel.webview.postMessage({ 
-      command: 'processPixQrCode', 
-      imageData: imageData 
+    panel.webview.postMessage({
+      command: 'processPixQrCode',
+      imageData: imageData
     })
-  }
-  private static decodePixPayload (payload: string): DecodedPixData {
+  } private static decodePixPayload (payload: string): DecodedPixData {
     // Remove whitespace and validate basic format
     const cleanPayload = payload.trim()
-        
+
     if (!cleanPayload) {
       throw new Error('Código PIX vazio')
-    }        // Check if it's a valid PIX payload (should start with specific patterns)
+    }      // Check if it's a valid PIX payload (should start with specific patterns)
+    // More flexible regex to accept different PIX formats
     const pixRegex = /^00020\d/
-    if (!pixRegex.exec(cleanPayload)) {
-      throw new Error('Formato de código PIX inválido')
+    if (!pixRegex.test(cleanPayload)) {
+      throw new Error(`Formato de código PIX inválido. Código deve começar com '00020'. Código recebido: "${cleanPayload.substring(0, Math.min(20, cleanPayload.length))}${cleanPayload.length > 20 ? '...' : ''}"`)
     }
+
 
     const result: DecodedPixData = {
       version: '',
@@ -170,10 +170,25 @@ export class PixDecoderProvider {
     let index = 0
     try {
       while (index < cleanPayload.length - 4) { // -4 for CRC at the end
+        if (index + 4 > cleanPayload.length) {
+          break // Not enough data for tag and length
+        }
+
         const id = cleanPayload.substring(index, index + 2)
-        const length = parseInt(cleanPayload.substring(index + 2, index + 4), 10)
+        const lengthStr = cleanPayload.substring(index + 2, index + 4)
+
+        if (!/^\d{2}$/.test(lengthStr)) {
+          break
+        }
+
+        const length = parseInt(lengthStr, 10)
+
+        if (index + 4 + length > cleanPayload.length) {
+          break
+        }
+
         const value = cleanPayload.substring(index + 4, index + 4 + length)
-                
+
         switch (id) {
         case '00': // Payload Format Indicator
           result.version = value
@@ -215,20 +230,31 @@ export class PixDecoderProvider {
           result.unknownFields[id] = value
           break
         }
-                
-        index += 4 + length
-      }
 
-      // Validate CRC
-      const payloadWithoutCrc = cleanPayload.substring(0, cleanPayload.length - 4)
-      const calculatedCrc = PixDecoderProvider.calculateCRC16(payloadWithoutCrc)
-      result.crcValid = result.crc.toUpperCase() === calculatedCrc.toUpperCase()
+        index += 4 + length
+      }      // Validate CRC
+      if (result.crc) {
+        const payloadWithoutCrc = cleanPayload.substring(0, cleanPayload.length - 4)
+        const calculatedCrc = PixDecoderProvider.calculateCRC16(payloadWithoutCrc)
+        result.crcValid = result.crc.toUpperCase() === calculatedCrc.toUpperCase()
+      } else if (cleanPayload.length >= 4) {
+        // If no CRC found, try to extract from the end of the payload
+        const lastTag = cleanPayload.substring(cleanPayload.length - 8, cleanPayload.length - 6)
+        if (lastTag === '63') {
+          result.crc = cleanPayload.substring(cleanPayload.length - 4)
+          const payloadWithoutCrc = cleanPayload.substring(0, cleanPayload.length - 8)
+          const calculatedCrc = PixDecoderProvider.calculateCRC16(payloadWithoutCrc + '6304')
+          result.crcValid = result.crc.toUpperCase() === calculatedCrc.toUpperCase()
+        }
+      }
 
       return result
     } catch (error) {
       throw new Error(`Erro ao decodificar PIX: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
     }
-  }  private static parsePixMerchantInfo (value: string): PixMerchantInfo {
+  }
+
+  private static parsePixMerchantInfo (value: string): PixMerchantInfo {
     const info: PixMerchantInfo = {}
     let index = 0
 
@@ -258,7 +284,9 @@ export class PixDecoderProvider {
     }
 
     return info
-  }  private static parseAdditionalInfo (value: string): PixAdditionalInfo {
+  }
+
+  private static parseAdditionalInfo (value: string): PixAdditionalInfo {
     const info: PixAdditionalInfo = {}
     let index = 0
 
@@ -294,17 +322,17 @@ export class PixDecoderProvider {
     if (/^\d{14}$/.test(pixKey)) {
       return 'CNPJ'
     }
-        
+
     // Email pattern
     if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pixKey)) {
       return 'E-mail'
     }
-        
+
     // Phone pattern
     if (/^\+55\d{10,11}$/.test(pixKey)) {
       return 'Telefone'
     }
-        
+
     // UUID pattern (EVP)
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pixKey)) {
       return 'Chave Aleatória (EVP)'
@@ -319,7 +347,7 @@ export class PixDecoderProvider {
 
     for (let i = 0; i < data.length; i++) {
       crc ^= (data.charCodeAt(i) << 8)
-            
+
       for (let j = 0; j < 8; j++) {
         if (crc & 0x8000) {
           crc = (crc << 1) ^ polynomial
@@ -331,7 +359,7 @@ export class PixDecoderProvider {
     }
 
     return crc.toString(16).toUpperCase().padStart(4, '0')
-  }    private static getWebviewContent (extensionUri: vscode.Uri): string {
+  } private static getWebviewContent (extensionUri: vscode.Uri): string {
     return loadTemplate(extensionUri, 'pix-decoder')
   }
 }

@@ -147,7 +147,7 @@ export class EmailValidatorProvider {  /**
       success: true
     })
   }  
-/**
+  /**
      * Performs detailed email validation
      */
   private _performEmailValidation (email: string): EmailValidationResult {
@@ -203,7 +203,7 @@ export class EmailValidatorProvider {  /**
 
     return result
   }  
-/**
+  /**
      * Validates the local part (before @)
      */
   private _checkLocalPart (localPart: string, result: EmailValidationResult) {
@@ -285,7 +285,7 @@ export class EmailValidatorProvider {  /**
       result.suggestions.push(`Você quis dizer ${email.replace(typo.wrong, typo.correct)}?`)
     }
   }  
-/**
+  /**
      * Provides information about common email providers
      */
   private _checkCommonDomains (domain: string, result: EmailValidationResult) {
