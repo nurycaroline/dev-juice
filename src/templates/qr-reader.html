@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Reader</title>
     <script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script>
+        // Fallback para jsQR se não carregar do CDN
+        if (typeof jsQR === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+            document.head.appendChild(script);
+        }
+    </script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -52,6 +60,9 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background-color: var(--vscode-input-background);
+            width: 100%;
+            font-family: inherit;
+            color: inherit;
         }
 
         .upload-area:hover {
@@ -132,6 +143,16 @@
             border: 1px solid var(--vscode-panel-border);
             border-radius: 6px;
             margin: 10px 0;
+        }
+
+        .file-info {
+            padding: 15px;
+            background-color: var(--vscode-list-hoverBackground);
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 6px;
+            margin: 10px 0;
+            color: var(--vscode-foreground);
+            font-size: 14px;
         }
 
         .info {
@@ -219,17 +240,14 @@
 <body>
     <div class="container">
         <h1>QR Code Reader</h1>
-
         <div class="section">
             <h2>Upload de Imagem</h2>
-
-            <div class="upload-area" onclick="document.getElementById('fileInput').click()"
-                ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <button type="button" class="upload-area" id="uploadButton">
                 <p><strong>Clique aqui ou arraste uma imagem com QR Code</strong></p>
                 <p>Formatos suportados: PNG, JPG, JPEG, GIF, BMP, WEBP</p>
-            </div>
+            </button>
 
-            <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+            <input type="file" id="fileInput" accept="image/*">
         </div>
 
         <div class="section">
@@ -245,98 +263,145 @@
                 <div id="resultStatus"></div>
                 <div id="resultText" class="result-text"></div>
                 <div class="button-group">
-                    <button class="secondary-btn" onclick="copyResult()">Copiar Texto</button>
-                    <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
-                    <button onclick="clearResult()">Limpar</button>
+                    <button class="secondary-btn" id="copyButton">Copiar Texto</button>
+                    <button class="secondary-btn" id="insertButton">Inserir no Editor</button>
+                    <button id="clearButton">Limpar</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         const vscode = acquireVsCodeApi();
         let currentResult = '';
+        function handleUploadClick() {
+            document.getElementById('fileInput').click();
+        }
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
                 processFile(file);
             }
-        }
-
-        function handleDragOver(event) {
+        } function handleDragOver(event) {
             event.preventDefault();
-            event.currentTarget.classList.add('dragover');
+            event.stopPropagation();
+            const uploadButton = document.getElementById('uploadButton');
+            if (uploadButton) {
+                uploadButton.classList.add('dragover');
+            }
         }
 
         function handleDrop(event) {
             event.preventDefault();
-            event.currentTarget.classList.remove('dragover'); const files = event.dataTransfer.files;
+            event.stopPropagation();
+            const uploadButton = document.getElementById('uploadButton');
+            if (uploadButton) {
+                uploadButton.classList.remove('dragover');
+            }
+            const files = event.dataTransfer.files;
             if (files.length > 0) {
                 processFile(files[0]);
             }
         }
-
         function processFile(file) {
             if (!file.type.startsWith('image/')) {
                 showError('Por favor, selecione um arquivo de imagem válido.');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.onload = function () {
-                    showLoading();
-                    decodeQRCode(img, e.target.result);
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+            showLoading();
 
-        function decodeQRCode(img, imageSrc) {
+            // Check if createImageBitmap is supported
+            if (typeof createImageBitmap === 'function') {
+                // Use createImageBitmap to avoid CSP issues
+                createImageBitmap(file)
+                    .then(imageBitmap => {
+                        decodeQRCodeFromBitmap(imageBitmap, file.name);
+                    })
+                    .catch(error => {
+                        hideLoading();
+                        showError('Erro ao processar a imagem: ' + error.message);
+                    });
+            } else {
+                // Fallback: use FileReader and Canvas directly
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    processImageWithArrayBuffer(e.target.result, file.name);
+                };
+                reader.onerror = function () {
+                    hideLoading();
+                    showError('Erro ao ler o arquivo.');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        } function decodeQRCodeFromBitmap(imageBitmap, fileName = '') {
             try {
+
+                // Check if jsQR is available
+                if (typeof jsQR === 'undefined') {
+                    throw new Error('jsQR library not loaded');
+                }
+
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                canvas.width = img.width;
-                canvas.height = img.height;
+                canvas.width = imageBitmap.width;
+                canvas.height = imageBitmap.height;
 
-                ctx.drawImage(img, 0, 0);
+                // Draw ImageBitmap to canvas
+                ctx.drawImage(imageBitmap, 0, 0);
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
 
                 hideLoading();
 
                 if (code) {
-                    showResult(code.data, imageSrc, true);
+                    showResult(code.data, '', true, fileName);
                 } else {
-                    showResult('', imageSrc, false);
+                    showResult('', '', false, fileName);
                 }
+
+                // Clean up
+                imageBitmap.close();
             } catch (error) {
                 hideLoading();
                 showError('Erro ao processar a imagem: ' + error.message);
             }
         }
 
-        function showLoading() {
+        function processImageWithArrayBuffer(arrayBuffer, fileName) {
+            try {
+                // This is a more complex fallback that would require additional image processing
+                // For now, show an error message asking to use a different browser/environment
+                hideLoading();
+                showError('Seu navegador não suporta o processamento de imagens necessário. Tente usar uma versão mais recente do VS Code.');
+            } catch (error) {
+                hideLoading();
+                showError('Erro ao processar a imagem: ' + error.message);
+            }
+        } function showLoading() {
             document.getElementById('loadingArea').style.display = 'block';
             document.getElementById('resultArea').style.display = 'none';
         }
 
         function hideLoading() {
             document.getElementById('loadingArea').style.display = 'none';
-        }
-
-        function showResult(text, imageSrc, success) {
+        } function showResult(text, imageSrc, success, fileName = '') {
             const resultArea = document.getElementById('resultArea');
             const imagePreview = document.getElementById('imagePreview');
             const resultStatus = document.getElementById('resultStatus');
             const resultText = document.getElementById('resultText');
-            // Show image preview
-            imagePreview.innerHTML = '<img src="' + imageSrc + '" class="image-preview" alt="QR Code Image">'; if (success && text) {
+
+            // Show file info instead of image preview (to avoid CSP issues)
+            if (fileName) {
+                imagePreview.innerHTML = '<div class="file-info"><strong>📁 Arquivo processado:</strong> ' + fileName + '</div>';
+            } else {
+                imagePreview.innerHTML = '<div class="file-info"><strong>📁 Imagem processada</strong></div>';
+            }
+
+            if (success && text) {
                 currentResult = text;
                 resultStatus.innerHTML = '<div class="success"><strong>✅ QR Code decodificado com sucesso!</strong></div>';
                 resultText.textContent = text;
@@ -348,13 +413,13 @@
             }
 
             resultArea.style.display = 'block';
-        }
-
-        function showError(message) {
+        } function showError(message) {
             const resultArea = document.getElementById('resultArea');
             const imagePreview = document.getElementById('imagePreview');
             const resultStatus = document.getElementById('resultStatus');
-            const resultText = document.getElementById('resultText'); imagePreview.innerHTML = '';
+            const resultText = document.getElementById('resultText');
+
+            imagePreview.innerHTML = '';
             resultStatus.innerHTML = '<div class="error"><strong>❌ Erro:</strong> ' + message + '</div>';
             resultText.style.display = 'none';
             resultArea.style.display = 'block';
@@ -381,16 +446,54 @@
 
         function clearResult() {
             document.getElementById('resultArea').style.display = 'none';
-            document.getElementById('fileInput').value = '';
-            currentResult = '';
-        }
+            document.getElementById('fileInput').value = ''; currentResult = '';
+        }        // Test when page loads
+        document.addEventListener('DOMContentLoaded', function () {
 
-        // Remove dragover class when dragging leaves the area
-        document.addEventListener('dragleave', function (e) {
-            if (!e.currentTarget.contains(e.relatedTarget)) {
-                document.querySelector('.upload-area').classList.remove('dragover');
-            }
+            // Setup event listeners
+            setupEventListeners();
         });
+
+        // Also test when scripts load
+        window.addEventListener('load', function () {
+        });
+
+        function setupEventListeners() {
+            // Upload button events
+            const uploadButton = document.getElementById('uploadButton');
+            const fileInput = document.getElementById('fileInput');
+
+            if (uploadButton) {
+                uploadButton.addEventListener('click', handleUploadClick);
+                uploadButton.addEventListener('dragover', handleDragOver);
+                uploadButton.addEventListener('drop', handleDrop);
+                uploadButton.addEventListener('dragleave', function (e) {
+                    e.currentTarget.classList.remove('dragover');
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', handleFileSelect);
+            }
+
+            // Result buttons
+            const copyButton = document.getElementById('copyButton');
+            const insertButton = document.getElementById('insertButton');
+            const clearButton = document.getElementById('clearButton');
+
+            if (copyButton) {
+                copyButton.addEventListener('click', copyResult);
+            }
+
+            if (insertButton) {
+                insertButton.addEventListener('click', insertResult);
+            }
+
+            if (clearButton) {
+                clearButton.addEventListener('click', clearResult);
+            }
+
+        }
     </script>
 </body>
 
