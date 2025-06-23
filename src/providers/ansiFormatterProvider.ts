@@ -69,23 +69,22 @@ export class AnsiFormatterProvider {  /**
       this._disposables
     )
   }
-
   /**
    * Process text containing ANSI codes
-   */  private _processAnsiText (text: string, options: { stripAnsi: boolean, renderAnsi: boolean, highlightAnsi: boolean }) {
+   */
+  private _processAnsiText (text: string, options: { stripAnsi: boolean, renderAnsi: boolean, highlightAnsi: boolean }) {
     try {
       console.log('Recebido texto para processamento:', { 
         textLength: text.length, 
         options: options 
       })
       
-      let result = text      // Define the ANSI escape code pattern (ESC[ followed by parameters and a command character)
-      // Inclui o caractere � que aparece em alguns logs quando o ESC é mal codificado
-      const ansiPattern = /(?:\u001b|\x1b|�)\[[0-9;]*[A-Za-z]/g
+      let result = text      // Define the ANSI escape code pattern - mais abrangente para capturar todos os códigos
+      // Inclui códigos completos (ESC[) e códigos truncados ([0m, [32m, etc.)
+      const ansiPattern = /(?:\u001b\[|\x1b\[|\[)([0-9;]*)m/g
 
       if (options.stripAnsi) {
-        // Strip all ANSI codes
-        result = text.replace(ansiPattern, '')
+        // Strip all ANSI codes        result = text.replace(ansiPattern, '')
         this._sendProcessedResult(this._escapeHtml(result))
       } else if (options.renderAnsi) {
         // Render ANSI codes as HTML
@@ -94,7 +93,7 @@ export class AnsiFormatterProvider {  /**
       } else if (options.highlightAnsi) {
         // Highlight ANSI codes (make them visible)
         result = this._escapeHtml(text).replace(ansiPattern, (match) => {
-          return `<span style="background-color:yellow;color:black;font-weight:bold;">${match}</span>`
+          return `<span style="background-color:yellow;color:black;font-weight:bold;">${this._escapeHtml(match)}</span>`
         })
         this._sendProcessedResult(result)
       } else {
@@ -110,88 +109,96 @@ export class AnsiFormatterProvider {  /**
       })
     }
   }
-
   /**
    * Convert ANSI escape codes to HTML styling
-   */  private _renderAnsiAsHtml (text: string): string {
+   */
+  private _renderAnsiAsHtml (text: string): string {
     console.log('Renderizando ANSI como HTML')
     
-    // Basic mapping of ANSI codes to CSS styles
+    // Escape HTML in text first
+    let html = this._escapeHtml(text)
+    
+    // Enhanced ANSI style mapping with better colors
     const styleMap: Record<string, string> = {
-      '0': '</span>',  // Reset
-      '1': '<span style="font-weight:bold;">',  // Bold
-      '2': '<span style="opacity:0.7;">',  // Dim
-      '3': '<span style="font-style:italic;">',  // Italic
-      '4': '<span style="text-decoration:underline;">',  // Underline
-      '5': '<span style="animation:blink 1s step-start 0s infinite;">',  // Blink
-      '7': '<span style="filter:invert(100%);">',  // Reverse
-      '8': '<span style="visibility:hidden;">',  // Hidden
-      '9': '<span style="text-decoration:line-through;">',  // Strikethrough
-      // Foreground colors
-      '30': '<span style="color:black;">',  // Black
-      '31': '<span style="color:#ff0000;">',  // Red (mais brilhante)
-      '32': '<span style="color:#00ff00;">',  // Green (mais brilhante)
-      '33': '<span style="color:#ffff00;">',  // Yellow (mais brilhante)
-      '34': '<span style="color:#0080ff;">',  // Blue (mais brilhante)
-      '35': '<span style="color:#ff00ff;">',  // Magenta (mais brilhante)
-      '36': '<span style="color:#00ffff;">',  // Cyan (mais brilhante)
-      '37': '<span style="color:white;">',  // White
-      '39': '<span style="color:inherit;">',  // Default color
+      // Reset
+      '0': 'RESET',
       
-      // Background colors
-      '40': '<span style="background-color:black;">',  // Black
-      '41': '<span style="background-color:red;">',  // Red
-      '42': '<span style="background-color:green;">',  // Green
-      '43': '<span style="background-color:yellow;">',  // Yellow
-      '44': '<span style="background-color:blue;">',  // Blue
-      '45': '<span style="background-color:magenta;">',  // Magenta
-      '46': '<span style="background-color:cyan;">',  // Cyan
-      '47': '<span style="background-color:white;">',  // White
-      '49': '<span style="background-color:inherit;">'  // Default background
+      // Text styling
+      '1': 'font-weight:bold;',
+      '2': 'opacity:0.7;',
+      '3': 'font-style:italic;',
+      '4': 'text-decoration:underline;',
+      '5': 'animation:blink 1s step-start 0s infinite;',
+      '7': 'filter:invert(100%);',
+      '8': 'visibility:hidden;',
+      '9': 'text-decoration:line-through;',
+      
+      // Foreground colors (normal)
+      '30': 'color:#000000;',  // Black
+      '31': 'color:#cd3131;',  // Red
+      '32': 'color:#00bc00;',  // Green
+      '33': 'color:#e5e510;',  // Yellow
+      '34': 'color:#2472c8;',  // Blue
+      '35': 'color:#bc3fbc;',  // Magenta
+      '36': 'color:#11a8cd;',  // Cyan
+      '37': 'color:#e5e5e5;',  // White
+      '39': 'color:inherit;',  // Default
+      
+      // Background colors (normal)
+      '40': 'background-color:#000000;',  // Black
+      '41': 'background-color:#cd3131;',  // Red
+      '42': 'background-color:#00bc00;',  // Green
+      '43': 'background-color:#e5e510;',  // Yellow
+      '44': 'background-color:#2472c8;',  // Blue
+      '45': 'background-color:#bc3fbc;',  // Magenta
+      '46': 'background-color:#11a8cd;',  // Cyan
+      '47': 'background-color:#e5e5e5;',  // White
+      '49': 'background-color:inherit;',  // Default
+      
+      // Bright foreground colors
+      '90': 'color:#666666;',  // Bright Black (Dark Grey)
+      '91': 'color:#f14c4c;',  // Bright Red
+      '92': 'color:#23d18b;',  // Bright Green
+      '93': 'color:#f5f543;',  // Bright Yellow
+      '94': 'color:#3b8eea;',  // Bright Blue
+      '95': 'color:#d670d6;',  // Bright Magenta
+      '96': 'color:#29b8db;',  // Bright Cyan
+      '97': 'color:#e5e5e5;',  // Bright White
+      
+      // Bright background colors
+      '100': 'background-color:#666666;',  // Bright Black
+      '101': 'background-color:#f14c4c;',  // Bright Red
+      '102': 'background-color:#23d18b;',  // Bright Green
+      '103': 'background-color:#f5f543;',  // Bright Yellow
+      '104': 'background-color:#3b8eea;',  // Bright Blue
+      '105': 'background-color:#d670d6;',  // Bright Magenta
+      '106': 'background-color:#29b8db;',  // Bright Cyan
+      '107': 'background-color:#e5e5e5;'   // Bright White
     }
-
-    // Bright foreground colors
-    for (let i = 0; i < 8; i++) {
-      styleMap[`9${i}`] = `<span style="color:var(--vscode-terminal-ansi${i}Bright,var(--vscode-terminal-ansi${i}));">`
-    }
-
-    // Bright background colors
-    for (let i = 0; i < 8; i++) {
-      styleMap[`10${i}`] = `<span style="background-color:var(--vscode-terminal-ansi${i}Bright,var(--vscode-terminal-ansi${i}));">`
-    }
-
-    // Escape HTML in text
-    let html = this._escapeHtml(text)    // Stack to keep track of open spans
-    const openSpans: string[] = []
+    
+    // Stack to manage nested styles
+    const styleStack: string[] = []
     
     // Replace ANSI escape sequences with HTML
-    html = html.replace(/(?:\u001b|\x1b|�)\[([0-9;]*)m/g, (match, params) => {
-      // Split parameters
-      const paramList = params.split(';')
-      
-      // Reset closes all open spans
-      if (params === '0' || params === '') {
-        const result = openSpans.length > 0 ? '</span>'.repeat(openSpans.length) : ''
-        openSpans.length = 0
-        return result
+    html = html.replace(/\[([0-9;]*)m/g, (match, params) => {
+      if (!params || params === '0') {
+        // Reset - close all open spans
+        const closeSpans = '</span>'.repeat(styleStack.length)
+        styleStack.length = 0
+        return closeSpans
       }
       
+      const paramList = params.split(';').filter((p: string) => p !== '')
       let result = ''
       
-      // Process each parameter
       for (const param of paramList) {
         if (styleMap[param]) {
-          if (param === '0') {
-            // Reset
-            result += '</span>'.repeat(openSpans.length)
-            openSpans.length = 0          } else if (param.startsWith('0')) {
-            // Reset specific formatting
-            // This is simplified; would need more complex logic for actual implementation
-            result += '</span>'
+          if (styleMap[param] === 'RESET') {
+            result += '</span>'.repeat(styleStack.length)
+            styleStack.length = 0
           } else {
-            // Add style
-            result += styleMap[param]
-            openSpans.push(param)
+            result += `<span style="${styleMap[param]}">`
+            styleStack.push(param)
           }
         }
       }
@@ -200,7 +207,7 @@ export class AnsiFormatterProvider {  /**
     })
     
     // Close any remaining open spans
-    html += openSpans.length > 0 ? '</span>'.repeat(openSpans.length) : ''
+    html += '</span>'.repeat(styleStack.length)
     
     return html
   }
