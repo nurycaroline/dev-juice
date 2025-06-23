@@ -28,12 +28,10 @@ export class TextFormatterProvider {
         retainContextWhenHidden: true,
         localResourceRoots: []
       }
-    );        TextFormatterProvider.currentPanel = panel
+    ); TextFormatterProvider.currentPanel = panel
 
     // Set the webview's initial html content
-    panel.webview.html = TextFormatterProvider.getWebviewContent(extensionUri)
-
-    // Handle messages from the webview
+    panel.webview.html = TextFormatterProvider.getWebviewContent(extensionUri)    // Handle messages from the webview
     panel.webview.onDidReceiveMessage(
       message => {
         switch (message.command) {
@@ -59,7 +57,7 @@ export class TextFormatterProvider {
       },
       null
     )
-  }  private static handleFormatText (text: string, format: string): void {
+  } private static handleFormatText (text: string, format: string): void {
     const panel = TextFormatterProvider.currentPanel
     if (!panel) {
       return
@@ -77,7 +75,7 @@ export class TextFormatterProvider {
       vscode.window.showErrorMessage(`Erro ao formatar texto: ${errorMessage}`)
     }
   }
-  
+
   private static getWebviewContent (extensionUri: vscode.Uri): string {
     return loadTemplate(extensionUri, 'text-formatter')
   }

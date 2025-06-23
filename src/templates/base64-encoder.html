@@ -141,10 +141,9 @@
                 <label for="textInput">Texto para Codificar</label>
                 <textarea id="textInput" placeholder="Digite o texto que deseja codificar em Base64..."></textarea>
             </div>
-
             <div class="form-group">
-                <button type="button" class="button" onclick="encodeText()">Codificar</button>
-                <button type="button" class="button secondary" onclick="clearEncode()">Limpar</button>
+                <button type="button" class="button" id="encodeBtn">Codificar</button>
+                <button type="button" class="button secondary" id="clearEncodeBtn">Limpar</button>
             </div>
 
             <div id="encodeMessages"></div>
@@ -153,9 +152,8 @@
                 <label for="base64Output">Base64 Codificado</label>
                 <div class="textarea-container">
                     <textarea id="base64Output" readonly
-                        placeholder="O texto codificado em Base64 aparecerá aqui..."></textarea>
-                    <button type="button" class="button copy-button hidden" id="copyEncoded"
-                        onclick="copyEncoded()">Copiar</button>
+                        placeholder="O texto codificado em Base64 aparecerá aqui..."></textarea> <button type="button"
+                        class="button copy-button hidden" id="copyEncoded">Copiar</button>
                 </div>
             </div>
         </div>
@@ -167,10 +165,9 @@
                 <textarea id="base64Input"
                     placeholder="Cole aqui o texto em Base64 que deseja decodificar..."></textarea>
             </div>
-
             <div class="form-group">
-                <button type="button" class="button" onclick="decodeText()">Decodificar</button>
-                <button type="button" class="button secondary" onclick="clearDecode()">Limpar</button>
+                <button type="button" class="button" id="decodeBtn">Decodificar</button>
+                <button type="button" class="button secondary" id="clearDecodeBtn">Limpar</button>
             </div>
 
             <div id="decodeMessages"></div>
@@ -179,8 +176,7 @@
                 <label for="textOutput">Texto Decodificado</label>
                 <div class="textarea-container">
                     <textarea id="textOutput" readonly placeholder="O texto decodificado aparecerá aqui..."></textarea>
-                    <button type="button" class="button copy-button hidden" id="copyDecoded"
-                        onclick="copyDecoded()">Copiar</button>
+                    <button type="button" class="button copy-button hidden" id="copyDecoded">Copiar</button>
                 </div>
             </div>
         </div>
@@ -255,9 +251,7 @@
 
         function clearMessages(containerId) {
             document.getElementById(containerId).innerHTML = '';
-        }
-
-        // Receber mensagens do VS Code
+        }        // Receber mensagens do VS Code
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
@@ -280,6 +274,19 @@
                     }
                     break;
             }
+        });
+
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Encode section buttons
+            document.getElementById('encodeBtn').addEventListener('click', encodeText);
+            document.getElementById('clearEncodeBtn').addEventListener('click', clearEncode);
+            document.getElementById('copyEncoded').addEventListener('click', copyEncoded);
+
+            // Decode section buttons
+            document.getElementById('decodeBtn').addEventListener('click', decodeText);
+            document.getElementById('clearDecodeBtn').addEventListener('click', clearDecode);
+            document.getElementById('copyDecoded').addEventListener('click', copyDecoded);
         });
     </script>
 </body>

@@ -206,11 +206,10 @@
                 <option value="sha512">SHA-512</option>
             </select>
         </div>
-
         <div class="form-group">
-            <button type="button" class="button" onclick="generateSingleHash()">Gerar Hash</button>
-            <button type="button" class="button secondary" onclick="generateAllHashes()">Gerar Todos os Hashes</button>
-            <button type="button" class="button secondary" onclick="clearAll()">Limpar</button>
+            <button type="button" id="generate-btn" class="button">Gerar Hash</button>
+            <button type="button" id="generate-all-btn" class="button secondary">Gerar Todos os Hashes</button>
+            <button type="button" id="clear-btn" class="button secondary">Limpar</button>
         </div>
 
         <div id="messages"></div>
@@ -249,106 +248,144 @@
             </div>
         </div>
     </div>
-
     <script>
-        const vscode = acquireVsCodeApi();
-        let currentHashes = {};
-        let currentSingleHash = '';
+        document.addEventListener('DOMContentLoaded', function () {
+            const vscode = acquireVsCodeApi();
+            let currentHashes = {};
+            let currentSingleHash = '';
 
-        function generateSingleHash() {
-            const text = document.getElementById('inputText').value;
-            const algorithm = document.getElementById('algorithm').value; if (!text.trim()) {
-                showMessage('Por favor, insira um texto para gerar o hash.', 'error');
-                return;
-            }
+            // Elementos do DOM
+            const inputText = document.getElementById('inputText');
+            const algorithm = document.getElementById('algorithm');
+            const generateBtn = document.getElementById('generate-btn');
+            const generateAllBtn = document.getElementById('generate-all-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const singleResult = document.getElementById('singleResult');
+            const allResults = document.getElementById('allResults');
+            const messages = document.getElementById('messages');
 
-            vscode.postMessage({
-                command: 'generateHash',
-                text: text,
-                algorithm: algorithm
-            });
-        }
+            function generateSingleHash() {
+                const text = inputText.value;
+                const selectedAlgorithm = algorithm.value;
 
-        function generateAllHashes() {
-            const text = document.getElementById('inputText').value; if (!text.trim()) {
-                showMessage('Por favor, insira um texto para gerar os hashes.', 'error');
-                return;
-            }
+                if (!text.trim()) {
+                    showMessage('Por favor, insira um texto para gerar o hash.', 'error');
+                    return;
+                }
 
-            vscode.postMessage({
-                command: 'generateAllHashes',
-                text: text
-            });
-        }
-
-        function copySingleHash() {
-            if (currentSingleHash) {
                 vscode.postMessage({
-                    command: 'copyToClipboard',
-                    text: currentSingleHash
+                    command: 'generateHash',
+                    text: text,
+                    algorithm: selectedAlgorithm
                 });
             }
-        }
 
-        function copyHash(algorithm) {
-            if (currentHashes[algorithm]) {
-                vscode.postMessage({
-                    command: 'copyToClipboard',
-                    text: currentHashes[algorithm]
+            function generateAllHashes() {
+                const text = inputText.value;
+
+                if (!text.trim()) {
+                    showMessage('Por favor, insira um texto para gerar os hashes.', 'error');
+                    return;
+                } vscode.postMessage({
+                    command: 'generateAllHashes',
+                    text: text
                 });
             }
-        }
 
-        function clearAll() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('singleResult').classList.add('hidden');
-            document.getElementById('allResults').classList.add('hidden');
-            clearMessages();
-            currentHashes = {};
-            currentSingleHash = '';
-        }
-
-        function showMessage(message, type) {
-            const messagesDiv = document.getElementById('messages');
-            messagesDiv.innerHTML = `<div class="${type}">${message}</div>`;
-        }
-
-        function clearMessages() {
-            document.getElementById('messages').innerHTML = '';
-        }
-
-        // Receber mensagens do VS Code
-        window.addEventListener('message', event => {
-            const message = event.data;
-
-            switch (message.command) {
-                case 'hashGenerated':
-                    if (message.success) {
-                        currentSingleHash = message.hash;
-                        document.getElementById('singleAlgorithm').textContent = message.algorithm.toUpperCase();
-                        document.getElementById('singleHash').textContent = message.hash;
-                        document.getElementById('singleResult').classList.remove('hidden');
-                        document.getElementById('allResults').classList.add('hidden');
-                        clearMessages();
-                    } else {
-                        showMessage('Erro ao gerar hash: ' + message.error, 'error');
-                    }
-                    break;
-                case 'allHashesGenerated':
-                    if (message.success) {
-                        currentHashes = message.hashes;
-                        document.getElementById('md5Hash').textContent = message.hashes.md5;
-                        document.getElementById('sha1Hash').textContent = message.hashes.sha1;
-                        document.getElementById('sha256Hash').textContent = message.hashes.sha256;
-                        document.getElementById('sha512Hash').textContent = message.hashes.sha512;
-                        document.getElementById('allResults').classList.remove('hidden');
-                        document.getElementById('singleResult').classList.add('hidden');
-                        clearMessages();
-                    } else {
-                        showMessage('Erro ao gerar hashes: ' + message.error, 'error');
-                    }
-                    break;
+            function copySingleHash() {
+                if (currentSingleHash) {
+                    vscode.postMessage({
+                        command: 'copyToClipboard',
+                        text: currentSingleHash
+                    });
+                }
             }
+
+            function copyHash(algorithm) {
+                if (currentHashes[algorithm]) {
+                    vscode.postMessage({
+                        command: 'copyToClipboard',
+                        text: currentHashes[algorithm]
+                    });
+                }
+            }
+
+            function clearAll() {
+                inputText.value = '';
+                singleResult.classList.add('hidden');
+                allResults.classList.add('hidden');
+                clearMessages();
+                currentHashes = {};
+                currentSingleHash = '';
+            }
+
+            function showMessage(message, type) {
+                messages.innerHTML = `<div class="${type}">${message}</div>`;
+            }
+
+            function clearMessages() {
+                messages.innerHTML = '';
+            }
+
+            // Event Listeners
+            if (generateBtn) {
+                generateBtn.addEventListener('click', generateSingleHash);
+            }
+            if (generateAllBtn) {
+                generateAllBtn.addEventListener('click', generateAllHashes);
+            }
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAll);
+            }
+
+            // Event listeners para botões de copiar (usando delegação de eventos)
+            document.addEventListener('click', function (e) {
+                if (e.target && e.target.onclick) {
+                    const onclickStr = e.target.onclick.toString();
+                    if (onclickStr.includes('copySingleHash')) {
+                        copySingleHash();
+                    } else if (onclickStr.includes('copyHash')) {
+                        const match = onclickStr.match(/copyHash\('(\w+)'\)/);
+                        if (match) {
+                            copyHash(match[1]);
+                        }
+                    }
+                }
+            });
+
+            // Receber mensagens do VS Code
+            window.addEventListener('message', event => {
+                const message = event.data;
+
+                switch (message.command) {
+                    case 'hashGenerated':
+                        if (message.success) {
+                            currentSingleHash = message.hash;
+                            document.getElementById('singleAlgorithm').textContent = message.algorithm.toUpperCase();
+                            document.getElementById('singleHash').textContent = message.hash;
+                            singleResult.classList.remove('hidden');
+                            allResults.classList.add('hidden');
+                            clearMessages();
+                        } else {
+                            showMessage('Erro ao gerar hash: ' + message.error, 'error');
+                        }
+                        break;
+                    case 'allHashesGenerated':
+                        if (message.success) {
+                            currentHashes = message.hashes;
+                            document.getElementById('md5Hash').textContent = message.hashes.md5;
+                            document.getElementById('sha1Hash').textContent = message.hashes.sha1;
+                            document.getElementById('sha256Hash').textContent = message.hashes.sha256;
+                            document.getElementById('sha512Hash').textContent = message.hashes.sha512;
+                            allResults.classList.remove('hidden');
+                            singleResult.classList.add('hidden');
+                            clearMessages();
+                        } else {
+                            showMessage('Erro ao gerar hashes: ' + message.error, 'error');
+                        }
+                        break;
+                }
+            });
         });
     </script>
 </body>

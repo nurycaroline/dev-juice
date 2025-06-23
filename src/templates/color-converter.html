@@ -182,7 +182,7 @@
         <div class="input-section">
             <div class="form-group">
                 <label for="inputFormat">Formato de Entrada</label>
-                <select id="inputFormat" onchange="updateInputPlaceholder()">
+                <select id="inputFormat">
                     <option value="hex">HEX (#RRGGBB)</option>
                     <option value="rgb">RGB (rgb(r, g, b))</option>
                     <option value="hsl">HSL (hsl(h, s%, l%))</option>
@@ -193,12 +193,11 @@
                 <div class="form-group">
                     <label for="colorInput">Valor da Cor</label>
                     <div class="color-picker-container">
-                        <input type="text" id="colorInput" placeholder="#FF5733" oninput="convertColorRealTime()">
-                        <input type="color" id="colorPicker" onchange="updateFromColorPicker()">
+                        <input type="text" id="colorInput" placeholder="#FF5733">
+                        <input type="color" id="colorPicker">
                     </div>
-                </div>
-                <button type="button" class="button" onclick="convertColor()">Converter</button>
-                <button type="button" class="button secondary" onclick="clearAll()">Limpar</button>
+                </div> <button type="button" class="button" id="convertButton">Converter</button>
+                <button type="button" class="button secondary" id="clearButton">Limpar</button>
             </div>
         </div>
 
@@ -211,8 +210,7 @@
                 <div class="format-info">
                     <div class="format-name">HEX</div>
                     <div class="format-value" id="hexValue"></div>
-                </div>
-                <button type="button" class="button copy-button" onclick="copyValue('hex')">Copiar</button>
+                </div> <button type="button" class="button copy-button" data-format="hex">Copiar</button>
             </div>
 
             <div class="color-format">
@@ -220,7 +218,7 @@
                     <div class="format-name">RGB</div>
                     <div class="format-value" id="rgbValue"></div>
                 </div>
-                <button type="button" class="button copy-button" onclick="copyValue('rgb')">Copiar</button>
+                <button type="button" class="button copy-button" data-format="rgb">Copiar</button>
             </div>
 
             <div class="color-format">
@@ -228,7 +226,7 @@
                     <div class="format-name">HSL</div>
                     <div class="format-value" id="hslValue"></div>
                 </div>
-                <button type="button" class="button copy-button" onclick="copyValue('hsl')">Copiar</button>
+                <button type="button" class="button copy-button" data-format="hsl">Copiar</button>
             </div>
 
             <div class="color-format">
@@ -236,15 +234,33 @@
                     <div class="format-name">HSV</div>
                     <div class="format-value" id="hsvValue"></div>
                 </div>
-                <button type="button" class="button copy-button" onclick="copyValue('hsv')">Copiar</button>
+                <button type="button" class="button copy-button" data-format="hsv">Copiar</button>
             </div>
         </div>
     </div>
-
     <script>
         const vscode = acquireVsCodeApi();
         let currentResult = null;
         let conversionTimer = null;
+
+        // Adicionar event listeners quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('inputFormat').addEventListener('change', updateInputPlaceholder);
+            document.getElementById('colorInput').addEventListener('input', convertColorRealTime);
+            document.getElementById('colorPicker').addEventListener('change', updateFromColorPicker);
+            document.getElementById('convertButton').addEventListener('click', convertColor);
+            document.getElementById('clearButton').addEventListener('click', clearAll);
+
+            // Adicionar event listeners para os botões de copiar
+            document.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const format = button.getAttribute('data-format');
+                    if (format) {
+                        copyValue(format);
+                    }
+                });
+            });
+        });
 
         function updateInputPlaceholder() {
             const format = document.getElementById('inputFormat').value;
@@ -261,12 +277,12 @@
                     input.placeholder = 'hsl(9, 100%, 60%)';
                     break;
             }
-        }
-
-        function updateFromColorPicker() {
+        } function updateFromColorPicker() {
             const colorPicker = document.getElementById('colorPicker');
             const colorInput = document.getElementById('colorInput');
-            const format = document.getElementById('inputFormat'); format.value = 'hex';
+            const format = document.getElementById('inputFormat');
+
+            format.value = 'hex';
             colorInput.value = colorPicker.value.toUpperCase();
             updateInputPlaceholder();
             convertColor();
@@ -289,9 +305,9 @@
             if (!color) {
                 showError('Por favor, insira uma cor para converter.');
                 return;
-            }
+            } hideError();
 
-            hideError(); vscode.postMessage({
+            vscode.postMessage({
                 command: 'convertColor',
                 color: color,
                 fromFormat: format

@@ -98,12 +98,6 @@ export class DevJuiceProvider implements vscode.TreeDataProvider<DevToolItem> {
             vscode.TreeItemCollapsibleState.None
           ),
           new DevToolItem(
-            'Conversor de Case',
-            'Converter entre diferentes estilos de case (camelCase, snake_case, etc.)',
-            'dev-juice.caseConverter',
-            vscode.TreeItemCollapsibleState.None
-          ),
-          new DevToolItem(
             'Conversor de Comprimento',
             'Converter entre diferentes unidades de comprimento',
             'dev-juice.lengthConverter',

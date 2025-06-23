@@ -4,8 +4,7 @@ import { loadTemplate } from '../utils/templateLoader'
 /**
  * Provider for the JSON formatter webview panel
  */
-export class JsonFormatterProvider {
-  /**
+export class JsonFormatterProvider {  /**
      * Track the currently active panels. Only allow a single panel to exist at a time.
      */
   public static currentPanel: JsonFormatterProvider | undefined
@@ -51,9 +50,7 @@ export class JsonFormatterProvider {
     this._update()
 
     // Listen for when the panel is disposed
-    this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
-
-    // Handle messages from the webview
+    this._panel.onDidDispose(() => this.dispose(), null, this._disposables)    // Handle messages from the webview
     this._panel.webview.onDidReceiveMessage(
       message => {
         switch (message.command) {
@@ -69,13 +66,15 @@ export class JsonFormatterProvider {
       this._disposables
     )
   }
-
   /**
      * Formats JSON and sends the result to the webview
      */
   private _formatJson (jsonString: string) {
     try {
-      const parsed = JSON.parse(jsonString)
+      // Sempre aplicar aspas duplas nas chaves quando necessário
+      const processedJson = this._addQuotesToKeys(jsonString)
+
+      const parsed = JSON.parse(processedJson)
       const formatted = JSON.stringify(parsed, null, 2)
 
       this._panel.webview.postMessage({
@@ -104,6 +103,26 @@ export class JsonFormatterProvider {
       vscode.window.showErrorMessage('Erro ao copiar JSON para a área de transferência.')
     }
   }
+  /**
+   * Adds double quotes to JSON keys that don't have them
+   */
+  private _addQuotesToKeys (jsonString: string): string {
+    let json = jsonString.trim()
+
+    // Regex para encontrar chaves sem aspas no JSON
+    // Busca por padrões como: 'chave:' onde chave não está entre aspas
+    // Evita substituir dentro de strings ou valores já quoted
+
+    // Split por linhas para processar linha por linha (mais seguro)
+    const lines = json.split('\n')
+    const processedLines = lines.map(line => {
+      // Regex para chave sem aspas: espaços + identificador + espaços + dois pontos
+      // Mas só se não estiver já entre aspas
+      return line.replace(/^(\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":')
+    })
+
+    return processedLines.join('\n')
+  }
 
   public dispose () {
     JsonFormatterProvider.currentPanel = undefined
@@ -121,7 +140,7 @@ export class JsonFormatterProvider {
 
   private _update () {
     this._panel.webview.html = this._getHtmlForWebview()
-  }  private _getHtmlForWebview () {
+  } private _getHtmlForWebview () {
     return loadTemplate(this._extensionUri, 'json-formatter')
   }
 }

@@ -246,22 +246,21 @@
 <body>
     <div class="container">
         <h1>Validador de Email</h1>
-
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('single')">Validação Única</div>
-            <div class="tab" onclick="switchTab('bulk')">Validação em Lote</div>
+            <div class="tab active" data-tab="single">Validação Única</div>
+            <div class="tab" data-tab="bulk">Validação em Lote</div>
         </div>
 
         <!-- Single Email Validation -->
         <div id="singleTab" class="tab-content active">
             <div class="form-group">
                 <label for="singleEmail">Endereço de Email</label>
-                <input type="email" id="singleEmail" placeholder="digite@exemplo.com" oninput="validateEmailRealTime()">
+                <input type="email" id="singleEmail" placeholder="digite@exemplo.com">
             </div>
 
             <div class="form-group">
-                <button type="button" class="button" onclick="validateSingleEmail()">Validar Email</button>
-                <button type="button" class="button secondary" onclick="clearSingle()">Limpar</button>
+                <button type="button" class="button" id="validateSingleBtn">Validar Email</button>
+                <button type="button" class="button secondary" id="clearSingleBtn">Limpar</button>
             </div>
 
             <div id="singleResult" class="hidden"></div>
@@ -275,25 +274,43 @@
                 <textarea id="bulkEmails"
                     placeholder="email1@exemplo.com, email2@exemplo.com&#10;email3@exemplo.com"></textarea>
             </div>
-
             <div class="form-group">
-                <button type="button" class="button" onclick="validateBulkEmails()">Validar Lista</button>
-                <button type="button" class="button secondary" onclick="clearBulk()">Limpar</button>
+                <button type="button" class="button" id="validateBulkBtn">Validar Lista</button>
+                <button type="button" class="button secondary" id="clearBulkBtn">Limpar</button>
             </div>
 
             <div id="bulkSummary" class="hidden"></div>
             <div id="bulkResults" class="hidden"></div>
         </div>
     </div>
-
     <script>
         const vscode = acquireVsCodeApi();
         let currentValidationTimer = null;
 
+        // Adicionar event listeners quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listeners para as abas
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+
+            // Event listeners para os botões
+            document.getElementById('validateSingleBtn').addEventListener('click', validateSingleEmail);
+            document.getElementById('clearSingleBtn').addEventListener('click', clearSingle);
+            document.getElementById('validateBulkBtn').addEventListener('click', validateBulkEmails);
+            document.getElementById('clearBulkBtn').addEventListener('click', clearBulk);
+
+            // Event listener para validação em tempo real
+            document.getElementById('singleEmail').addEventListener('input', validateEmailRealTime);
+        });
+
         function switchTab(tabName) {
             // Update tab buttons
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -353,11 +370,11 @@
                 command: 'copyToClipboard',
                 text: validEmails.join(', ')
             });
-        }
-
-        function displaySingleResult(email, validation) {
+        } function displaySingleResult(email, validation) {
             const resultDiv = document.getElementById('singleResult');
-            const isValid = validation.isValid; let html = `
+            const isValid = validation.isValid;
+
+            let html = `
                 <div class="validation-result ${isValid ? 'valid' : 'invalid'}">
                     <div class="email-display">
                         <span class="status-icon">${isValid ? '✅' : '❌'}</span>
@@ -417,18 +434,24 @@
                         <div class="stat-item">
                             <div class="stat-number">${summary.validPercentage}%</div>
                             <div class="stat-label">Taxa de Sucesso</div>
-                        </div>
-                    </div>
-                    <button type="button" class="button copy-button" onclick="copyValidEmails(${JSON.stringify(results).replace(/"/g, '&quot;')})">
+                        </div>                    </div>
+                    <button type="button" class="button copy-button" id="copyValidEmailsBtn">
                         Copiar Emails Válidos
                     </button>
                 </div>
             `;
             summaryDiv.classList.remove('hidden');
 
+            // Adicionar event listener para o botão de copiar
+            document.getElementById('copyValidEmailsBtn').addEventListener('click', () => {
+                copyValidEmails(results);
+            });
+
             // Display results
             const resultsDiv = document.getElementById('bulkResults');
-            let html = '<div class="bulk-results">'; results.forEach(result => {
+            let html = '<div class="bulk-results">';
+
+            results.forEach(result => {
                 const isValid = result.validation.isValid;
                 html += `
                     <div class="bulk-item">

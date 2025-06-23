@@ -95,11 +95,12 @@ export class PasswordGeneratorProvider {  /**
     )
   }
   /**
-     * Generates a password based on the provided options
-     */
+       * Generates a password based on the provided options
+       */
   private _generatePassword (options: PasswordOptions) {
     try {
       const charset = this._buildCharset(options)
+
       if (charset.length === 0) {
         this._panel.webview.postMessage({
           command: 'passwordGenerated',
@@ -110,7 +111,7 @@ export class PasswordGeneratorProvider {  /**
       }
 
       const password = this._createPassword(charset, options.length)
-            
+
       this._panel.webview.postMessage({
         command: 'passwordGenerated',
         password: password,
@@ -131,7 +132,7 @@ export class PasswordGeneratorProvider {  /**
      */
   private _buildCharset (options: PasswordOptions): string {
     let charset = ''
-        
+
     if (options.lowercase) {
       charset += 'abcdefghijklmnopqrstuvwxyz'
     }
@@ -147,7 +148,7 @@ export class PasswordGeneratorProvider {  /**
     if (options.customChars) {
       charset += options.customChars
     }
-        
+
     return charset
   }
 
@@ -157,19 +158,20 @@ export class PasswordGeneratorProvider {  /**
   private _createPassword (charset: string, length: number): string {
     let password = ''
     const crypto = require('crypto')
-        
+
     for (let i = 0; i < length; i++) {
       const randomIndex = crypto.randomInt(0, charset.length)
       password += charset[randomIndex]
     }
-        
+
     return password
-  }  /**
+  }
+  /**
      * Calculates password strength
      */
   private _calculateStrength (password: string, options: PasswordOptions): string {
     let score = 0
-        
+
     // Length bonus
     if (password.length >= 8) {
       score += 1
@@ -180,7 +182,7 @@ export class PasswordGeneratorProvider {  /**
     if (password.length >= 16) {
       score += 1
     }
-        
+
     // Character variety bonus
     if (options.lowercase) {
       score += 1
@@ -194,7 +196,7 @@ export class PasswordGeneratorProvider {  /**
     if (options.symbols) {
       score += 2
     }
-        
+
     if (score <= 2) {
       return 'Fraca'
     }
@@ -235,7 +237,9 @@ export class PasswordGeneratorProvider {  /**
 
   private _update () {
     this._panel.webview.html = this._getHtmlForWebview()
-  }  private _getHtmlForWebview () {
+  }
+
+  private _getHtmlForWebview () {
     return loadTemplate(this._extensionUri, 'password-generator')
   }
 }

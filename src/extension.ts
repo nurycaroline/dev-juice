@@ -311,11 +311,6 @@ export function activate (context: vscode.ExtensionContext) {
     lazyProviders.AngleConverterProvider.createOrShow(context.extensionUri)
   })
 
-  // Case Converter command
-  const caseConverterDisposable = vscode.commands.registerCommand('dev-juice.caseConverter', () => {
-    lazyProviders.CaseConverterProvider.createOrShow(context.extensionUri)
-  })
-
   // Currency Converter command
   const currencyConverterDisposable = vscode.commands.registerCommand('dev-juice.currencyConverter', () => {
     lazyProviders.CurrencyConverterProvider.createOrShow(context.extensionUri)
@@ -426,7 +421,6 @@ export function activate (context: vscode.ExtensionContext) {
     urlEncoderDisposable,
     volumeConverterDisposable,
     weightConverterDisposable,
-    caseConverterDisposable,
     powerConverterDisposable,
     pressureConverterDisposable
   )

@@ -121,15 +121,14 @@
 <body>
     <div class="container">
         <h1>Formatador JSON</h1>
-
         <div class="form-group">
             <label for="inputJson">JSON de Entrada</label>
             <textarea id="inputJson" placeholder="Cole aqui o JSON que deseja formatar..."></textarea>
         </div>
 
         <div class="form-group">
-            <button type="button" class="button" onclick="formatJson()">Formatar JSON</button>
-            <button type="button" class="button secondary" onclick="clearAll()">Limpar</button>
+            <button type="button" class="button" id="formatButton">Formatar JSON</button>
+            <button type="button" class="button secondary" id="clearButton">Limpar</button>
         </div>
 
         <div id="messages"></div>
@@ -138,16 +137,19 @@
             <label for="outputJson">JSON Formatado</label>
             <div class="textarea-container">
                 <textarea id="outputJson" readonly placeholder="O JSON formatado aparecerá aqui..."></textarea>
-                <button type="button" class="button copy-button hidden" id="copyButton"
-                    onclick="copyFormatted()">Copiar</button>
+                <button type="button" class="button copy-button hidden" id="copyButton">Copiar</button>
             </div>
         </div>
     </div>
-
     <script>
         const vscode = acquireVsCodeApi();
 
-        function formatJson() {
+        // Adicionar event listeners quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('formatButton').addEventListener('click', formatJson);
+            document.getElementById('clearButton').addEventListener('click', clearAll);
+            document.getElementById('copyButton').addEventListener('click', copyFormatted);
+        }); function formatJson() {
             const input = document.getElementById('inputJson').value.trim();
             if (!input) {
                 showMessage('Por favor, insira um JSON para formatar.', 'error');

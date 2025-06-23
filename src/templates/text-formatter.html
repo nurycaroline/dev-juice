@@ -227,19 +227,16 @@
             <textarea id="inputText" placeholder="Digite seu texto aqui..."></textarea>
 
             <div class="button-group">
-                <button onclick="clearInput()">Limpar</button>
-                <button class="secondary-btn" onclick="loadExample()">Texto de Exemplo</button>
+                <button id="clearInputBtn">Limpar</button>
+                <button class="secondary-btn" id="loadExampleBtn">Texto de Exemplo</button>
             </div>
         </div>
 
         <div id="resultArea" class="result-area">
             <h3>Resultado</h3>
             <div id="resultPreview" class="result-preview"></div>
-
             <div class="button-group">
-                <button class="secondary-btn" onclick="copyResult()">Copiar</button>
-                <button class="secondary-btn" onclick="insertResult()">Inserir no Editor</button>
-                <button onclick="clearResult()">Limpar</button>
+                <button class="secondary-btn" id="copyBtn">Copiar</button>
             </div>
         </div>
 
@@ -249,79 +246,79 @@
             <h2>🎨 Formatos Disponíveis</h2>
             <p>Clique em um formato para aplicar ao seu texto:</p>
             <div class="format-grid">
-                <div class="format-item" onclick="selectFormat('alternating')" data-format="alternating">
+                <div class="format-item" data-format="alternating">
                     <div class="format-title">aLtErNaTiNg cAsE</div>
                     <div class="format-example">hElLo WoRlD eXaMpLe TeXt</div>
                     <div class="format-description">Letras alternadas entre maiúscula e minúscula</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('camel')" data-format="camel">
+                <div class="format-item" data-format="camel">
                     <div class="format-title">camelCase</div>
                     <div class="format-example">helloWorldExampleText</div>
                     <div class="format-description">Primeira palavra minúscula, demais capitalizadas</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('capital')" data-format="capital">
+                <div class="format-item" data-format="capital">
                     <div class="format-title">Capitalized Case</div>
                     <div class="format-example">Hello World Example Text</div>
                     <div class="format-description">Primeira letra de cada palavra maiúscula</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('dot')" data-format="dot">
+                <div class="format-item" data-format="dot">
                     <div class="format-title">Dot Notation</div>
                     <div class="format-example">hello.world.example.text</div>
                     <div class="format-description">Palavras separadas por pontos</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('inverse')" data-format="inverse">
+                <div class="format-item" data-format="inverse">
                     <div class="format-title">InVeRsE CaSe</div>
                     <div class="format-example">hELLO wORLD eXAMPLE tEXT</div>
                     <div class="format-description">Inverte maiúsculas e minúsculas</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('kebab')" data-format="kebab">
+                <div class="format-item" data-format="kebab">
                     <div class="format-title">kebab-case</div>
                     <div class="format-example">hello-world-example-text</div>
                     <div class="format-description">Palavras separadas por hífens</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('lower')" data-format="lower">
+                <div class="format-item" data-format="lower">
                     <div class="format-title">lower case</div>
                     <div class="format-example">hello world example text</div>
                     <div class="format-description">Todas as letras minúsculas</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('params')" data-format="params">
+                <div class="format-item" data-format="params">
                     <div class="format-title">Params Style</div>
                     <div class="format-example">hello: world: example: text</div>
                     <div class="format-description">Palavras separadas por dois pontos e espaço</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('pascal')" data-format="pascal">
+                <div class="format-item" data-format="pascal">
                     <div class="format-title">PascalCase</div>
                     <div class="format-example">HelloWorldExampleText</div>
                     <div class="format-description">Todas as palavras capitalizadas</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('path')" data-format="path">
+                <div class="format-item" data-format="path">
                     <div class="format-title">Path Style</div>
                     <div class="format-example">hello/world/example/text</div>
                     <div class="format-description">Palavras separadas por barras</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('sentence')" data-format="sentence">
+                <div class="format-item" data-format="sentence">
                     <div class="format-title">Sentence case</div>
                     <div class="format-example">Hello world example text</div>
                     <div class="format-description">Primeira letra maiúscula, resto minúsculo</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('snake')" data-format="snake">
+                <div class="format-item" data-format="snake">
                     <div class="format-title">snake_case</div>
                     <div class="format-example">hello_world_example_text</div>
                     <div class="format-description">Palavras separadas por underscores</div>
                 </div>
 
-                <div class="format-item" onclick="selectFormat('upper')" data-format="upper">
+                <div class="format-item" data-format="upper">
                     <div class="format-title">UPPER CASE</div>
                     <div class="format-example">HELLO WORLD EXAMPLE TEXT</div>
                     <div class="format-description">Todas as letras maiúsculas</div>
@@ -334,7 +331,6 @@
         const vscode = acquireVsCodeApi();
         let currentResult = '';
         let selectedFormat = '';
-
         function selectFormat(format) {
             selectedFormat = format;
 
@@ -344,7 +340,10 @@
             });
 
             // Add selection to clicked item
-            document.querySelector('[data-format="' + format + '"]').classList.add('selected');
+            const targetElement = document.querySelector('[data-format="' + format + '"]');
+            if (targetElement) {
+                targetElement.classList.add('selected');
+            }
 
             // Format text if there's input
             const inputText = document.getElementById('inputText').value;
@@ -352,7 +351,6 @@
                 formatText(inputText, format);
             }
         }
-
         function formatText(text, format) {
             if (!text.trim()) {
                 document.getElementById('resultArea').style.display = 'none';
@@ -384,21 +382,10 @@
             document.getElementById('resultArea').style.display = 'none';
             document.getElementById('resultPreview').textContent = '';
             currentResult = '';
-        }
-
-        function copyResult() {
+        } function copyResult() {
             if (currentResult) {
                 vscode.postMessage({
                     command: 'copyToClipboard',
-                    text: currentResult
-                });
-            }
-        }
-
-        function insertResult() {
-            if (currentResult) {
-                vscode.postMessage({
-                    command: 'insertInEditor',
                     text: currentResult
                 });
             }
@@ -408,16 +395,12 @@
         window.addEventListener('message', event => {
             const message = event.data;
 
-            switch (message.command) {
-                case 'formatResult':
-                    currentResult = message.result;
-                    document.getElementById('resultPreview').textContent = message.result;
-                    document.getElementById('resultArea').style.display = 'block';
-                    break;
+            if (message.command === 'formatResult') {
+                currentResult = message.result;
+                document.getElementById('resultPreview').textContent = message.result;
+                document.getElementById('resultArea').style.display = 'block';
             }
-        });
-
-        // Auto-format on input change with debounce
+        });// Auto-format on input change with debounce
         let formatTimeout;
         document.getElementById('inputText').addEventListener('input', function () {
             clearTimeout(formatTimeout);
@@ -428,6 +411,22 @@
                     clearResult();
                 }
             }, 300);
+        });        // Add click event listeners to format items
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.format-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const format = item.getAttribute('data-format');
+                    if (format) {
+                        selectFormat(format);
+                    }
+                });
+            });
+            // Add event listener for copy button
+            document.getElementById('copyBtn').addEventListener('click', copyResult);
+
+            // Add event listeners for input section buttons
+            document.getElementById('clearInputBtn').addEventListener('click', clearInput);
+            document.getElementById('loadExampleBtn').addEventListener('click', loadExample);
         });
     </script>
 </body>

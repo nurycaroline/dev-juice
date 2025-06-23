@@ -311,38 +311,35 @@
             </div>
             <h3 style="margin-top: 25px;">Padrões Comuns:</h3>
             <div class="quick-patterns">
-                <button class="pattern-button"
-                    onclick="setPattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 'gm')">
+                <button class="pattern-button" id="patternEmail1">
                     <span class="pattern-title">Email (linha por linha)</span>
                     <span class="pattern-regex">^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$</span>
                 </button>
-                <button class="pattern-button"
-                    onclick="setPattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', 'g')">
+                <button class="pattern-button" id="patternEmail2">
                     <span class="pattern-title">Email (qualquer lugar)</span>
                     <span class="pattern-regex">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', 'g')">
+                <button class="pattern-button" id="patternCPF">
                     <span class="pattern-title">CPF</span>
                     <span class="pattern-regex">\d{3}\.\d{3}\.\d{3}-\d{2}</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}', 'g')">
+                <button class="pattern-button" id="patternCNPJ">
                     <span class="pattern-title">CNPJ</span>
                     <span class="pattern-regex">\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}', 'g')">
+                <button class="pattern-button" id="patternPhone">
                     <span class="pattern-title">Telefone</span>
                     <span class="pattern-regex">\(\d{2}\)\s?\d{4,5}-\d{4}</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('\\d{5}-\\d{3}', 'g')">
+                <button class="pattern-button" id="patternCEP">
                     <span class="pattern-title">CEP</span>
                     <span class="pattern-regex">\d{5}-\d{3}</span>
                 </button>
-                <button class="pattern-button"
-                    onclick="setPattern('https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?', 'g')">
+                <button class="pattern-button" id="patternURL">
                     <span class="pattern-title">URL</span>
                     <span class="pattern-regex">https?://[\w\-]+(\...)</span>
                 </button>
-                <button class="pattern-button" onclick="setPattern('^\\d+$', 'gm')">
+                <button class="pattern-button" id="patternNumbers">
                     <span class="pattern-title">Números (linha por linha)</span>
                     <span class="pattern-regex">^\d+$</span>
                 </button>
@@ -353,10 +350,9 @@
             <h2>Texto de Teste</h2>
             <label for="testText">Texto para testar o regex:</label>
             <textarea id="testText" placeholder="Cole ou digite o texto que deseja testar aqui..."></textarea>
-
             <div class="button-container">
-                <button onclick="testRegex()">Testar Regex</button>
-                <button class="secondary-button" onclick="clearAll()">Limpar Tudo</button>
+                <button id="testBtn">Testar Regex</button>
+                <button class="secondary-button" id="clearBtn">Limpar Tudo</button>
             </div>
         </div>
 
@@ -418,15 +414,17 @@
             document.getElementById('testText').value = '';
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
             document.getElementById('resultsSection').style.display = 'none';
-        }
-
-        function showError(message) {
+        } function showError(message) {
             const resultsSection = document.getElementById('resultsSection');
-            const resultsContent = document.getElementById('resultsContent'); resultsContent.innerHTML = `
+            const resultsContent = document.getElementById('resultsContent');
+
+            resultsContent.innerHTML = `
                 <div class="error-message">
                     ❌ ${message}
                 </div>
-            `; resultsSection.style.display = 'block';
+            `;
+
+            resultsSection.style.display = 'block';
         } function displayResults(result) {
             const resultsSection = document.getElementById('resultsSection');
             const resultsContent = document.getElementById('resultsContent');
@@ -440,6 +438,20 @@
             const html = buildResultsHtml(result);
             resultsContent.innerHTML = html;
             resultsSection.style.display = 'block';
+
+            // Add event listeners to dynamically created buttons
+            resultsContent.addEventListener('click', function (e) {
+                if (e.target.tagName === 'BUTTON' && e.target.dataset.action) {
+                    const action = e.target.dataset.action;
+                    const text = e.target.dataset.text;
+
+                    if (action === 'copy') {
+                        copyToClipboard(text);
+                    } else if (action === 'insert') {
+                        insertInEditor(text);
+                    }
+                }
+            });
         }
 
         function showErrorResult(container, error) {
@@ -504,21 +516,22 @@
             let html = `
                 <div class="match-item">
                     <div class="match-header">${header}:</div>
-                    <div class="match-text">${escapeHtml(match.match)}</div>
-                    <div class="match-details">
+                    <div class="match-text">${escapeHtml(match.match)}</div>                    <div class="match-details">
                         <strong>Posição:</strong> ${match.index} - ${match.index + match.match.length - 1}
                     </div>
-            `; if (showGroups) {
+            `;
+
+            if (showGroups) {
                 html += buildGroups(match);
             }
 
             html += buildMatchButtons(match);
             html += '</div>';
             return html;
-        }
+        } function buildGroups(match) {
+            let html = '';
 
-        function buildGroups(match) {
-            let html = ''; if (match.groups && match.groups.length > 0) {
+            if (match.groups && match.groups.length > 0) {
                 html += '<div class="groups-container"><strong>Grupos capturados:</strong>';
                 match.groups.forEach((group, groupIndex) => {
                     if (group !== undefined) {
@@ -537,16 +550,15 @@
             }
 
             return html;
-        }
-
-        function buildMatchButtons(match) {
-            const escapedMatch = escapeHtml(match.match).replace(/'/g, "\\'");
+        } function buildMatchButtons(match) {
+            const escapedMatch = escapeHtml(match.match);
+            const uniqueId = Math.random().toString(36).substr(2, 9);
             return `
                 <div class="button-container" style="margin-top: 10px;">
-                    <button class="secondary-button" onclick="copyToClipboard('${escapedMatch}')">
+                    <button class="secondary-button" data-action="copy" data-text="${escapedMatch}" data-id="${uniqueId}">
                         Copiar Match
                     </button>
-                    <button class="secondary-button" onclick="insertInEditor('${escapedMatch}')">
+                    <button class="secondary-button" data-action="insert" data-text="${escapedMatch}" data-id="${uniqueId}">
                         Inserir no Editor
                     </button>
                 </div>
@@ -582,9 +594,7 @@
             if (message.command === 'regexResult') {
                 displayResults(message.result);
             }
-        });
-
-        // Add enter key support for testing
+        });        // Add enter key support for testing
         document.getElementById('regexPattern').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 testRegex();
@@ -595,6 +605,39 @@
             if (e.key === 'Enter' && e.ctrlKey) {
                 testRegex();
             }
+        });
+
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Main buttons
+            document.getElementById('testBtn').addEventListener('click', testRegex);
+            document.getElementById('clearBtn').addEventListener('click', clearAll);
+
+            // Pattern buttons
+            document.getElementById('patternEmail1').addEventListener('click', function () {
+                setPattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', 'gm');
+            });
+            document.getElementById('patternEmail2').addEventListener('click', function () {
+                setPattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', 'g');
+            });
+            document.getElementById('patternCPF').addEventListener('click', function () {
+                setPattern('\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}', 'g');
+            });
+            document.getElementById('patternCNPJ').addEventListener('click', function () {
+                setPattern('\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}', 'g');
+            });
+            document.getElementById('patternPhone').addEventListener('click', function () {
+                setPattern('\\(\\d{2}\\)\\s?\\d{4,5}-\\d{4}', 'g');
+            });
+            document.getElementById('patternCEP').addEventListener('click', function () {
+                setPattern('\\d{5}-\\d{3}', 'g');
+            });
+            document.getElementById('patternURL').addEventListener('click', function () {
+                setPattern('https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-\\.,@?^=%&:/~\\+#]*[\\w\\-\\@?^=%&/~\\+#])?', 'g');
+            });
+            document.getElementById('patternNumbers').addEventListener('click', function () {
+                setPattern('^\\d+$', 'gm');
+            });
         });
     </script>
 </body>

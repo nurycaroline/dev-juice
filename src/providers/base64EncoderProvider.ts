@@ -5,8 +5,7 @@ import { validateUserInput } from '../utils/securityUtils'
 /**
  * Provider for the Base64 encoder/decoder webview panel
  */
-export class Base64EncoderProvider {
-  /**
+export class Base64EncoderProvider {  /**
      * Track the currently active panels. Only allow a single panel to exist at a time.
      */
   public static currentPanel: Base64EncoderProvider | undefined
@@ -185,8 +184,8 @@ export class Base64EncoderProvider {
 
   private _update () {
     this._panel.webview.html = this._getHtmlForWebview()
-  } 
-  
+  }
+
   private _getHtmlForWebview () {
     return loadTemplate(this._extensionUri, 'base64-encoder')
   }

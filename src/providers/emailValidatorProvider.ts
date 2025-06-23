@@ -146,7 +146,8 @@ export class EmailValidatorProvider {  /**
       summary: this._generateSummary(results),
       success: true
     })
-  }  /**
+  }  
+/**
      * Performs detailed email validation
      */
   private _performEmailValidation (email: string): EmailValidationResult {
@@ -201,7 +202,8 @@ export class EmailValidatorProvider {  /**
     this._checkCommonDomains(domain, result)
 
     return result
-  }  /**
+  }  
+/**
      * Validates the local part (before @)
      */
   private _checkLocalPart (localPart: string, result: EmailValidationResult) {
@@ -282,7 +284,8 @@ export class EmailValidatorProvider {  /**
     if (typo) {
       result.suggestions.push(`Você quis dizer ${email.replace(typo.wrong, typo.correct)}?`)
     }
-  }  /**
+  }  
+/**
      * Provides information about common email providers
      */
   private _checkCommonDomains (domain: string, result: EmailValidationResult) {
