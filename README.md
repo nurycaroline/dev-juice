@@ -2,6 +2,10 @@
 
 Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
 
+![Screenshot](./assets/screenshot-commands.png)
+
+![Screenshot](./assets/screenshot.png)
+
 ## Funcionalidades
 
 ### Geradores
