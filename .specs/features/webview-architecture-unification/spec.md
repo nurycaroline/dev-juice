@@ -194,18 +194,18 @@ de webviews para que criar/corrigir ferramentas exija tocar um só lugar.
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| ARCH-01 | P1: Núcleo unificado (ciclo de vida singleton/reveal/dispose) | Design | Pending |
-| ARCH-02 | P1: Núcleo unificado (36 providers migrados, zero boilerplate próprio) | Design | Pending |
-| ARCH-03 | P1: Núcleo unificado (100% via `loadTemplate` + CSP) | Design | Pending |
-| ARCH-04 | P1: Registro único (comandos derivados do registro) | Design | Pending |
-| ARCH-05 | P1: Registro único (tree view derivada do registro) | Design | Pending |
-| ARCH-06 | P1: Registro único (teste de consistência registro ↔ manifesto ↔ templates) | Design | Pending |
-| ARCH-07 | P1: Infra de testes (`npm test` operacional com testes reais) | Design | Pending |
-| ARCH-08 | P2: Segurança (validação de mensagens na base) | Design | Pending |
-| ARCH-09 | P2: Segurança (nonce criptográfico) | Design | Pending |
-| ARCH-10 | P2: Segurança (sanitização do fallback de erro PIX) | Design | Pending |
-| ARCH-11 | P2: Código morto (5 itens removidos, build verde) | Design | Pending |
-| ARCH-12 | P3: Manifesto (comandos completos e consistentes no palette) | Design | Pending |
+| ARCH-01 | P1: Núcleo unificado (ciclo de vida singleton/reveal/dispose) | T5, T6 | ✅ Verified |
+| ARCH-02 | P1: Núcleo unificado (providers migrados, zero boilerplate próprio) | T7, T9, T10, T11 | ✅ Verified |
+| ARCH-03 | P1: Núcleo unificado (100% via `loadTemplate` + CSP) | T6, T7, T11 | ✅ Verified |
+| ARCH-04 | P1: Registro único (comandos derivados do registro) | T3, T8 | ✅ Verified |
+| ARCH-05 | P1: Registro único (tree view derivada do registro) | T3, T12 | ✅ Verified |
+| ARCH-06 | P1: Registro único (teste de consistência registro ↔ manifesto ↔ templates) | T4 | ✅ Verified |
+| ARCH-07 | P1: Infra de testes (`npm test` operacional com testes reais) | T1 | ✅ Verified |
+| ARCH-08 | P2: Segurança (validação de mensagens na base) | T5, T9 | ✅ Verified (D1: não-string permitido) |
+| ARCH-09 | P2: Segurança (nonce criptográfico) | T2 | ✅ Verified |
+| ARCH-10 | P2: Segurança (sanitização do fallback de erro PIX) | T11 | ✅ Verified (D2: vetor eliminado) |
+| ARCH-11 | P2: Código morto (5 itens removidos, build verde) | T8, T13 | ✅ Verified |
+| ARCH-12 | P3: Manifesto (comandos completos e consistentes no palette) | T4, T14 | ✅ Verified |
 
 **ID format:** `ARCH-NN`
 **Status values:** Pending → In Design → In Tasks → Implementing → Verified
