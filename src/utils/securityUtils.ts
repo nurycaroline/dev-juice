@@ -5,10 +5,11 @@ import * as crypto from 'crypto'
  * @returns String aleatória para usar como nonce
  */
 export function generateNonce (): string {
-  let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  const bytes = crypto.randomBytes(32)
+  let text = ''
+  for (let i = 0; i < bytes.length; i++) {
+    text += possible.charAt(bytes[i] % possible.length)
   }
   return text
 }
