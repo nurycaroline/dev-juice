@@ -1,83 +1,25 @@
 import * as vscode from 'vscode'
-import { loadTemplate } from '../utils/templateLoader'
+import { BaseWebviewPanel, ValidatedMessage } from '../BaseWebviewPanel'
 
-/**
- * Provider for the Color Converter webview panel
- */
-export class ColorConverterProvider {
-  /**
-     * Track the currently active panels. Only allow a single panel to exist at a time.
-     */
-  public static currentPanel: ColorConverterProvider | undefined
+export class ColorConverterPanel extends BaseWebviewPanel {
+  protected get messageWhitelist (): readonly string[] {
+    return ['convertColor', 'copyToClipboard']
+  }
 
-  public static readonly viewType = 'colorConverter'
-
-  private readonly _panel: vscode.WebviewPanel
-  private readonly _extensionUri: vscode.Uri
-  private readonly _disposables: vscode.Disposable[] = []
-
-  public static createOrShow (extensionUri: vscode.Uri) {
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined
-
-    // If we already have a panel, show it.
-    if (ColorConverterProvider.currentPanel) {
-      ColorConverterProvider.currentPanel._panel.reveal(column)
+  protected onMessage (message: ValidatedMessage): void {
+    switch (message.command) {
+    case 'convertColor':
+      this._convertColor(message.color as string, message.fromFormat as string)
+      return
+    case 'copyToClipboard':
+      void this._copyToClipboard(message.text as string)
       return
     }
-
-    // Otherwise, create a new panel.
-    const panel = vscode.window.createWebviewPanel(
-      ColorConverterProvider.viewType,
-      'Conversor de Cores',
-      column ?? vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        localResourceRoots: [
-          vscode.Uri.joinPath(extensionUri, 'src', 'templates')
-        ]
-      }
-    )
-
-    ColorConverterProvider.currentPanel = new ColorConverterProvider(panel, extensionUri)
   }
 
-  private constructor (panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-    this._panel = panel
-    this._extensionUri = extensionUri
-
-    // Set the webview's initial html content
-    this._update()
-
-    // Listen for when the panel is disposed
-    this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
-
-    // Handle messages from the webview
-    this._panel.webview.onDidReceiveMessage(
-      message => {
-        switch (message.command) {
-        case 'convertColor':
-          this._convertColor(message.color, message.fromFormat)
-          return
-        case 'copyToClipboard':
-          this._copyToClipboard(message.text)
-          return
-        }
-      },
-      null,
-      this._disposables
-    )
-  }
-
-  /**
-     * Converts color between different formats
-     */
-  private _convertColor (color: string, fromFormat: string) {
+  private _convertColor (color: string, fromFormat: string): void {
     try {
-      let rgb: { r: number; g: number; b: number }
-
-      // Parse input color based on format
+      let rgb: { r: number, g: number, b: number }
       switch (fromFormat) {
       case 'hex':
         rgb = this._hexToRgb(color)
@@ -92,7 +34,6 @@ export class ColorConverterProvider {
         throw new Error('Formato não suportado')
       }
 
-      // Convert to all formats
       const hex = this._rgbToHex(rgb)
       const rgbStr = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
       const hsl = this._rgbToHsl(rgb)
@@ -100,7 +41,7 @@ export class ColorConverterProvider {
       const hsv = this._rgbToHsv(rgb)
       const hsvStr = `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`
 
-      this._panel.webview.postMessage({
+      void this.postMessage({
         command: 'colorConverted',
         result: {
           hex: hex,
@@ -115,7 +56,7 @@ export class ColorConverterProvider {
       })
     } catch (error) {
       console.error('Erro ao converter cor:', error)
-      this._panel.webview.postMessage({
+      void this.postMessage({
         command: 'colorConverted',
         error: error instanceof Error ? error.message : 'Erro desconhecido',
         success: false
@@ -123,68 +64,49 @@ export class ColorConverterProvider {
     }
   }
 
-  /**
-     * Converts HEX to RGB
-     */
-  private _hexToRgb (hex: string): { r: number; g: number; b: number } {
+  private _hexToRgb (hex: string): { r: number, g: number, b: number } {
     const cleanHex = hex.replace('#', '')
     if (!/^[0-9A-F]{6}$/i.test(cleanHex)) {
       throw new Error('Formato HEX inválido. Use #RRGGBB')
     }
-
     const r = parseInt(cleanHex.slice(0, 2), 16)
     const g = parseInt(cleanHex.slice(2, 4), 16)
     const b = parseInt(cleanHex.slice(4, 6), 16)
-
     return { r, g, b }
   }
 
-  /**
-     * Converts RGB to HEX
-     */
-  private _rgbToHex (rgb: { r: number; g: number; b: number }): string {
-    const toHex = (n: number) => {
+  private _rgbToHex (rgb: { r: number, g: number, b: number }): string {
+    const toHex = (n: number): string => {
       const hex = Math.round(n).toString(16)
       return hex.length === 1 ? '0' + hex : hex
     }
-
     return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`.toUpperCase()
   }
 
-  /**
-     * Parses RGB string
-     */
-  private _parseRgb (rgbStr: string): { r: number; g: number; b: number } {
+  private _parseRgb (rgbStr: string): { r: number, g: number, b: number } {
     const match = rgbStr.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/)
     if (!match) {
       throw new Error('Formato RGB inválido. Use rgb(r, g, b)')
     }
-
     const r = parseInt(match[1])
     const g = parseInt(match[2])
     const b = parseInt(match[3])
-
     if (r > 255 || g > 255 || b > 255 || r < 0 || g < 0 || b < 0) {
       throw new Error('Valores RGB devem estar entre 0 e 255')
     }
-
     return { r, g, b }
   }
 
-  /**
-     * Converts HSL to RGB
-     */
-  private _hslToRgb (hslStr: string): { r: number; g: number; b: number } {
+  private _hslToRgb (hslStr: string): { r: number, g: number, b: number } {
     const match = hslStr.match(/hsl\s*\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/)
     if (!match) {
       throw new Error('Formato HSL inválido. Use hsl(h, s%, l%)')
     }
-
-    let h = parseInt(match[1]) / 360
+    const h = parseInt(match[1]) / 360
     const s = parseInt(match[2]) / 100
     const l = parseInt(match[3]) / 100
 
-    const hue2rgb = (p: number, q: number, t: number) => {
+    const hue2rgb = (p: number, q: number, t: number): number => {
       if (t < 0) { t += 1 }
       if (t > 1) { t -= 1 }
       if (t < 1 / 6) { return p + (q - p) * 6 * t }
@@ -194,7 +116,6 @@ export class ColorConverterProvider {
     }
 
     let r, g, b
-
     if (s === 0) {
       r = g = b = l
     } else {
@@ -212,18 +133,14 @@ export class ColorConverterProvider {
     }
   }
 
-  /**
-     * Converts RGB to HSL
-     */
-  private _rgbToHsl (rgb: { r: number; g: number; b: number }): { h: number; s: number; l: number } {
+  private _rgbToHsl (rgb: { r: number, g: number, b: number }): { h: number, s: number, l: number } {
     const r = rgb.r / 255
     const g = rgb.g / 255
     const b = rgb.b / 255
-
     const max = Math.max(r, g, b)
     const min = Math.min(r, g, b)
-    let h, s, l = (max + min) / 2
-
+    let h, s
+    const l = (max + min) / 2
     if (max === min) {
       h = s = 0
     } else {
@@ -237,7 +154,6 @@ export class ColorConverterProvider {
       }
       h /= 6
     }
-
     return {
       h: Math.round(h * 360),
       s: Math.round(s * 100),
@@ -245,21 +161,16 @@ export class ColorConverterProvider {
     }
   }
 
-  /**
-     * Converts RGB to HSV
-     */
-  private _rgbToHsv (rgb: { r: number; g: number; b: number }): { h: number; s: number; v: number } {
+  private _rgbToHsv (rgb: { r: number, g: number, b: number }): { h: number, s: number, v: number } {
     const r = rgb.r / 255
     const g = rgb.g / 255
     const b = rgb.b / 255
-
     const max = Math.max(r, g, b)
     const min = Math.min(r, g, b)
-    let h, s, v = max
-
+    let h, s
+    const v = max
     const d = max - min
     s = max === 0 ? 0 : d / max
-
     if (max === min) {
       h = 0
     } else {
@@ -271,7 +182,6 @@ export class ColorConverterProvider {
       }
       h /= 6
     }
-
     return {
       h: Math.round(h * 360),
       s: Math.round(s * 100),
@@ -279,10 +189,7 @@ export class ColorConverterProvider {
     }
   }
 
-  /**
-     * Copies text to clipboard
-     */
-  private async _copyToClipboard (text: string) {
+  private async _copyToClipboard (text: string): Promise<void> {
     try {
       await vscode.env.clipboard.writeText(text)
       vscode.window.showInformationMessage('Cor copiada para a área de transferência!')
@@ -290,25 +197,5 @@ export class ColorConverterProvider {
       console.error('Erro ao copiar cor:', error)
       vscode.window.showErrorMessage('Erro ao copiar cor para a área de transferência.')
     }
-  }
-
-  public dispose () {
-    ColorConverterProvider.currentPanel = undefined
-
-    // Clean up our resources
-    this._panel.dispose()
-
-    while (this._disposables.length) {
-      const x = this._disposables.pop()
-      if (x) {
-        x.dispose()
-      }
-    }
-  } private _update () {
-    this._panel.webview.html = this._getHtmlForWebview()
-  }
-
-  private _getHtmlForWebview () {
-    return loadTemplate(this._extensionUri, 'color-converter')
   }
 }

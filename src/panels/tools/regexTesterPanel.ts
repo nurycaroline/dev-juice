@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import { insertText } from '../utils/insertUtils'
-import { loadTemplate } from '../utils/templateLoader'
+import { insertText } from '../../utils/insertUtils'
+import { BaseWebviewPanel, ValidatedMessage } from '../BaseWebviewPanel'
 
 interface MatchResult {
   match: string
@@ -10,81 +10,38 @@ interface MatchResult {
   line?: number
 }
 
-export class RegexTesterProvider {
-  private static currentPanel: vscode.WebviewPanel | undefined
+export class RegexTesterPanel extends BaseWebviewPanel {
+  protected get messageWhitelist (): readonly string[] {
+    return ['testRegex', 'insertInEditor', 'copyToClipboard']
+  }
 
-  public static createOrShow (extensionUri: vscode.Uri): void {
-    const column = vscode.window.activeTextEditor
-      ? vscode.window.activeTextEditor.viewColumn
-      : undefined
-
-    // If we already have a panel, show it.
-    if (RegexTesterProvider.currentPanel) {
-      RegexTesterProvider.currentPanel.reveal(column)
+  protected onMessage (message: ValidatedMessage): void {
+    switch (message.command) {
+    case 'testRegex':
+      this._testRegex(message.pattern as string, message.flags as string, message.text as string)
+      return
+    case 'insertInEditor':
+      insertText(message.text as string)
+      return
+    case 'copyToClipboard':
+      vscode.env.clipboard.writeText(message.text as string)
+      vscode.window.showInformationMessage('Resultado copiado para a área de transferência!')
       return
     }
+  }
 
-    // Otherwise, create a new panel.
-    const panel = vscode.window.createWebviewPanel(
-      'regexTester',
-      'Testador de Regex',
-      column ?? vscode.ViewColumn.One,
-      {
-        enableScripts: true,
-        retainContextWhenHidden: true,
-        localResourceRoots: []
-      }
-    )
-
-    RegexTesterProvider.currentPanel = panel
-
-    // Set the webview's initial html content
-    panel.webview.html = RegexTesterProvider.getWebviewContent(extensionUri)
-
-    // Handle messages from the webview
-    panel.webview.onDidReceiveMessage(
-      message => {
-        switch (message.command) {
-        case 'testRegex':
-          RegexTesterProvider.handleTestRegex(message.pattern, message.flags, message.text)
-          break
-        case 'insertInEditor':
-          insertText(message.text)
-          break
-        case 'copyToClipboard':
-          vscode.env.clipboard.writeText(message.text)
-          vscode.window.showInformationMessage('Resultado copiado para a área de transferência!')
-          break
-        }
-      },
-      undefined
-    )
-
-    // Listen for when the panel is disposed
-    panel.onDidDispose(
-      () => {
-        RegexTesterProvider.currentPanel = undefined
-      },
-      null
-    )
-  }  private static handleTestRegex (pattern: string, flags: string, text: string): void {
-    const panel = RegexTesterProvider.currentPanel
-    if (!panel) {
-      return
-    }
-
+  private _testRegex (pattern: string, flags: string, text: string): void {
     try {
       if (!pattern) {
-        RegexTesterProvider.sendErrorResult(panel, 'Padrão regex não pode estar vazio')
+        this._sendErrorResult('Padrão regex não pode estar vazio')
         return
       }
-
       const regex = new RegExp(pattern, flags)
-      const matches = RegexTesterProvider.findMatches(regex, text, flags)
-      const lineMatches = RegexTesterProvider.findLineMatches(pattern, flags, text)
-      const fullMatch = RegexTesterProvider.testFullMatch(pattern, flags, text)
+      const matches = RegexTesterPanel.findMatches(regex, text, flags)
+      const lineMatches = RegexTesterPanel.findLineMatches(pattern, flags, text)
+      const fullMatch = RegexTesterPanel.testFullMatch(pattern, flags, text)
 
-      panel.webview.postMessage({
+      void this.postMessage({
         command: 'regexResult',
         result: {
           isValid: true,
@@ -101,24 +58,20 @@ export class RegexTesterProvider {
       })
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
-      RegexTesterProvider.sendErrorResult(panel, errorMessage)
+      this._sendErrorResult(errorMessage)
     }
   }
 
-  private static sendErrorResult (panel: vscode.WebviewPanel, error: string): void {
-    panel.webview.postMessage({
+  private _sendErrorResult (error: string): void {
+    void this.postMessage({
       command: 'regexResult',
-      result: {
-        isValid: false,
-        error: error
-      }
+      result: { isValid: false, error: error }
     })
   }
 
   private static findMatches (regex: RegExp, text: string, flags: string): MatchResult[] {
     const matches: MatchResult[] = []
     const globalTest = flags.includes('g')
-    
     if (globalTest) {
       let match
       while ((match = regex.exec(text)) !== null) {
@@ -128,7 +81,6 @@ export class RegexTesterProvider {
           groups: match.slice(1),
           namedGroups: match.groups || {}
         })
-        
         if (match.index === regex.lastIndex) {
           regex.lastIndex++
         }
@@ -144,23 +96,19 @@ export class RegexTesterProvider {
         })
       }
     }
-    
     return matches
   }
 
   private static findLineMatches (pattern: string, flags: string, text: string): MatchResult[] {
     const lineMatches: MatchResult[] = []
     const hasAnchors = pattern.includes('^') || pattern.includes('$')
-    
     if (hasAnchors && text.includes('\n')) {
       const lines = text.split('\n')
       const lineRegex = new RegExp(pattern, flags.replace('g', ''))
-      
       lines.forEach((line, lineIndex) => {
         if (lineRegex.test(line.trim())) {
           const precedingText = lines.slice(0, lineIndex).join('\n')
           const lineStartIndex = precedingText.length + (lineIndex > 0 ? 1 : 0)
-          
           lineMatches.push({
             match: line.trim(),
             index: lineStartIndex,
@@ -171,15 +119,10 @@ export class RegexTesterProvider {
         }
       })
     }
-    
     return lineMatches
   }
 
   private static testFullMatch (pattern: string, flags: string, text: string): boolean {
     return new RegExp(`^${pattern}$`, flags.replace('g', '')).test(text)
-  }
-  
-  private static getWebviewContent (extensionUri: vscode.Uri): string {
-    return loadTemplate(extensionUri, 'regex-tester')
   }
 }
