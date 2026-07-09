@@ -31,17 +31,23 @@ Esta extensão do VS Code fornece ferramentas úteis para desenvolvedores.
 
 ### Conversores
 
-- ✅ **Conversor de Ângulos**: Graus, radianos, etc.
+- ✅ **Conversor de Ângulo**: Graus, radianos, etc.
 - ✅ **Conversor de Área**: m², km², hectares, etc.
-- ✅ **Conversor de Base**: Decimal, binário, hexadecimal, etc.
-- ✅ **Conversor de Caso**: camelCase, snake_case, etc.
-- ✅ **Conversor de Moeda**: Conversão entre moedas
-- ✅ **Conversor de Armazenamento**: Bytes, KB, MB, GB, etc.
-- ✅ **Conversor de Volume Seco**: Litros, galões, etc.
+- ✅ **Conversor de Armazenamento de Dados**: Bytes, KB, MB, GB, etc.
+- ✅ **Conversor de Comprimento**: Metros, pés, milhas, etc.
+- ✅ **Conversor de Consumo de Combustível**: L/100km, mpg, etc.
 - ✅ **Conversor de Energia**: Joules, calorias, etc.
 - ✅ **Conversor de Força**: Newtons, libras-força, etc.
-- ✅ **Conversor de Consumo de Combustível**: L/100km, mpg, etc.
-- ✅ **Conversor de Comprimento**: Metros, pés, milhas, etc.
+- ✅ **Conversor de Moedas**: Conversão entre moedas
+- ✅ **Conversor de Números**: Decimal, binário, hexadecimal, etc.
+- ✅ **Conversor de Peso e Massa**: Gramas, quilos, libras, etc.
+- ✅ **Conversor de Potência**: Watts, cavalos-vapor, etc.
+- ✅ **Conversor de Pressão**: Pascal, bar, psi, etc.
+- ✅ **Conversor de Temperatura**: Celsius, Fahrenheit, Kelvin
+- ✅ **Conversor de Tempo**: Segundos, minutos, horas, etc.
+- ✅ **Conversor de Velocidade**: km/h, m/s, mph, etc.
+- ✅ **Conversor de Volume**: Litros, mililitros, galões, etc.
+- ✅ **Conversor de Volume (Seco)**: Litros, galões secos, etc.
 
 ## Comandos Disponíveis
 

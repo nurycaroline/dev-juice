@@ -92,6 +92,19 @@ describe('registry ↔ manifest ↔ templates consistency (real repository)', ()
     )
   })
 
+  it('every panel command title in the manifest matches the registry title (ARCH-12)', () => {
+    const manifestTitleByCommand = new Map<string, string>(
+      manifest.contributes.commands.map((c: { command: string, title: string }) => [c.command, c.title])
+    )
+    for (const tool of getTools()) {
+      assert.strictEqual(
+        manifestTitleByCommand.get(tool.command),
+        tool.title,
+        `título de ${tool.command} deve coincidir com o registro`
+      )
+    }
+  })
+
   it('all converter commands are reachable from the command palette (declared in manifest)', () => {
     const converterCommands = getTools()
       .filter(t => t.category === 'Conversores')

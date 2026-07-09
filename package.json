@@ -158,22 +158,22 @@
       },
       {
         "command": "dev-juice.generateCNPJ",
-        "title": "Gerar CNPJ Válido",
+        "title": "Gerador de CNPJ",
         "icon": "$(key)"
       },
       {
         "command": "dev-juice.generateCPF",
-        "title": "Gerar CPF Válido",
+        "title": "Gerador de CPF",
         "icon": "$(key)"
       },
       {
         "command": "dev-juice.generatePix",
-        "title": "Gerar PIX QR Code",
+        "title": "Gerador de PIX QR Code",
         "icon": "$(credit-card)"
       },
       {
         "command": "dev-juice.generateUUID",
-        "title": "Gerar UUID",
+        "title": "Gerador de UUID",
         "icon": "$(key)"
       },
       {
