@@ -28,9 +28,7 @@ const NON_PANEL_COMMANDS: readonly string[] = [
   'dev-juice.insertCPFFormatted',
   'dev-juice.insertCPFUnformatted',
   'dev-juice.insertUUIDFormatted',
-  'dev-juice.insertUUIDUnformatted',
-  // Sobra do template do VS Code — removido em T8; whitelisted enquanto existe.
-  'dev-juice.helloWorld'
+  'dev-juice.insertUUIDUnformatted'
 ]
 
 // Regra 1: todo comando do registro existe em contributes.commands

@@ -182,10 +182,6 @@
         "icon": "$(key)"
       },
       {
-        "command": "dev-juice.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "dev-juice.insertCNPJFormatted",
         "title": "Dev Juice: Inserir CNPJ Formatado",
         "category": "Editor"

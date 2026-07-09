@@ -1,15 +1,17 @@
 import type * as vscode from 'vscode'
+import type { BaseWebviewPanel } from '../panels/BaseWebviewPanel'
 
 export type ToolCategory = 'Geradores' | 'Conversores' | 'Formatação' | 'Utilitários'
 
 /**
  * Construtor de uma subclasse de painel com lógica no host.
  * A base instancia via `new Ctor(panel, extensionUri)`.
+ * Import type-only (apagado em runtime) — sem dependência de execução.
  */
 export type PanelConstructor = new (
   panel: vscode.WebviewPanel,
   extensionUri: vscode.Uri
-) => object
+) => BaseWebviewPanel
 
 export interface ToolDefinition {
   /** id do comando, ex.: 'dev-juice.lengthConverter' — imutável (compat com keybindings) */
