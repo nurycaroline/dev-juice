@@ -26,14 +26,22 @@
 - **Date**: 2026-07-08
 - **Status**: active
 
+### AD-004
+- **Decision**: Publicação no Marketplace é automatizada via GitHub Action que dispara a todo push em `main`, executa lint + compile + testes (xvfb) + `vsce package`, e publica com `@vscode/vsce` usando o secret `VSCE_PAT`. A publicação é idempotente: um gate (`should-publish.mjs`) consulta `vsce show --json` e pula o `vsce publish` quando a versão do `package.json` já está publicada.
+- **Reason**: O fluxo manual atual (bump de versão + `vsce publish` local) é propenso a esquecimento; automatizar no push de `main` alinha com o fluxo do mantenedor. A idempotência evita falhas em pushes que não bumpam versão (ex.: só docs) — o Marketplace rejeita re-publicar a mesma versão, então o gate converte esse erro em skip silencioso.
+- **Trade-off**: O mantenedor ainda precisa bumpar `version` no `package.json` manualmente antes de fundir releases (a action não auto-bumpa nem cria git tag, evitando loops). Requer configurar o secret `VSCE_PAT` uma única vez. Testes baixam VS Code (~287 MB) a cada run, adicionando ~1-2 min ao pipeline.
+- **Scope**: Pipeline de release/publicação; `.github/workflows/publish.yml`, `.github/scripts/should-publish.mjs`, scripts `package`/`deploy` em `package.json`.
+- **Date**: 2026-07-10
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: webview-architecture-unification (`.specs/features/webview-architecture-unification/`)
-- **Phase / Task**: Execute CONCLUÍDO — T1–T14 implementados e commitados; Verifier independente rodou (PASS ✅) e gravou `validation.md`
-- **Completed**: T1–T14 (todas as 14 tarefas), + teste de hardening do edge case de path traversal
+- **Feature**: publish-extension-action (inline spec — escopo Small)
+- **Phase / Task**: Execute CONCLUÍDO — workflow + helper + scripts package.json implementados e verificados localmente (lint ✓, 72 testes ✓ via `xvfb-run`, `vsce package` ✓, `should-publish.mjs` ✓ emite `should-publish=false` para 0.0.6 já publicada)
+- **Completed**: `.github/workflows/publish.yml`, `.github/scripts/should-publish.mjs`, scripts `package`/`deploy`, `@vscode/vsce@^3.9.2` em devDependencies, AD-004 gravado
 - **In-progress** (file:line): none
-- **Next step**: Revisão/merge do PR. Follow-ups opcionais (gaps não-bloqueantes em `validation.md`): G2 ativação por comando, G3 warn side-effect, G4/G5/G6 asserções adicionais
-- **Blockers**: none
-- **Uncommitted files**: none (tudo commitado)
-- **Verifier**: PASS ✅ — 72 testes verdes (45 unit + 27 integration), 4/4 mutantes mortos; 2 SPEC_DEVIATIONs sólidos (D1 payload não-string; D2 fallback PIX eliminado)
-- **Branch**: cursor/webview-architecture-unification-943c
+- **Next step**: Revisão/merge do PR. Pós-merge, o mantenedor precisa (uma única vez) adicionar o secret `VSCE_PAT` em Settings → Secrets → Actions; daí em diante todo push em `main` publica automaticamente (idempotente).
+- **Blockers**: none — a action roda mesmo sem o secret (emite `::warning::` e pula publish); publish real só ocorre após configurar `VSCE_PAT` e bumpar `version`.
+- **Uncommitted files**: none (tudo commitado nesta branch)
+- **Verifier**: standalone fresh-eyes pass — spec-anchored outcome check (trigger=push main ✓, gate lint+test+package ✓, publish idempotente ✓, auth via VSCE_PAT ✓); discrimination: doc-only push sem bump → skip ✓, secret ausente → warning+skip ✓, teste falha → publish não roda ✓
+- **Branch**: cursor/publish-extension-action-c163
