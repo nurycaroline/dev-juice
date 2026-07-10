@@ -1,22 +1,31 @@
-# Publishes the Dev Juice extension to the VS Code Marketplace on every push
-# to main. The publish is idempotent: if the version in package.json is already
-# on the store, the publish step is skipped (so doc-only pushes don't fail).
+# Publishes the Dev Juice extension to both the VS Code Marketplace and the
+# Open VSX Registry on every push to main. Open VSX is the registry Cursor
+# (and other VS Code forks) use, so publishing there is what makes the
+# extension installable from Cursor's Extensions panel.
+#
+# The publish is idempotent: if the version in package.json is already on a
+# given store, that store's publish step is skipped (so doc-only pushes don't
+# fail). The two stores are gated independently — see should-publish.mjs.
 #
 # Setup required (one-time):
-#   1. Create a Personal Access Token (PAT) for the publisher that owns this
-#      extension on the Marketplace:
+#   1. VS Code Marketplace PAT — for the `NuryStudio` publisher in package.json:
 #        https://dev.azure.com/<user-or-org>/_usersSettings/tokens
 #      Scope: "Custom defined" > Marketplace > "Publish" (Acquire).
-#      The PAT must belong to the same account that owns the `NuryStudio`
-#      publisher in package.json.
-#   2. Add it as a repository secret named `VSCE_PAT`:
+#      Add it as a repository secret named `VSCE_PAT`:
 #        https://github.com/nurycaroline/dev-juice/settings/secrets/actions
-#   3. Bump `version` in package.json before merging a release to main; the
-#      Marketplace rejects re-publishing an existing version, and this workflow
-#      skips publish when the version is already on the store.
 #
-# `@vscode/vsce` reads the PAT from the VSCE_PAT environment variable, so the
-# secret never needs to be passed on the command line.
+#   2. Open VSX access token — create the `NuryStudio` namespace on Open VSX
+#      once (https://open-vsx.org/), then generate a token under Settings →
+#      Access Tokens. Add it as a repository secret named `OVSX_PAT`:
+#        https://github.com/nurycaroline/dev-juice/settings/secrets/actions
+#
+#   3. Bump `version` in package.json before merging a release to main; each
+#      store rejects re-publishing an existing version, and this workflow
+#      skips a store's publish when the version is already on that store.
+#
+# `@vscode/vsce` reads the Marketplace PAT from VSCE_PAT, and `ovsx` reads the
+# Open VSX token from OVSX_PAT, so neither secret needs to be passed on the
+# command line.
 
 name: Publish Extension
 
@@ -73,17 +82,28 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Check if version needs publishing
+      - name: Check which stores need publishing
         id: check
         run: node .github/scripts/should-publish.mjs
 
-      - name: Publish to Marketplace
+      - name: Publish to VS Code Marketplace
         if: steps.check.outputs.should-publish == 'true'
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
           if [ -z "$VSCE_PAT" ]; then
-            echo "::warning::VSCE_PAT repository secret is not set — skipping publish. See .github/workflows/publish.yml header for setup instructions."
+            echo "::warning::VSCE_PAT repository secret is not set — skipping Marketplace publish. See .github/workflows/publish.yml header for setup instructions."
             exit 0
           fi
           npm run deploy
+
+      - name: Publish to Open VSX (Cursor)
+        if: steps.check.outputs.should-publish-openvsx == 'true'
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$OVSX_PAT" ]; then
+            echo "::warning::OVSX_PAT repository secret is not set — skipping Open VSX publish. See .github/workflows/publish.yml header for setup instructions."
+            exit 0
+          fi
+          npm run deploy:openvsx
