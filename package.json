@@ -158,32 +158,28 @@
       },
       {
         "command": "dev-juice.generateCNPJ",
-        "title": "Gerar CNPJ Válido",
+        "title": "Gerador de CNPJ",
         "icon": "$(key)"
       },
       {
         "command": "dev-juice.generateCPF",
-        "title": "Gerar CPF Válido",
+        "title": "Gerador de CPF",
         "icon": "$(key)"
       },
       {
         "command": "dev-juice.generatePix",
-        "title": "Gerar PIX QR Code",
+        "title": "Gerador de PIX QR Code",
         "icon": "$(credit-card)"
       },
       {
         "command": "dev-juice.generateUUID",
-        "title": "Gerar UUID",
+        "title": "Gerador de UUID",
         "icon": "$(key)"
       },
       {
         "command": "dev-juice.hashGenerator",
         "title": "Gerador de Hash",
         "icon": "$(key)"
-      },
-      {
-        "command": "dev-juice.helloWorld",
-        "title": "Hello World"
       },
       {
         "command": "dev-juice.insertCNPJFormatted",
@@ -244,6 +240,91 @@
         "command": "dev-juice.urlEncoder",
         "title": "URL Encoder/Decoder",
         "icon": "$(link)"
+      },
+      {
+        "command": "dev-juice.angleConverter",
+        "title": "Conversor de Ângulo",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.areaConverter",
+        "title": "Conversor de Área",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.currencyConverter",
+        "title": "Conversor de Moedas",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.dataStorageConverter",
+        "title": "Conversor de Armazenamento de Dados",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.dryVolumeConverter",
+        "title": "Conversor de Volume (Seco)",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.energyConverter",
+        "title": "Conversor de Energia",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.forceConverter",
+        "title": "Conversor de Força",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.fuelConsumptionConverter",
+        "title": "Conversor de Consumo de Combustível",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.lengthConverter",
+        "title": "Conversor de Comprimento",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.numbersConverter",
+        "title": "Conversor de Números",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.powerConverter",
+        "title": "Conversor de Potência",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.pressureConverter",
+        "title": "Conversor de Pressão",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.speedConverter",
+        "title": "Conversor de Velocidade",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.temperatureConverter",
+        "title": "Conversor de Temperatura",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.timeConverter",
+        "title": "Conversor de Tempo",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.volumeConverter",
+        "title": "Conversor de Volume",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "dev-juice.weightConverter",
+        "title": "Conversor de Peso e Massa",
+        "icon": "$(arrow-swap)"
       }
     ],
     "menus": {

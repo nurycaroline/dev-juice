@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 3,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "spec_deviation::payload size caps for webview messages must target string fields only allow non string protocol fields numbers booleans so tool message contracts are not broken",
+      "text": "Payload size caps for webview messages must target string fields only; allow non-string protocol fields (numbers/booleans) so tool message contracts are not broken",
+      "signal": "spec_deviation",
+      "scope": "webview/message-validation",
+      "status": "candidate",
+      "features": [
+        "webview-architecture-unification"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/panels/BaseWebviewPanel.ts:validateWebviewMessage (D1, ARCH-08 AC3) (webview/message-validation)"
+      ],
+      "created": "2026-07-09T14:28:36Z",
+      "last_seen": "2026-07-09T14:28:36Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_deviation::prevent error driven html injection by routing all webview html through the shared template loader and reporting load failures via showerrormessage instead of sanitizing ad hoc inline error html fallbacks",
+      "text": "Prevent error-driven HTML injection by routing all webview HTML through the shared template loader and reporting load failures via showErrorMessage, instead of sanitizing ad-hoc inline error-HTML fallbacks",
+      "signal": "spec_deviation",
+      "scope": "webview/security",
+      "status": "candidate",
+      "features": [
+        "webview-architecture-unification"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/panels/tools/pixGeneratorPanel.ts (D2, ARCH-10 AC4) (webview/security)"
+      ],
+      "created": "2026-07-09T14:28:42Z",
+      "last_seen": "2026-07-09T14:28:42Z"
+    }
+  ]
+}

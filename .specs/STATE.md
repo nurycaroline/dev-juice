@@ -29,10 +29,11 @@
 ## Handoff
 
 - **Feature**: webview-architecture-unification (`.specs/features/webview-architecture-unification/`)
-- **Phase / Task**: Planejamento concluído — spec.md, design.md e tasks.md escritos; Execute NÃO iniciado
-- **Completed**: none (nenhuma tarefa de implementação executada)
+- **Phase / Task**: Execute CONCLUÍDO — T1–T14 implementados e commitados; Verifier independente rodou (PASS ✅) e gravou `validation.md`
+- **Completed**: T1–T14 (todas as 14 tarefas), + teste de hardening do edge case de path traversal
 - **In-progress** (file:line): none
-- **Next step**: Usuário revisa/aprova spec + design + tasks; em seguida ativar a skill `tlc-spec-driven` e iniciar Execute pela Fase 1 (T1)
-- **Blockers**: Aprovação do usuário; assunções da spec marcadas "Confirmado? n" aguardam confirmação
-- **Uncommitted files**: none (planejamento commitado na branch)
-- **Branch**: cursor/spec-webview-architecture-unification-91e3
+- **Next step**: Revisão/merge do PR. Follow-ups opcionais (gaps não-bloqueantes em `validation.md`): G2 ativação por comando, G3 warn side-effect, G4/G5/G6 asserções adicionais
+- **Blockers**: none
+- **Uncommitted files**: none (tudo commitado)
+- **Verifier**: PASS ✅ — 72 testes verdes (45 unit + 27 integration), 4/4 mutantes mortos; 2 SPEC_DEVIATIONs sólidos (D1 payload não-string; D2 fallback PIX eliminado)
+- **Branch**: cursor/webview-architecture-unification-943c
