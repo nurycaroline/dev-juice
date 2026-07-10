@@ -5,6 +5,11 @@ import { generateNonce } from './securityUtils'
 // Cache para templates carregados
 const templateCache: Record<string, string> = {}
 
+// Placeholder literal que o runtime do webview (VS Code / Cursor) substitui pelo
+// esquema de CSP correto do editor ao atribuir o HTML. Aspas simples preservam
+// os caracteres ${...} sem interpolação pelo template literal do JS.
+const webviewCspSourcePlaceholder = '${webview.cspSource}'
+
 /**
  * Carrega um template HTML de um arquivo com cache
  * @param extensionUri URI da extensão
@@ -66,8 +71,13 @@ export function loadTemplate (extensionUri: vscode.Uri, templateName: string): s
  * @param nonce Nonce para uso nos scripts
  * @returns Template com CSP aplicado
  */
-function insertCSP (template: string, extensionUri: vscode.Uri, nonce: string): string {  // Define o CSP
-  const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' vscode-resource:; img-src vscode-resource: https:; script-src 'nonce-${nonce}';">`
+function insertCSP (template: string, extensionUri: vscode.Uri, nonce: string): string {  // Define o CSP.
+  // ${webview.cspSource} é um placeholder substituído pelo runtime do VS Code /
+  // Cursor ao atribuir o HTML ao webview — expande para o esquema correto do
+  // editor (vscode-file: em builds modernos). O esquema legado vscode-resource:
+  // foi removido após VS Code 1.56 e ignorado pelo Cursor, o que tornava a CSP
+  // silenciosamente ineficaz para recursos carregados do disco.
+  const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' ${webviewCspSourcePlaceholder}; img-src ${webviewCspSourcePlaceholder} https:; script-src 'nonce-${nonce}';">`
   
   // Adiciona o nonce a todos os scripts no template
   let processedTemplate = template.replace(/<script/g, `<script nonce="${nonce}"`)
