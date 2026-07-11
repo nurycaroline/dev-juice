@@ -2,7 +2,7 @@
   "name": "dev-juice",
   "displayName": "Dev Juice",
   "description": "Conjunto de ferramentas úteis para desenvolvedores incluindo conversores, formatadores, geradores e validadores",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publisher": "NuryStudio",
   "author": "Nurielly Caroline Brizola",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "QR Code"
   ],
   "engines": {
-    "vscode": "^1.100.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
@@ -350,18 +350,20 @@
     "build": "npm run lint && npm run compile",
     "security-check": "npm audit && npm run lint",
     "package": "vsce package",
-    "deploy": "vsce publish"
+    "deploy": "vsce publish",
+    "deploy:openvsx": "ovsx publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/vscode": "^1.100.0",
+    "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.9.2",
     "eslint": "^9.25.1",
+    "ovsx": "^1.0.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
